@@ -4,17 +4,26 @@ function MapController(map) {
   return true
 }
 
-MapController.prototype.init = function () {
+MapController.prototype.init = function() {
   this.sizeMap()
   this.map.googleMap()
 
   mc = this
-  this.button().click(function () {
+
+  newDirections = function() {
     mc.getDirections()
+  }
+  this.button().click(function() {
+    newDirections()
+  })
+  $('input[type=text]').keyup(function(event) {
+    if(event.keyCode == 13) {
+      newDirections()
+    }
   })
 }
 
-MapController.prototype.sizeMap = function () {
+MapController.prototype.sizeMap = function() {
   this.map.canvas().width('100%')
   this.map.canvas().height('600px')
 }
