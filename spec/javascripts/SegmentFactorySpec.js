@@ -1,5 +1,5 @@
 describe('SegmentFactory', function() {
-  describe('from_google', function() {
+  describe('.from_google', function() {
     it('reutrns a DrivingSegment object', function() {
       step = { distance: 1, travel_mode: 'DRIVING' }
       segment = SegmentFactory.from_google(0, step)

@@ -9,7 +9,7 @@ describe("Map", function() {
     map = new Map('#mapdiv')
   });
 
-  describe('.canvas', function() {
+  describe('#canvas', function() {
     it('returns the map div', function() {
       expect(map.canvas()).toBe('div#mapdiv')
     })

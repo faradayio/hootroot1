@@ -1,5 +1,5 @@
 describe('RouteView', function() {
-  describe('.segments', function() {
+  describe('#segments', function() {
     it('returns an array of segments', function() {
       var result = {
         routes: [{
