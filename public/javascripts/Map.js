@@ -13,7 +13,7 @@ function Map(mapId) {
 Map.prototype.canvas = function() { return $(this.mapId) }
 Map.prototype.googleMap = function () {
   if(this.google_map == null) {
-    this.google_map = new google.maps.Map(this.canvas, this.options)
+    this.google_map = new google.maps.Map(this.canvas().get(0), this.options)
   }
   return this.google_map
 }

@@ -9,14 +9,14 @@ MapController.prototype.init = function () {
   this.map.googleMap()
 
   mc = this
-  this.button().onclick = function () {
+  this.button().click(function () {
     mc.getDirections()
-  }
+  })
 }
 
 MapController.prototype.sizeMap = function () {
-  this.map.canvas.style.width = '100%'
-  this.map.canvas.style.height = '600px'
+  this.map.canvas().width('100%')
+  this.map.canvas().height('600px')
 }
 
 MapController.prototype.getDirections = function () {
@@ -38,17 +38,17 @@ MapController.prototype.getDirections = function () {
   })
 }
 MapController.prototype.originField = function () {
-  return document.getElementById("origin")
+  return $('#origin')
 }
 MapController.prototype.destinationField = function () {
-  return document.getElementById("destination")
+  return $('#destination')
 }
 MapController.prototype.origin = function () {
-  return this.originField().value
+  return this.originField().val()
 }
 MapController.prototype.destination = function () {
-  return this.destinationField().value
+  return this.destinationField().val()
 }
 MapController.prototype.button = function () {
-  return document.getElementById("go")
+  return $('#go')
 }
