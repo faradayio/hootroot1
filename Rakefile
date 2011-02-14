@@ -5,3 +5,8 @@ require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
 Mapprint::Application.load_tasks
+
+require 'jasmine'
+load 'jasmine/tasks/jasmine.rake'
+
+task :default => [:features, :spec]
