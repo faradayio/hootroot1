@@ -5,7 +5,6 @@ describe('SegmentFactory', function() {
       segment = SegmentFactory.from_google(0, step)
       expect(segment.__proto__['emissions']).
         toEqual(DrivingSegment.prototype.emissions)
-      expect(segment.emissions()).toEqual(0.0)
     })
   })
 })

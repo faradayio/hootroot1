@@ -5,7 +5,7 @@ describe("Map", function() {
     google = { maps: { Map: function() {},
                        LatLng: function() {},
                        MapTypeId: { ROADMAP: 'roadmap' } } }
-    loadFixtures('map.html');
+    setFixtures('<div id="mapdiv">hi</div>')
     map = new Map('#mapdiv')
   });
 

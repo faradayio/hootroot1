@@ -5,6 +5,15 @@ function DrivingSegment(index, step) {
   this.instructions = step.instructions
 }
 DrivingSegment.prototype = new Segment()
-DrivingSegment.prototype.emissions = function() {
-  return 0.0
+DrivingSegment.prototype.emissions = function(element) {
+  element.html('Loading emissions data...')
+  $.ajax({
+    url: 'http://carbon.brighterplanet.com/automobile_trips?distance=' + this.distance,
+    dataType: 'json',
+    success: DrivingSegment.onSuccess,
+    error: DrivingSegment.onError
+  })
 }
+
+DrivingSegment.onSuccess = function(data) { element.html(data['emissions']) }
+DrivingSegment.onError = function(data) { element.html('Failed to load emissions data') }

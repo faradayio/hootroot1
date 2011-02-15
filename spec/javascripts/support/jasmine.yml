@@ -11,6 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
+    - public/javascripts/jquery-1.5.min.js
     - public/javascripts/Segment.js
     - public/javascripts/**/*.js
 
@@ -34,10 +35,8 @@ stylesheets:
 #
 # EXAMPLE:
 #
-# helpers:
-#   - helpers/**/*.js
-#
 helpers:
+  - helpers/**/*.js
 
 # spec_files
 #
