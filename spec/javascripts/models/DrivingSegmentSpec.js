@@ -2,7 +2,6 @@ describe('DrivingSegment', function() {
   var segment;
 
   beforeEach(function() {
-    setFixtures('<div id="quiet"></div>')
     var step = {
       distance: 10000,
       travel_mode: 'DRIVING',
@@ -12,14 +11,21 @@ describe('DrivingSegment', function() {
   })
 
   describe('#emissions', function() {
-    it('sets the value of the specified element to the emissions result')
+    it('runs on onSuccess handler on a successful fetch', function() {
+      var onSuccess = jasmine.createSpy('onSuccess')
+      fakeAjax({ urls: {
+        'http://carbon.brighterplanet.com/automobile_trips?distance=10': {
+          successData: {"emission": 10.4}}}})
+      segment.emissions(onSuccess, null)
+      expect(onSuccess).toHaveBeenCalledWith(10.4)
+    })
     it('runs an onFailure handler on a failed fetch', function() {
-      DrivingSegment.onError = jasmine.createSpy('onError')
+      var onError = jasmine.createSpy('onError')
       fakeAjax({ urls: {
         'http://carbon.brighterplanet.com/automobile_trips?distance=10': {
           errorMessage: 'argh'}}})
-      segment.emissions($('#quiet'))
-      expect(DrivingSegment.onError).toHaveBeenCalled()
+      segment.emissions(null, onError)
+      expect(onError).toHaveBeenCalled()
     })
   })
 })

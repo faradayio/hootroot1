@@ -110,12 +110,12 @@
       if (!options.success) {
         logAndThrow("Ajax success handler is not defined in system under test for url '" + options.url + "'. See firebug script stack for more info.")
       } else {
-        options.success(context, "default success data")
+        options.success("default success data")
       }
     } else if (urls[options.url].successData) {
-      options.success(context, urls[options.url].successData)
+      options.success(urls[options.url].successData)
     } else if (urls[options.url].errorMessage) {
-      options.error(context, {responseText: urls[options.url].errorMessage})
+      options.error({responseText: urls[options.url].errorMessage})
     } else {
       logAndThrow("Unknown mapping value for url '" + options.url + "'. Expected either successData or errorMessage. Actual was '" + urls[options.url] + "'")
     }

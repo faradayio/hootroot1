@@ -1,4 +1,4 @@
-describe('MapController', function() {
+describe('IndexController', function() {
   describe('#segments', function() {
     it('returns an array of segments', function() {
       var result = {
@@ -33,24 +33,24 @@ describe('MapController', function() {
         }]
       }
 
-      var mapController = new MapController(null)
-      var segments = mapController.segments(result)
+      google = { maps: { Map: function() {},
+                         LatLng: function() {},
+                         MapTypeId: { ROADMAP: 'roadmap' } } }
+
+      var indexController = new IndexController(null, null)
+      var segments = indexController.segments(result)
 
       expect(segments[0].distance).toEqual(0.688)
-      expect(segments[0].elementId).toEqual('segment_0')
-      expect(segments[0].elementClass).toEqual('driving')
+      expect(segments[0].index).toEqual(0)
 
       expect(segments[1].distance).toEqual(0.128)
-      expect(segments[1].elementId).toEqual('segment_1')
-      expect(segments[1].elementClass).toEqual('driving')
+      expect(segments[1].index).toEqual(1)
 
       expect(segments[2].distance).toEqual(0.045)
-      expect(segments[2].elementId).toEqual('segment_2')
-      expect(segments[2].elementClass).toEqual('driving')
+      expect(segments[2].index).toEqual(2)
 
       expect(segments[3].distance).toEqual(9.025)
-      expect(segments[3].elementId).toEqual('segment_3')
-      expect(segments[3].elementClass).toEqual('driving')
+      expect(segments[3].index).toEqual(3)
     })
   })
 })

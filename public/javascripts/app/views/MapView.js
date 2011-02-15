@@ -1,4 +1,4 @@
-function Map(mapId) {
+function MapView(mapId) {
   this.mapId = mapId
   var ll = new google.maps.LatLng(37.774107, -122.419281)
   this.options = {
@@ -10,8 +10,8 @@ function Map(mapId) {
   return true
 }
 
-Map.prototype.canvas = function() { return $(this.mapId) }
-Map.prototype.googleMap = function () {
+MapView.prototype.canvas = function() { return $(this.mapId) }
+MapView.prototype.googleMap = function () {
   if(this.google_map == null) {
     this.google_map = new google.maps.Map(this.canvas().get(0), this.options)
   }

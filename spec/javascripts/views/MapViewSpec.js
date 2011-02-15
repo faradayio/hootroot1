@@ -1,4 +1,4 @@
-describe("Map", function() {
+describe("MapView", function() {
   var map
 
   beforeEach(function() {
@@ -6,12 +6,12 @@ describe("Map", function() {
                        LatLng: function() {},
                        MapTypeId: { ROADMAP: 'roadmap' } } }
     setFixtures('<div id="mapdiv">hi</div>')
-    map = new Map('#mapdiv')
+    mapView = new MapView('#mapdiv')
   });
 
   describe('#canvas', function() {
     it('returns the map div', function() {
-      expect(map.canvas()).toBe('div#mapdiv')
+      expect(mapView.canvas()).toBe('div#mapdiv')
     })
   })
 })

@@ -1,2 +1,0 @@
-describe('Segment', function() {
-})
