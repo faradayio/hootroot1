@@ -1,9 +1,9 @@
 beforeEach(function() {
   this.addMatchers({
-    toBePlaying: function(expectedSong) {
-      var player = this.actual;
-      return player.currentlyPlayingSong === expectedSong
-          && player.isPlaying;
+    toBeClose: function(base, deviation) {
+      var lowerBound = base - deviation
+      var upperBound = base + deviation
+      return this.actual >= lowerBound && this.actual <= upperBound
     }
   })
   google = {

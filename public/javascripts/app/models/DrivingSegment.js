@@ -9,7 +9,8 @@ DrivingSegment.prototype.emissions = function(onSuccess, onError) {
   $.ajax({
     url: 'http://carbon.brighterplanet.com/automobile_trips.json?distance=' + this.distance,
     dataType: 'json',
-    success: function(data) { onSuccess(index, data['emission']) },
+    success: function(data) {
+      onSuccess(index, data['emission']) },
     error: function(data) { onError(index) }
   })
 }

@@ -2,6 +2,7 @@ Directions = function(origin, destination) {
   this.origin = origin
   this.destination = destination
   this.directionsService = new google.maps.DirectionsService()
+  this.totalEmissions = 0.0
 }
 
 Directions.prototype.segments = function() {
@@ -29,7 +30,7 @@ Directions.prototype.route = function (onSuccess, onFailure) {
     destination: this.destination,
     travelMode: google.maps.DirectionsTravelMode.DRIVING
   }
-  me = this
+  var me = this
   this.directionsService.route(request, function(result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       me.directionResult = result
@@ -41,7 +42,20 @@ Directions.prototype.route = function (onSuccess, onFailure) {
 }
 
 Directions.prototype.getEmissions = function(onSuccess, onError) {
+  onSuccessWithTotalEmissionUpdate = this.onSegmentEmissions(onSuccess)
   this.eachSegment(function(segment) {
-    segment.emissions(onSuccess, onError)
+    segment.emissions(onSuccessWithTotalEmissionUpdate, onError)
   })
+}
+
+
+
+// Events
+
+Directions.prototype.onSegmentEmissions = function(onSuccess) {
+  return $.proxy(function(index, emissionValue) {
+      this.totalEmissions += emissionValue
+      onSuccess(this, index, emissionValue)
+    },
+    this)
 }

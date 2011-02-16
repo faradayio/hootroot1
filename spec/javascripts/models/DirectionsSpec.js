@@ -37,6 +37,26 @@ describe('Directions', function() {
     })
   })
 
+  describe('#onSegmentEmissions', function() {
+    it('updates the total emissions', function() {
+      directions.directionResult = result
+      fakeAjax({
+        urls: {
+          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.688': {
+            successData: {"emission": 6.8}},
+          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.128': {
+            successData: {"emission": 1.2}},
+          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.045': {
+            successData: {"emission": 0.4}},
+          'http://carbon.brighterplanet.com/automobile_trips.json?distance=9.025': {
+            successData: {"emission": 90.2}}
+        }
+      })
+      directions.getEmissions(function(index, emissionValue) {}, function() {})
+      expect(directions.totalEmissions).toBeClose(98.6, 0.01)
+    })
+  })
+
 // describe('#route', function() {
 //   it('calls the onSuccess method', function() {
 //     google.maps.DirectionsService.prototype.route = function(request, callback) { callback('OK') }

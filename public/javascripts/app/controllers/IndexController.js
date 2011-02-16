@@ -57,8 +57,9 @@ IndexController.prototype.directionsRouteFailure = function(result, status) {
   alert('Failed to get directions')
 }
 
-IndexController.prototype.segmentEmissionsSuccess = function(index, emission_value) {
+IndexController.prototype.segmentEmissionsSuccess = function(directions, index, emission_value) {
   this.routeView.updateSegmentEmissions(index, emission_value)
+  this.routeView.updateTotalEmissions(directions)
 }
 
 IndexController.prototype.segmentEmissionsFailure = function(index) {
