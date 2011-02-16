@@ -1,5 +1,5 @@
 describe('DrivingSegment', function() {
-  var segment;
+  var segment
 
   beforeEach(function() {
     var step = {
@@ -17,7 +17,7 @@ describe('DrivingSegment', function() {
         'http://carbon.brighterplanet.com/automobile_trips.json?distance=10': {
           successData: {"emission": 10.4}}}})
       segment.emissions(onSuccess, null)
-      expect(onSuccess).toHaveBeenCalledWith(10.4)
+      expect(onSuccess).toHaveBeenCalledWith(0, 10.4)
     })
     it('runs an onFailure handler on a failed fetch', function() {
       var onError = jasmine.createSpy('onError')

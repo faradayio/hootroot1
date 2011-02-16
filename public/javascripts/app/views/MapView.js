@@ -17,3 +17,8 @@ MapView.prototype.googleMap = function () {
   }
   return this.google_map
 }
+
+MapView.prototype.resize = function() {
+  this.canvas().width('100%')
+  this.canvas().height('600px')
+}

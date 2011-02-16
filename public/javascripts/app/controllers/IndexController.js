@@ -1,106 +1,66 @@
 function IndexController(mapId, routeId) {
   this.mapView = new MapView(mapId)
   this.routeView = new RouteView(routeId)
+  this.directionsDisplay = new google.maps.DirectionsRenderer()
 
   return true
 }
 
 IndexController.prototype.init = function() {
-  this.sizeMap()
-  this.mapView.googleMap()
+  this.mapView.resize()
+  this.directionsDisplay.setMap(this.mapView.googleMap())
 
-  mc = this
-
-  newDirections = function() {
-    mc.getDirections()
-  }
-  this.button().click(function() {
-    newDirections()
-  })
-  $('input[type=text]').keyup(function(event) {
-    if(event.keyCode == 13) {
-      newDirections()
-    }
-  })
+  $('#go').click($.proxy(this.routeButtonClick, this))
+  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this))
 }
 
-IndexController.prototype.sizeMap = function() {
-  this.mapView.canvas().width('100%')
-  this.mapView.canvas().height('600px')
+IndexController.prototype.directions = function() {
+  if(!this._directions) {
+    this._directions = new Directions($('#origin').val(),
+                                      $('#destination').val())
+  }
+  return this._directions
 }
 
-IndexController.prototype.segments = function(result) {
-  if(!this._segments) {
-    var list = []
-    var steps = result.routes[0].legs[0].steps
-    for(i = 0; i < steps.length; i++) {
-      var step = steps[i]
-      list[i] = Segment.from_google(i, step)
-    }
-    this._segments = list
-  }
-  return this._segments
-}
-
-IndexController.prototype.events = {
-  emissionSuccess: function(routeView, segment) {
-    return function(emission_value) {
-      routeView.updateSegmentEmissions(segment.index, emission_value)
-    }
-  },
-  emissionError: function(routeView, segment) {
-    return function(emission_value) {
-      routeView.updateSegmentEmissions(segment.index, 'Unable to fetch emissions')
-    }
-  }
-}
-
-IndexController.prototype.getEmissions = function(segments) {
-  for(i = 0; i < this.segments().length; i++) {
-    segment = this.segments()[i]
-    segment.emissions(this.events.emissionSuccess(this.routeView, segment),
-                      this.events.emissionError(this.routeView, segment))
-  }
+IndexController.prototype.getEmissions = function() {
+  routeView = this.routeView
+  this.directions().getEmissions(
+    $.proxy(this.segmentEmissionsSuccess, this),
+    $.proxy(this.segmentEmissionsFailure, this))
 }
 
 IndexController.prototype.getDirections = function () {
-  directionsService = new google.maps.DirectionsService()
-  directionsDisplay = new google.maps.DirectionsRenderer()
-  directionsDisplay.setMap(this.mapView.googleMap())
+  this.directions().route(
+    $.proxy(this.directionsRouteSuccess, this),
+    $.proxy(this.directionsRouteFailure, this))
+}
 
-  var request = {
-    origin: this.origin(), 
-    destination: this.destination(),
-    travelMode: google.maps.DirectionsTravelMode.DRIVING
+//////  Events 
+
+IndexController.prototype.originDestinationInputKeyup = function(event) {
+  if(event.keyCode == 13) {
+    this.getDirections()
   }
-  me = this
-  directionsService.route(request, function(result, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(result)
-
-      me.routeView.update(me.segments(result))
-      me.getEmissions()
-      //this.routeView.updateTotalEmissions(totalEmissions)
-    }
-  })
 }
 
-IndexController.prototype.originField = function () {
-  return $('#origin')
+IndexController.prototype.routeButtonClick = function() {
+  this.getDirections()
 }
 
-IndexController.prototype.destinationField = function () {
-  return $('#destination')
+IndexController.prototype.directionsRouteSuccess = function(result) {
+  this.directionsDisplay.setDirections(result)
+  this.routeView.update(this.directions())
+  this.getEmissions()
 }
 
-IndexController.prototype.origin = function () {
-  return this.originField().val()
+IndexController.prototype.directionsRouteFailure = function(result, status) {
+  alert('Failed to get directions')
 }
 
-IndexController.prototype.destination = function () {
-  return this.destinationField().val()
+IndexController.prototype.segmentEmissionsSuccess = function(index, emission_value) {
+  this.routeView.updateSegmentEmissions(index, emission_value)
 }
 
-IndexController.prototype.button = function () {
-  return $('#go')
+IndexController.prototype.segmentEmissionsFailure = function(index) {
+  this.routeView.updateSegmentEmissions(index, 'Unable to fetch emissions')
 }

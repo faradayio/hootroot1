@@ -5,10 +5,11 @@ function DrivingSegment(index, step) {
 }
 DrivingSegment.prototype = new Segment()
 DrivingSegment.prototype.emissions = function(onSuccess, onError) {
+  var index = this.index
   $.ajax({
     url: 'http://carbon.brighterplanet.com/automobile_trips.json?distance=' + this.distance,
     dataType: 'json',
-    success: function(data) { onSuccess(data['emission']) },
-    error: onError
+    success: function(data) { onSuccess(index, data['emission']) },
+    error: function(data) { onError(index) }
   })
 }
