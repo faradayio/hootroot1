@@ -43,19 +43,23 @@ IndexController.prototype.segments = function(result) {
 }
 
 IndexController.prototype.events = {
-  emissionSuccess: function(data) {
-
+  emissionSuccess: function(routeView, segment) {
+    return function(emission_value) {
+      routeView.updateSegmentEmissions(segment.index, emission_value)
+    }
   },
-  emissionError: function(data) {
-
+  emissionError: function(routeView, segment) {
+    return function(emission_value) {
+      routeView.updateSegmentEmissions(segment.index, 'Unable to fetch emissions')
+    }
   }
 }
 
 IndexController.prototype.getEmissions = function(segments) {
   for(i = 0; i < this.segments().length; i++) {
     segment = this.segments()[i]
-    segment.emissions(this.events.emissionSuccess,
-                      this.events.emissionError)
+    segment.emissions(this.events.emissionSuccess(this.routeView, segment),
+                      this.events.emissionError(this.routeView, segment))
   }
 }
 
@@ -69,13 +73,14 @@ IndexController.prototype.getDirections = function () {
     destination: this.destination(),
     travelMode: google.maps.DirectionsTravelMode.DRIVING
   }
+  me = this
   directionsService.route(request, function(result, status) {
     if (status == google.maps.DirectionsStatus.OK) {
       directionsDisplay.setDirections(result)
 
-      this.routeView.update(this.segments())
-      this.getEmissions()
-      this.routeView.updateTotalEmissions(totalEmissions)
+      me.routeView.update(me.segments(result))
+      me.getEmissions()
+      //this.routeView.updateTotalEmissions(totalEmissions)
     }
   })
 }

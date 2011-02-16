@@ -3,7 +3,7 @@ describe('DrivingSegment', function() {
 
   beforeEach(function() {
     var step = {
-      distance: 10000,
+      distance: { value: '10000' },
       travel_mode: 'DRIVING',
       instructions: 'Go West, young man!'
     }
@@ -14,7 +14,7 @@ describe('DrivingSegment', function() {
     it('runs on onSuccess handler on a successful fetch', function() {
       var onSuccess = jasmine.createSpy('onSuccess')
       fakeAjax({ urls: {
-        'http://carbon.brighterplanet.com/automobile_trips?distance=10': {
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=10': {
           successData: {"emission": 10.4}}}})
       segment.emissions(onSuccess, null)
       expect(onSuccess).toHaveBeenCalledWith(10.4)
@@ -22,7 +22,7 @@ describe('DrivingSegment', function() {
     it('runs an onFailure handler on a failed fetch', function() {
       var onError = jasmine.createSpy('onError')
       fakeAjax({ urls: {
-        'http://carbon.brighterplanet.com/automobile_trips?distance=10': {
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=10': {
           errorMessage: 'argh'}}})
       segment.emissions(null, onError)
       expect(onError).toHaveBeenCalled()

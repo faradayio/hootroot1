@@ -17,16 +17,16 @@ describe('IndexController', function() {
             start_address: 'Lansing, MI, USA',
             steps: [
               { travel_mode: 'DRIVING',
-                distance: 688,
+                distance: { value: 688 },
                 instructions: 'Go there' },
               { travel_mode: 'DRIVING',
-                distance: 128,
+                distance: { value: 128 },
                 instructions: 'Go there' },
               { travel_mode: 'DRIVING',
-                distance: 45,
+                distance: { value: 45 },
                 instructions: 'Go there' },
               { travel_mode: 'DRIVING',
-                distance: 9025,
+                distance: { value: 9025 },
                 instructions: 'Go there' },
             ]
           }]
