@@ -3,7 +3,7 @@ function RouteView() {}
 RouteView.prototype.output = function(directions) {
   var html = '<div id="route"><ul>'
   directions.eachSegment(function(segment) {
-    var detail = segment.instructions + ', emissions: <span class="emissions"><em>Loading...</em></span>'
+    var detail = segment.instructions + '<br />Emissions: <span class="emissions"><em>Loading...</em></span>'
     html += '<li id="segment_' + segment.index + '" class="driving">' + detail + '</li>'
   })
   html += '</ul><p>Total emissions: <span id="emissions_total"><em>Loading</em></span></p></div>'
