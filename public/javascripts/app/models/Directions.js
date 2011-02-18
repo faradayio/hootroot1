@@ -1,6 +1,7 @@
-Directions = function(origin, destination) {
+Directions = function(origin, destination, mode) {
   this.origin = origin
   this.destination = destination
+  this.mode = mode
   this.directionsService = new GoogleService.directionsService()
   this.totalEmissions = 0.0
 }
@@ -28,7 +29,7 @@ Directions.prototype.route = function (onSuccess, onFailure) {
   var request = {
     origin: this.origin, 
     destination: this.destination,
-    travelMode: GoogleService.directionsTravelMode.DRIVING
+    travelMode: this.mode
   }
   var me = this
   this.directionsService.route(request, function(result, status) {

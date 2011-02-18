@@ -25,8 +25,14 @@
       <input type="text" id="origin" />
       <label for="destination">Destination:</label>
       <input type="text" id="destination" />
+      <select id="mode">
+        <option selected="selected" value="DRIVING">by Car</option>
+        <option value="WALKING">by Foot</option>
+        <option value="BICYCLING">by Bicyle</option>
+      </select>
     </div>
     <button id="go" type="button">Route</button>
     <div id="route"></div>
+    <div id="otherroute"></div>
   </body>
 </html>

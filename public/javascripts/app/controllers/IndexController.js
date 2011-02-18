@@ -17,19 +17,20 @@ IndexController.prototype.init = function() {
 IndexController.prototype.directions = function() {
   if(!this._directions) {
     this._directions = new Directions($('#origin').val(),
-                                      $('#destination').val())
+                                      $('#destination').val(),
+                                      $('#mode').val())
   }
   return this._directions
 }
 
 IndexController.prototype.getEmissions = function() {
-  routeView = this.routeView
   this.directions().getEmissions(
     $.proxy(this.segmentEmissionsSuccess, this),
     $.proxy(this.segmentEmissionsFailure, this))
 }
 
 IndexController.prototype.getDirections = function () {
+  this._directions = null
   this.directions().route(
     $.proxy(this.directionsRouteSuccess, this),
     $.proxy(this.directionsRouteFailure, this))
