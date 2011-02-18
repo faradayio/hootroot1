@@ -8,7 +8,7 @@ function IndexController(mapId, routeId) {
 
 IndexController.prototype.init = function() {
   this.mapView.resize()
-  this.directionsDisplay.setMap(this.mapView.googleMap())
+  this.mapView.googleMap()
 
   $('#go').click($.proxy(this.routeButtonClick, this))
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this))
@@ -31,6 +31,8 @@ IndexController.prototype.getEmissions = function() {
 
 IndexController.prototype.getDirections = function () {
   this._directions = null
+  this.directionsDisplay.setMap(null); 
+  this.directionsDisplay.setMap(this.mapView.googleMap())
   this.directions().route(
     $.proxy(this.directionsRouteSuccess, this),
     $.proxy(this.directionsRouteFailure, this))
