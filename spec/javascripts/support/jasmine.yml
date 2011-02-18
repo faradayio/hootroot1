@@ -11,7 +11,9 @@
 #   - dist/**/*.js
 #
 src_files:
+    - public/javascripts/google_maps.js
     - public/javascripts/jquery-1.5.min.js
+    - public/javascripts/lib/**/*.js
     - public/javascripts/app/models/Segment.js
     - public/javascripts/app/**/*.js
 

@@ -1,7 +1,7 @@
 function IndexController(mapId, routeId) {
   this.mapView = new MapView(mapId)
   this.routeView = new RouteView(routeId)
-  this.directionsDisplay = new google.maps.DirectionsRenderer()
+  this.directionsDisplay = new GoogleService.directionsRenderer()
 
   return true
 }

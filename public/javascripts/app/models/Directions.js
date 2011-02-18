@@ -1,7 +1,7 @@
 Directions = function(origin, destination) {
   this.origin = origin
   this.destination = destination
-  this.directionsService = new google.maps.DirectionsService()
+  this.directionsService = new GoogleService.directionsService()
   this.totalEmissions = 0.0
 }
 
@@ -28,11 +28,11 @@ Directions.prototype.route = function (onSuccess, onFailure) {
   var request = {
     origin: this.origin, 
     destination: this.destination,
-    travelMode: google.maps.DirectionsTravelMode.DRIVING
+    travelMode: GoogleService.directionsTravelMode.DRIVING
   }
   var me = this
   this.directionsService.route(request, function(result, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
+    if (status == GoogleService.directionsStatus.OK) {
       me.directionResult = result
       onSuccess(result)
     } else {
