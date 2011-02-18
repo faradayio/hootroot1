@@ -12,6 +12,7 @@ IndexController.prototype.init = function() {
 
   $('#go').click($.proxy(this.routeButtonClick, this))
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this))
+  $('#mode').change($.proxy(this.modeChange, this))
 }
 
 IndexController.prototype.directions = function() {
@@ -47,6 +48,10 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 }
 
 IndexController.prototype.routeButtonClick = function() {
+  this.getDirections()
+}
+
+IndexController.prototype.modeChange = function() {
   this.getDirections()
 }
 
