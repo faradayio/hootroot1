@@ -4,6 +4,11 @@ function BicyclingSegment(index, step) {
   this.instructions = step.instructions
 }
 BicyclingSegment.prototype = new Segment()
-BicyclingSegment.prototype.emissions = function(onSuccess, onError) {
-  onSuccess(this.index, 0)
+
+BicyclingSegment.prototype.getEmissionEstimate = function(onSuccess, onError) {
+  var estimate = new EmissionEstimate()
+  estimate.data = {
+    emission: 0
+  }
+  onSuccess(estimate)
 }

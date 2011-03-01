@@ -1,22 +1,29 @@
 describe('Segment', function() {
-  describe('.from_google', function() {
+  describe('.create', function() {
     it('reutrns a DrivingSegment object', function() {
-      step = { distance: 1, travel_mode: 'DRIVING' }
-      segment = Segment.from_google(0, step)
-      expect(segment.__proto__['emissions']).
-        toEqual(DrivingSegment.prototype.emissions)
+      var step = { distance: 1, travel_mode: 'DRIVING' }
+      var segment = Segment.create(0, step)
+      expect(segment).toBeInstanceOf(DrivingSegment)
     })
     it('returns a WalkingSegment object', function() {
-      step = { distance: 1, travel_mode: 'WALKING' }
-      segment = Segment.from_google(0, step)
-      expect(segment.__proto__['emissions']).
-        toEqual(WalkingSegment.prototype.emissions)
+      var step = { distance: 1, travel_mode: 'WALKING' }
+      var segment = Segment.create(0, step)
+      expect(segment).toBeInstanceOf(WalkingSegment)
     })
     it('returns a BicyclingSegment object', function() {
-      step = { distance: 1, travel_mode: 'BICYCLING' }
-      segment = Segment.from_google(0, step)
-      expect(segment.__proto__['emissions']).
-        toEqual(BicyclingSegment.prototype.emissions)
+      var step = { distance: 1, travel_mode: 'BICYCLING' }
+      var segment = Segment.create(0, step)
+      expect(segment).toBeInstanceOf(BicyclingSegment)
+    })
+    it('returns a SubwayingSegment object', function() {
+      var step = { distance: 1, travel_mode: 'SUBWAYING' }
+      var segment = Segment.create(0, step)
+      expect(segment).toBeInstanceOf(SubwayingSegment)
+    })
+    it('returns a BussingSegment object', function() {
+      var step = { distance: 1, travel_mode: 'BUSSING' }
+      var segment = Segment.create(0, step)
+      expect(segment).toBeInstanceOf(BussingSegment)
     })
   })
 })

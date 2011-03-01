@@ -5,7 +5,7 @@ stub_google(function() {
 
     beforeEach(function() {
       routeView = new RouteView()
-      directions = new Directions('Lansing, MI', 'Ann Arbor, MI')
+      directions = Directions.create('Lansing, MI', 'Ann Arbor, MI', 'DRIVING')
       directions.directionResult = GoogleResult.driving
     })
 

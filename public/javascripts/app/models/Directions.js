@@ -2,20 +2,26 @@ Directions = function(origin, destination, mode) {
   this.origin = origin
   this.destination = destination
   this.mode = mode
-  this.directionsService = new GoogleService.directionsService()
-  this.totalEmissions = 0.0
+}
+
+Directions.create = function(origin, destination, mode) {
+  if(mode == 'PUBLICTRANSIT') {
+    return new HopStopDirections(origin, destination, mode)
+  } else {
+    return new GoogleDirections(origin, destination, mode)
+  }
 }
 
 Directions.prototype.segments = function() {
   if(!this._segments) {
     var list = []
-    var steps = this.directionResult.routes[0].legs[0].steps
-    for(var i = 0; i < steps.length; i++) {
-      var step = steps[i]
-      list[i] = Segment.from_google(i, step)
+    for(var i = 0; i < this.steps().length; i++) {
+      var step = this.steps()[i]
+      list[i] = Segment.create(i, step)
     }
     this._segments = list
   }
+
   return this._segments
 }
 
@@ -25,27 +31,11 @@ Directions.prototype.eachSegment = function(lambda) {
   }
 }
 
-Directions.prototype.route = function (onSuccess, onFailure) {
-  var request = {
-    origin: this.origin, 
-    destination: this.destination,
-    travelMode: this.mode
-  }
-  var me = this
-  this.directionsService.route(request, function(result, status) {
-    if (status == GoogleService.directionsStatus.OK) {
-      me.directionResult = result
-      onSuccess(result)
-    } else {
-      onFailure(result, status)
-    }
-  })
-}
-
 Directions.prototype.getEmissions = function(onSuccess, onError) {
-  onSuccessWithTotalEmissionUpdate = this.onSegmentEmissions(onSuccess)
+  var onSuccessWithTotalEmissionUpdate = this.onSegmentEmissions(onSuccess)
+  this.totalEmissions = 0.0
   this.eachSegment(function(segment) {
-    segment.emissions(onSuccessWithTotalEmissionUpdate, onError)
+    segment.getEmissionEstimateWithIndex(onSuccessWithTotalEmissionUpdate, onError)
   })
 }
 
@@ -54,9 +44,9 @@ Directions.prototype.getEmissions = function(onSuccess, onError) {
 // Events
 
 Directions.prototype.onSegmentEmissions = function(onSuccess) {
-  return $.proxy(function(index, emissionValue) {
-      this.totalEmissions += emissionValue
-      onSuccess(this, index, emissionValue)
+  return $.proxy(function(index, emissionEstimate) {
+      this.totalEmissions += emissionEstimate.value()
+      onSuccess(this, index, emissionEstimate)
     },
     this)
 }

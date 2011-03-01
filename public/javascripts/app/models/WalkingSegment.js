@@ -4,6 +4,11 @@ function WalkingSegment(index, step) {
   this.instructions = step.instructions
 }
 WalkingSegment.prototype = new Segment()
-WalkingSegment.prototype.emissions = function(onSuccess, onError) {
-  onSuccess(this.index, 0)
+
+WalkingSegment.prototype.getEmissionEstimate = function(onSuccess, onError) {
+  var estimate = new EmissionEstimate()
+  estimate.data = {
+    emission: 0
+  }
+  onSuccess(estimate)
 }

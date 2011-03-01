@@ -17,9 +17,9 @@ IndexController.prototype.init = function() {
 
 IndexController.prototype.directions = function() {
   if(!this._directions) {
-    this._directions = new Directions($('#origin').val(),
-                                      $('#destination').val(),
-                                      $('#mode').val())
+    this._directions = Directions.create($('#origin').val(),
+                                         $('#destination').val(),
+                                         $('#mode').val())
   }
   return this._directions
 }
@@ -65,8 +65,8 @@ IndexController.prototype.directionsRouteFailure = function(result, status) {
   alert('Failed to get directions')
 }
 
-IndexController.prototype.segmentEmissionsSuccess = function(directions, index, emission_value) {
-  this.routeView.updateSegmentEmissions(index, emission_value)
+IndexController.prototype.segmentEmissionsSuccess = function(directions, index, emissionEstimate) {
+  this.routeView.updateSegmentEmissions(index, emissionEstimate)
   this.routeView.updateTotalEmissions(directions)
 }
 
