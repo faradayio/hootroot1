@@ -16,7 +16,13 @@ RouteView.prototype.update = function(directions) {
 }
 
 RouteView.prototype.updateSegmentEmissions = function(index, emissionEstimate) {
-  var output = '<a href="' + emissionEstimate.methodology() + '">' + emissionEstimate.toString() + '</a>'
+  var output 
+  if(emissionEstimate.methodology()) {
+    output = '<a href="' + emissionEstimate.methodology() + '">' + emissionEstimate.toString() + '</a>'
+  } else {
+    output = emissionEstimate.toString()
+  }
+
   $('#segment_' + index + ' .emissions').html(output)
 }
 
