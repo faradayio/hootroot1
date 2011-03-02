@@ -16,7 +16,8 @@ RouteView.prototype.update = function(directions) {
 }
 
 RouteView.prototype.updateSegmentEmissions = function(index, emissionEstimate) {
-  $('#segment_' + index + ' .emissions').html(emissionEstimate.toString())
+  var output = '<a href="' + emissionEstimate.methodology() + '">' + emissionEstimate.toString() + '</a>'
+  $('#segment_' + index + ' .emissions').html(output)
 }
 
 RouteView.prototype.updateTotalEmissions = function(directions) {
