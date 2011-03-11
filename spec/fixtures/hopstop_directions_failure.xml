@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HopStopResponse xmlns="http://www.hopstop.com/ws/">
+ <ResponseStatus>
+  <FaultCode>182</FaultCode>
+  <FaultString>address1 not found.</FaultString>
+ </ResponseStatus>
+</HopStopResponse>

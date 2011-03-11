@@ -1,0 +1,2 @@
+module HopstopsHelper
+end
