@@ -21,7 +21,11 @@ stub_google(function() {
       it('updates the emissions of a segment', function() {
         setFixtures('<div id="route"></div>')
         routeView.update(directions)
-        routeView.updateSegmentEmissions(0, 'BINGO')
+        var emissionEstimate = {
+          methodology: function() { },
+          toString: function() { return 'BINGO' }
+        }
+        routeView.updateSegmentEmissions(0, emissionEstimate)
         expect($('#segment_0').html()).toContain('BINGO')
       })
     })

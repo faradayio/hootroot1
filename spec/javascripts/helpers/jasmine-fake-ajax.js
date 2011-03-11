@@ -102,22 +102,32 @@
     if (options.beforeSend) {
       options.beforeSend()
     }
+    var url
+    url = options.url
+    if(options.data) {
+      var sep = '?'
+      for(var param in options.data) {
+        url = url + sep + param + '=' + options.data[param]
+        sep = '&'
+      }
+    }
+
     var urls = jasmine.FakeAjax.urls
     if (!urls) {
-      jasmine.FakeAjax.log.warn("There are no ajax url mappings defined. Actual ajax url was '" + options.url + "'.")
-    } else if (!urls[options.url]) {
-      jasmine.FakeAjax.log.warn("Applying default success data for url '" + options.url + "' in spec '" + jasmine.getEnv().currentSpec.description + "'.")
+      jasmine.FakeAjax.log.warn("There are no ajax url mappings defined. Actual ajax url was '" + url + "'.")
+    } else if (!urls[url]) {
+      jasmine.FakeAjax.log.warn("Applying default success data for url '" + url + "' in spec '" + jasmine.getEnv().currentSpec.description + "'.")
       if (!options.success) {
-        logAndThrow("Ajax success handler is not defined in system under test for url '" + options.url + "'. See firebug script stack for more info.")
+        logAndThrow("Ajax success handler is not defined in system under test for url '" + url + "'. See firebug script stack for more info.")
       } else {
         options.success("default success data")
       }
-    } else if (urls[options.url].successData) {
-      options.success(urls[options.url].successData)
-    } else if (urls[options.url].errorMessage) {
-      options.error({responseText: urls[options.url].errorMessage})
+    } else if (urls[url].successData) {
+      options.success(urls[url].successData)
+    } else if (urls[url].errorMessage) {
+      options.error({responseText: urls[url].errorMessage})
     } else {
-      logAndThrow("Unknown mapping value for url '" + options.url + "'. Expected either successData or errorMessage. Actual was '" + urls[options.url] + "'")
+      logAndThrow("Unknown mapping value for url '" + url + "'. Expected either successData or errorMessage. Actual was '" + urls[url] + "'")
     }
     if (options.complete) {
       options.complete(context)
