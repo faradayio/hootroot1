@@ -4,6 +4,7 @@ module HopstopDirections
   extend self
 
   def parse(crack_hash)
+    puts "crack hash: #{crack_hash.inspect}"
     response = crack_hash['HopStopResponse']
     simplified_hash = {}
 
@@ -25,9 +26,16 @@ module HopstopDirections
   end
 
   def parse_steps(step_list)
-    step_list.split("\n").map do |line|
+    steps = []
+    step_list.split("\n").each do |line|
       step = HopstopStep.parse(line)
-      step.to_hash
+      previous_step = steps.last
+      if previous_step && step.mergable?(previous_step)
+        previous_step.merge!(step) 
+      else
+        steps << step
+      end
     end
+    steps.map(&:to_hash)
   end
 end

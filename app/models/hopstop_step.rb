@@ -1,7 +1,5 @@
-module HopstopStep
-  FIELDS = %w{directions time mode thumbnail_url thumb_height thumb_width _ _ _ _ _ _ stop_id _ coordinates vehicle_id vehicle_name}.map(&:to_sym)
-
-  extend self
+class HopstopStep
+  FIELDS = %w{directions time travel_mode thumbnail_url thumb_height thumb_width _ _ _ _ _ _ stop_id _ coordinates vehicle_id vehicle_name}.map(&:to_sym)
 
   # fields
   # 
@@ -9,29 +7,29 @@ module HopstopStep
   # directions|time|mode|thumbnail_url|thumb_height|thumb_width|||||||stop_id||start_lat,start_lon,end_lat,end_lon,1,32499,99,1|vehicle_id|vehicle_name
   # 
   #
-  def parse(line)
+  def self.parse(line)
     values = line.split("\t")
     fields = {}
     FIELDS.each_with_index do |field, i|
       fields[field] = values[i]
     end
 
-    { 'instructions' => fields[:directions],
-      'start_position' => parse_start_position(fields[:coordinates]),
-      'end_position' => parse_end_position(fields[:coordinates]),
-      'duration' => fields[:time].to_i,
-      'mode' => parse_mode(fields[:mode]) }
+    new :instructions => fields[:directions],
+      :start_position => parse_start_position(fields[:coordinates]),
+      :end_position => parse_end_position(fields[:coordinates]),
+      :duration => fields[:time].to_i,
+      :travel_mode => parse_travel_mode(fields[:travel_mode])
   end
 
-  def parse_start_position(tuple)
+  def self.parse_start_position(tuple)
     parse_position(tuple, 0)
   end
 
-  def parse_end_position(tuple)
+  def self.parse_end_position(tuple)
     parse_position(tuple, 2)
   end
 
-  def parse_position(tuple, start)
+  def self.parse_position(tuple, start)
     fields = tuple.to_s.split(',')[start..(start + 1)]
     if fields.nil? || fields.length < 2 || fields.all?(&:nil?)
       nil
@@ -40,12 +38,35 @@ module HopstopStep
     end
   end
 
-  def parse_mode(field)
+  def self.parse_travel_mode(field)
     case field
-    when 'B' then 'BUSSING'
+    when 'B','C' then 'BUSSING'
     when 'S' then 'SUBWAYING'
     when 'W' then 'WALKING'
     when 'E' then 'WALKING'
     end
+  end
+
+  attr_accessor :instructions, :start_position, :end_position, :duration, :travel_mode
+
+  def initialize(attrs = {})
+    attrs.each do |name, value|
+      self.send "#{name}=", value
+    end
+  end
+
+  def to_hash
+    [:instructions, :start_position, :end_position, :duration, :travel_mode].inject({}) do |hash, field|
+      hash[field.to_s] = self.send field
+      hash
+    end
+  end
+
+  def merge!(other)
+    self.duration += other.duration
+  end
+
+  def mergable?(mergist)
+    mergist.travel_mode == travel_mode
   end
 end

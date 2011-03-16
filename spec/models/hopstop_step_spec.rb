@@ -14,38 +14,38 @@ describe HopstopStep do
   let(:exit_step) { HopstopStep.parse exit_line }
 
   describe '.parse' do
-    it 'returns a hash' do
-      walking_step.should be_an_instance_of(Hash)
+    it 'returns a HopstopStep' do
+      walking_step.should be_an_instance_of(HopstopStep)
     end
     it 'parses a walking step' do
-      walking_step['instructions'].should == 'Start out going North West on Broadway towards Mother Gaston Blvd'
-      walking_step['start_position']['lat'].should == '-73.90871'
-      walking_step['start_position']['lon'].should == '40.6819'
-      walking_step['end_position']['lat'].should == '-73.91002'
-      walking_step['end_position']['lon'].should == '40.68265'
-      walking_step['duration'].should == 99
-      walking_step['mode'].should == 'WALKING'
+      walking_step.instructions.should == 'Start out going North West on Broadway towards Mother Gaston Blvd'
+      walking_step.start_position['lat'].should == '-73.90871'
+      walking_step.start_position['lon'].should == '40.6819'
+      walking_step.end_position['lat'].should == '-73.91002'
+      walking_step.end_position['lon'].should == '40.68265'
+      walking_step.duration.should == 99
+      walking_step.travel_mode.should == 'WALKING'
     end
     it 'parses a subway step' do
-      subway_step['instructions'].should == 'Take the 6 train from Canal Street station heading Uptown / to Pelham Bay Park'
-      subway_step['start_position'].should be_nil
-      subway_step['end_position'].should be_nil
-      subway_step['duration'].should == 300
-      subway_step['mode'].should == 'SUBWAYING'
+      subway_step.instructions.should == 'Take the 6 train from Canal Street station heading Uptown / to Pelham Bay Park'
+      subway_step.start_position.should be_nil
+      subway_step.end_position.should be_nil
+      subway_step.duration.should == 300
+      subway_step.travel_mode.should == 'SUBWAYING'
     end
     it 'parses a subway en-route step' do
-      subway_enroute_step['instructions'].should == 'Pass Spring Street'
-      subway_enroute_step['start_position'].should be_nil
-      subway_enroute_step['end_position'].should be_nil
-      subway_enroute_step['duration'].should == 94
-      subway_enroute_step['mode'].should == 'SUBWAYING'
+      subway_enroute_step.instructions.should == 'Pass Spring Street'
+      subway_enroute_step.start_position.should be_nil
+      subway_enroute_step.end_position.should be_nil
+      subway_enroute_step.duration.should == 94
+      subway_enroute_step.travel_mode.should == 'SUBWAYING'
     end
     it 'parses an exit step' do
-      exit_step['instructions'].should == 'Exit near intersection of E 32nd St and Park Ave S'
-      exit_step['start_position'].should be_nil
-      exit_step['end_position'].should be_nil
-      exit_step['duration'].should == 120
-      exit_step['mode'].should == 'WALKING'
+      exit_step.instructions.should == 'Exit near intersection of E 32nd St and Park Ave S'
+      exit_step.start_position.should be_nil
+      exit_step.end_position.should be_nil
+      exit_step.duration.should == 120
+      exit_step.travel_mode.should == 'WALKING'
     end
   end
 
@@ -86,21 +86,52 @@ describe HopstopStep do
     end
   end
 
-  describe '.parse_mode' do
+  describe '.parse_travel_mode' do
     it 'returns WALKING for a walking segment' do
-      HopstopStep.parse_mode('W')
+      HopstopStep.parse_travel_mode('W')
     end
     it 'returns SUBWAYING for a subway segment' do
-      HopstopStep.parse_mode('S')
+      HopstopStep.parse_travel_mode('S')
     end
     it 'returns SUBWAYING for a subway en-route segment' do
-      HopstopStep.parse_mode('S')
+      HopstopStep.parse_travel_mode('S')
     end
-    it 'returns BUSSING for a bus segment' do
-      HopstopStep.parse_mode('B')
+    it 'returns BUSSING for a bus segment (B)' do
+      HopstopStep.parse_travel_mode('B')
+    end
+    it 'returns BUSSING for a bus segment (C)' do
+      HopstopStep.parse_travel_mode('C')
     end
     it 'returns WALKING for an entrance/exit segment' do
-      HopstopStep.parse_mode('E')
+      HopstopStep.parse_travel_mode('E')
+    end
+  end
+
+  describe '#merge!' do
+    it 'combines two steps into one, preserving the original instructions, position, travel_mode' do
+      a = HopstopStep.new :instructions => 'Take subway', :start_position => 12.3, 
+        :end_position => 13.4, :duration => 123, :travel_mode => 'SUBWAYING'
+      b = HopstopStep.new :instructions => 'Pass X St', :duration => 62, :travel_mode => 'SUBWAYING'
+
+      a.merge!(b)
+      a.instructions.should == 'Take subway'
+      a.start_position.should == 12.3
+      a.end_position.should == 13.4
+      a.duration.should == 185
+      a.travel_mode.should == 'SUBWAYING'
+    end
+  end
+
+  describe '#mergable?' do
+    it 'returns true if the mergee has the same travel_mode as the merger' do
+      a = HopstopStep.new :travel_mode => 'WALKING'
+      b = HopstopStep.new :travel_mode => 'WALKING'
+      b.mergable?(a).should be_true
+    end
+    it 'returns false if the mergee has a different travel_mode than the merger' do
+      a = HopstopStep.new :travel_mode => 'WALKING'
+      b = HopstopStep.new :travel_mode => 'SUBWAYING'
+      b.mergable?(a).should be_false
     end
   end
 end

@@ -1,5 +1,5 @@
 Mapprint::Application.routes.draw do
-  devise_for :users
+  resources :hopstops, :only => :index
 
   root :to => "home#index"
 end

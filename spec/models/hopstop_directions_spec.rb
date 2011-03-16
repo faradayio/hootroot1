@@ -36,6 +36,16 @@ describe HopstopDirections do
       parsing.should_not be_empty
       parsing.each { |step| step.should be_a_kind_of(Hash) }
     end
+    it 'combines "en-route" steps into a single walking/transit step' do
+      route = crack_hash['HopStopResponse']['RouteInfo']['Route']
+      parsing = HopstopDirections.parse_steps route
+      parsing.size.should == 5
+      parsing[0]['duration'].should == 99 + 120
+      parsing[1]['duration'].should == 300 + 105 + 98 + 116 + 112 + 256 + 301 + 91 + 100
+      parsing[2]['duration'].should == 120 + 120
+      parsing[3]['duration'].should == 300 + 94 + 88 + 94 + 95 + 111 + 83 + 83
+      parsing[4]['duration'].should == 120 + 117 + 32
+    end
   end
 end
 
