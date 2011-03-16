@@ -7,13 +7,14 @@ function IndexController(mapId, routeId) {
 }
 
 IndexController.prototype.init = function() {
-  this.mapView.resize()
-  this.mapView.googleMap()
+  this.mapView.resize();
+  this.mapView.googleMap();
 
-  $('#go').click($.proxy(this.routeButtonClick, this))
-  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this))
-  $('#mode').change($.proxy(this.modeChange, this))
-}
+  $('#go').click($.proxy(this.routeButtonClick, this));
+  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
+  $('#mode').change($.proxy(this.modeChange, this));
+  $('#when').val('Today');
+};
 
 IndexController.prototype.directions = function() {
   if(!this._directions) {
@@ -52,8 +53,13 @@ IndexController.prototype.routeButtonClick = function() {
 }
 
 IndexController.prototype.modeChange = function() {
-  this.getDirections()
-}
+  if($('#mode').val() == 'PUBLICTRANSIT' || $('#mode').val() == 'BUSSING' || $('#mode').val() == 'SUBWAYING') {
+    $('#public_transit').fadeIn();
+  } else {
+    $('#public_transit').fadeOut();
+    this.getDirections();
+  }
+};
 
 IndexController.prototype.directionsRouteSuccess = function(result) {
   this.directionsDisplay.setDirections(result)
