@@ -35,7 +35,15 @@
         <option selected="selected" value="DRIVING">by Car</option>
         <option value="WALKING">by Foot</option>
         <option value="BICYCLING">by Bicyle</option>
+        <option value="PUBLICTRANSIT">by Any Public Transit</option>
+        <option value="SUBWAYING">by Rail</option>
+        <option value="BUSSING">by Bus</option>
       </select>
+      <div id="public_transit" style="display: none;">
+        <label for="when">When:</label>
+        <input id="when" value="Today" />
+        (e.g. "3:45pm" or "tomorrow at 5pm")
+      </div>
     </div>
     <button id="go" type="button">Route</button>
     <div id="route"></div>
