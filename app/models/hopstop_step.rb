@@ -44,6 +44,7 @@ class HopstopStep
     when 'S' then 'SUBWAYING'
     when 'W' then 'WALKING'
     when 'E' then 'ENTRANCEEXIT'
+    when 'L' then 'LIGHTRAILING'
     end
   end
 

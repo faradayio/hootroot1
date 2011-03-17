@@ -111,6 +111,10 @@ describe HopstopStep do
       HopstopStep.parse_travel_mode('E').
         should == 'ENTRANCEEXIT'
     end
+    it 'returns LIGHTRAILING for a light rail segment' do
+      HopstopStep.parse_travel_mode('L').
+        should == 'LIGHTRAILING'
+    end
   end
 
   describe '#merge!' do
