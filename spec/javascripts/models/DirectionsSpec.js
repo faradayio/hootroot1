@@ -8,7 +8,7 @@ stub_google(function() {
 
     describe('.create', function() {
       it('creates HopStopDirections', function() {
-        var dir = Directions.create('A','B','PUBLICTRANSIT')
+        var dir = Directions.create('A','B','PUBLICTRANSIT', 'today')
         expect(dir).toBeInstanceOf(HopStopDirections)
       })
       it('creates GoogleDirections for Driving', function() {

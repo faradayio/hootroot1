@@ -25,5 +25,11 @@ describe('Segment', function() {
       var segment = Segment.create(0, step)
       expect(segment).toBeInstanceOf(BussingSegment)
     })
+    it('throws an exception for an invalid travel mode', function() {
+      var step = { distance: 1, travel_mode: 'HITCHHIKING' }
+      expect(function() {
+        Segment.create(0, step)
+      }).toThrow();
+    });
   })
 })

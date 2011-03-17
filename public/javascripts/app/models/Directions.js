@@ -4,9 +4,9 @@ Directions = function(origin, destination, mode) {
   this.mode = mode
 }
 
-Directions.create = function(origin, destination, mode) {
-  if(mode == 'PUBLICTRANSIT') {
-    return new HopStopDirections(origin, destination, mode)
+Directions.create = function(origin, destination, mode, day) {
+  if(mode == 'PUBLICTRANSIT' || mode == 'SUBWAYING' || mode == 'BUSSING') {
+    return new HopStopDirections(origin, destination, mode, day)
   } else {
     return new GoogleDirections(origin, destination, mode)
   }
