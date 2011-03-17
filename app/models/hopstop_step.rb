@@ -42,7 +42,7 @@ class HopstopStep
     case field
     when 'B','C' then 'BUSSING'
     when 'S' then 'SUBWAYING'
-    when 'W' then 'WALKING'
+    when 'W','T' then 'WALKING'
     when 'E' then 'ENTRANCEEXIT'
     when 'L' then 'LIGHTRAILING'
     end

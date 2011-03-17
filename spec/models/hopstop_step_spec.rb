@@ -107,13 +107,17 @@ describe HopstopStep do
       HopstopStep.parse_travel_mode('C').
         should == 'BUSSING'
     end
-    it 'returns ENTRANCEEXIT for an entrance/exit segment' do
+    it 'returns ENTRANCEEXIT for an entrance/exit segment (E)' do
       HopstopStep.parse_travel_mode('E').
         should == 'ENTRANCEEXIT'
     end
-    it 'returns LIGHTRAILING for a light rail segment' do
+    it 'returns LIGHTRAILING for a light rail segment (L)' do
       HopstopStep.parse_travel_mode('L').
         should == 'LIGHTRAILING'
+    end
+    it 'returns WALKING for a transfer segment (T)' do
+      HopstopStep.parse_travel_mode('T').
+        should == 'WALKING'
     end
   end
 
