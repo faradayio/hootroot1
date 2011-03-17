@@ -34,7 +34,7 @@ class HopstopStep
     if fields.nil? || fields.length < 2 || fields.all?(&:nil?)
       nil
     else
-      { 'lat' => fields.first, 'lon' => fields.last }
+      { 'lat' => fields.last, 'lon' => fields.first }
     end
   end
 
@@ -43,7 +43,7 @@ class HopstopStep
     when 'B','C' then 'BUSSING'
     when 'S' then 'SUBWAYING'
     when 'W' then 'WALKING'
-    when 'E' then 'WALKING'
+    when 'E' then 'ENTRANCEEXIT'
     end
   end
 
@@ -64,6 +64,9 @@ class HopstopStep
 
   def merge!(other)
     self.duration += other.duration
+    instruction_parts = self.instructions.split(/,\s*/)
+    instruction_parts[1] = other.instructions
+    self.instructions = instruction_parts.join(', ')
   end
 
   def mergable?(mergist)

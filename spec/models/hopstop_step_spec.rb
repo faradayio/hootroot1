@@ -19,10 +19,10 @@ describe HopstopStep do
     end
     it 'parses a walking step' do
       walking_step.instructions.should == 'Start out going North West on Broadway towards Mother Gaston Blvd'
-      walking_step.start_position['lat'].should == '-73.90871'
-      walking_step.start_position['lon'].should == '40.6819'
-      walking_step.end_position['lat'].should == '-73.91002'
-      walking_step.end_position['lon'].should == '40.68265'
+      walking_step.start_position['lat'].should == '40.6819'
+      walking_step.start_position['lon'].should == '-73.90871'
+      walking_step.end_position['lat'].should == '40.68265'
+      walking_step.end_position['lon'].should == '-73.91002'
       walking_step.duration.should == 99
       walking_step.travel_mode.should == 'WALKING'
     end
@@ -45,7 +45,7 @@ describe HopstopStep do
       exit_step.start_position.should be_nil
       exit_step.end_position.should be_nil
       exit_step.duration.should == 120
-      exit_step.travel_mode.should == 'WALKING'
+      exit_step.travel_mode.should == 'ENTRANCEEXIT'
     end
   end
 
@@ -56,8 +56,8 @@ describe HopstopStep do
     it 'returns a CSV of start latitude and longitude' do
       pos = HopstopStep.
         parse_start_position('-73.90871,40.6819,-73.91002,40.68265,1,32499,99,1')
-      pos['lat'].should == '-73.90871'
-      pos['lon'].should == '40.6819'
+      pos['lat'].should == '40.6819'
+      pos['lon'].should == '-73.90871'
     end
   end
   describe '.parse_end_position' do
@@ -67,8 +67,8 @@ describe HopstopStep do
     it 'returns a CSV of end latitude and longitude' do
       pos = HopstopStep.
         parse_end_position('-73.90871,40.6819,-73.91002,40.68265,1,32499,99,1')
-      pos['lat'].should == '-73.91002'
-      pos['lon'].should == '40.68265'
+      pos['lat'].should == '40.68265'
+      pos['lon'].should == '-73.91002'
     end
   end
   describe '.parse_position' do
@@ -81,44 +81,56 @@ describe HopstopStep do
     it 'returns a CSV of requested fields' do
       pos = HopstopStep.
         parse_position('-73.90871,40.6819,-73.91002,40.68265,1,32499,99,1', 2)
-      pos['lat'].should == '-73.91002'
-      pos['lon'].should == '40.68265'
+      pos['lat'].should == '40.68265'
+      pos['lon'].should == '-73.91002'
     end
   end
 
   describe '.parse_travel_mode' do
     it 'returns WALKING for a walking segment' do
-      HopstopStep.parse_travel_mode('W')
+      HopstopStep.parse_travel_mode('W').
+        should == 'WALKING'
     end
     it 'returns SUBWAYING for a subway segment' do
-      HopstopStep.parse_travel_mode('S')
+      HopstopStep.parse_travel_mode('S').
+        should == 'SUBWAYING'
     end
     it 'returns SUBWAYING for a subway en-route segment' do
-      HopstopStep.parse_travel_mode('S')
+      HopstopStep.parse_travel_mode('S').
+        should == 'SUBWAYING'
     end
     it 'returns BUSSING for a bus segment (B)' do
-      HopstopStep.parse_travel_mode('B')
+      HopstopStep.parse_travel_mode('B').
+        should == 'BUSSING'
     end
     it 'returns BUSSING for a bus segment (C)' do
-      HopstopStep.parse_travel_mode('C')
+      HopstopStep.parse_travel_mode('C').
+        should == 'BUSSING'
     end
-    it 'returns WALKING for an entrance/exit segment' do
-      HopstopStep.parse_travel_mode('E')
+    it 'returns ENTRANCEEXIT for an entrance/exit segment' do
+      HopstopStep.parse_travel_mode('E').
+        should == 'ENTRANCEEXIT'
     end
   end
 
   describe '#merge!' do
-    it 'combines two steps into one, preserving the original instructions, position, travel_mode' do
+    it 'combines two steps into one, preserving position and travel_mode' do
       a = HopstopStep.new :instructions => 'Take subway', :start_position => 12.3, 
         :end_position => 13.4, :duration => 123, :travel_mode => 'SUBWAYING'
       b = HopstopStep.new :instructions => 'Pass X St', :duration => 62, :travel_mode => 'SUBWAYING'
 
       a.merge!(b)
-      a.instructions.should == 'Take subway'
       a.start_position.should == 12.3
       a.end_position.should == 13.4
       a.duration.should == 185
       a.travel_mode.should == 'SUBWAYING'
+    end
+    it 'combines instructions of two steps with the same mode' do
+      a = HopstopStep.new :instructions => 'Take subway', :start_position => 12.3, 
+        :end_position => 13.4, :duration => 123, :travel_mode => 'SUBWAYING'
+      b = HopstopStep.new :instructions => 'Pass X St', :duration => 62, :travel_mode => 'SUBWAYING'
+      a.merge!(b)
+      a.instructions.should == 'Take subway, Pass X St'
     end
   end
 
