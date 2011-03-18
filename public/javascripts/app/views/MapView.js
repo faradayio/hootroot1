@@ -20,5 +20,5 @@ MapView.prototype.googleMap = function () {
 
 MapView.prototype.resize = function() {
   this.canvas().width('100%')
-  this.canvas().height('600px')
+  this.canvas().height('100%')
 }

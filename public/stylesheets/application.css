@@ -1,0 +1,142 @@
+/*------------*/
+
+@font-face {
+  font-family: 'Brighter Planet';
+  src: url('fonts/KievitWebPro.eot');
+  src: local('☺'), url("fonts/KievitWebPro.woff") format("woff"), url("fonts/KievitOT-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Brighter Planet';
+  src: url('fonts/KievitWebPro-Bold.eot');
+  src: local('☺'), url("fonts/KievitWebPro-Bold.woff") format("woff"), url("fonts/KievitOT-Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Brighter Planet';
+  src: url('fonts/KievitWebPro-BoldIta.eot');
+  src: local('☺'), url("fonts/KievitWebPro-BoldIta.woff") format("woff"), url("fonts/KievitOT-BoldItalic.otf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Brighter Planet';
+  src: url('fonts/KievitWebPro-Ita.eot');
+  src: local('☺'), url("fonts/KievitWebPro-Ita.woff") format("woff"), url("fonts/KievitOT-Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'DejaVu Mono';
+  src: url('fonts/DejaVuSansMono.eot');
+  src: local('☺'), url("fonts/DejaVuSansMono.ttf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'DejaVu Mono';
+  src: url('fonts/DejaVuSansMono-Oblique.eot');
+  src: local('☺'), url("fonts/DejaVuSansMono-Oblique.ttf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* ---------- */
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+body, input, select, button {
+  font-family: "Brighter Planet", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
+}
+
+form#search {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  margin: -20px 0 0;
+}
+
+form#search fieldset {
+  width: 400px;
+  margin: 0 auto;
+  background: #eee;
+  border: 1px solid #ddd;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  padding: 0;
+}
+
+form#search fieldset legend {
+  display: none;
+}
+
+form#search fieldset label {
+  display: none;
+}
+
+form#search input {
+  margin: 5px 0 5px 5px;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 4px;
+  width: 281px;
+}
+
+form#search input#destination {
+  margin-top: 0;
+}
+
+form#search select {
+  display: none;
+}
+
+form#search button {
+  float: right;
+  width: 100px;
+  border: 0;
+  border-top: 1px solid #f4f4f4;
+  border-left: 1px solid #f4f4f4;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  -moz-border-radius: 0 5px 5px 0;
+  -webkit-border-radius: 0 5px 5px 0;
+  border-radius: 0 5px 5px 0;
+  -moz-box-shadow: -1px 0 0 #ddd;
+  height: 75px;
+  position: relative;
+  right: -1px;
+  top: -1px;
+  margin: 0 0 -3px;
+  font-sizE: 15px;
+  background: #ddd;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(221,221,221)),
+      color-stop(1, rgb(200,200,200))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(221,221,221) 0%,
+      rgb(200,200,200) 100%
+  );
+}
