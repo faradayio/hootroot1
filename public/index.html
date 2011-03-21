@@ -21,6 +21,7 @@
     <script type="text/javascript" src="javascripts/app/views/RouteView.js"></script>
     <script type="text/javascript" src="javascripts/app/controllers/IndexController.js"></script>
     <script type="text/javascript" src="javascripts/lib/jquery.placeholdize.min.js"></script>
+    <script type="text/javascript" src="javascripts/lib/jquery-ui-1.8.11.custom.min.js"></script>
     <script type="text/javascript">
       $(document).ready( function() {
         mc = new IndexController('#map_canvas', '#route')
@@ -56,5 +57,30 @@
     </form>
     <div id="route"></div>
     <div id="otherroute"></div>
+    <ul id="modes" style="display: none;">
+      <li id="car">
+        <a href="#">
+          <span class="mode">Driving</span>
+          <span class="footprint"></span>
+        </a>
+      </li>
+      <li id="foot">
+        <a href="#">
+          <span class="mode">On foot</span>
+          <span class="footprint"></span>
+        </a>
+      </li>
+      <li id="bicycle">
+        <a href="#">
+          <span class="mode">Bicycling</span>
+          <span class="footprint"></span>
+        </a>
+      </li>
+      <li id="transit">
+        <a href="#">
+          <span class="mode">Transit</span>
+          <span class="footprint"></span>
+        </a>
+      </li>
   </body>
 </html>

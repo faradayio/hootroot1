@@ -140,3 +140,66 @@ form#search button {
       rgb(200,200,200) 100%
   );
 }
+
+#route, #otherroute {
+  position: absolute;
+  width: 300px;
+  top: 10px;
+  left: 10px;
+}
+
+#modes {
+  position: absolute;
+  bottom: 0;
+  width: 398px;
+  left: 50%;
+  margin: 0 0 0 -199px;
+  list-style: none;
+  padding: 0;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(221,221,221)),
+      color-stop(1, rgb(200,200,200))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(221,221,221) 0%,
+      rgb(200,200,200) 100%
+  );
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+
+#modes li {
+  float: left;
+  width: 98px;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #f4f4f4;
+  border-right: 1px solid #bbb;
+}
+
+#modes li:first-child {
+  border-left: none;
+  -moz-border-radius: 5px 0 0 0;
+  -webkit-border-radius: 5px 0 0 0;
+  border-radius: 5px 0 0 0;
+}
+
+#modes li:last-child {
+  border-right: none;
+  -moz-border-radius: 0 5px 0 0;
+  -webkit-border-radius: 0 5px 0 0;
+  border-radius: 0 5px 0 0;
+}
+
+#modes li a {
+  display: block;
+  padding: 15px 5px;
+  text-decoration: none;
+  text-align: center;
+  color: gray;
+}

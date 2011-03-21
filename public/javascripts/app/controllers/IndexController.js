@@ -50,6 +50,8 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 
 IndexController.prototype.routeButtonClick = function() {
   this.getDirections()
+  $('#search').hide('drop', { direction: 'up' }, 500)
+  $('#modes').show('slide', { direction: 'up' }, 500)
 }
 
 IndexController.prototype.modeChange = function() {
