@@ -53,6 +53,7 @@
 html, body {
   margin: 0;
   height: 100%;
+  font-size: 14px;
 }
 
 body, input, select, button {
@@ -148,6 +149,10 @@ form#search button {
   left: 10px;
 }
 
+#route ul, #otherroute ul {
+  display: none;
+}
+
 #modes {
   position: absolute;
   bottom: 0;
@@ -171,6 +176,7 @@ form#search button {
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
+  border-right: 1px solid rgba(0,0,0,0.3);
 }
 
 #modes li {
@@ -180,6 +186,25 @@ form#search button {
   padding: 0;
   border-left: 1px solid #f4f4f4;
   border-right: 1px solid #bbb;
+  text-shadow: 0 1px 0 #eee;
+  color: gray;
+}
+
+#modes li.selected {
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(200,200,200)),
+      color-stop(1, rgb(180,180,180))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(200,200,200) 0%,
+      rgb(180,180,180) 100%
+  );
+  color: #333;
+  text-shadow: 0 1px 0 #ddd
 }
 
 #modes li:first-child {
@@ -201,5 +226,17 @@ form#search button {
   padding: 15px 5px;
   text-decoration: none;
   text-align: center;
-  color: gray;
+  color: inherit;
+}
+
+#modes li span {
+  display: block;
+}
+
+#modes li span.footprint {
+  font-size: 12px;
+}
+
+#modes li span.footprint:after {
+  content: " kg CO₂";
 }

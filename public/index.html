@@ -3,6 +3,7 @@
   <head>
     <title>MapPrint - Your Journey's Carbon Footprint</title>
     <link type="text/css" rel="stylesheet" href="stylesheets/application.css" />
+    <meta charset="utf-8" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="javascripts/jquery-1.5.min.js"></script>
     <script type="text/javascript" src="javascripts/lib/GoogleService.js"></script>
@@ -58,28 +59,28 @@
     <div id="route"></div>
     <div id="otherroute"></div>
     <ul id="modes" style="display: none;">
-      <li id="car">
+      <li id="car" class="selected">
         <a href="#">
           <span class="mode">Driving</span>
-          <span class="footprint"></span>
+          <span class="footprint">&hellip;</span>
         </a>
       </li>
       <li id="foot">
         <a href="#">
           <span class="mode">On foot</span>
-          <span class="footprint"></span>
+          <span class="footprint">&hellip;</span>
         </a>
       </li>
       <li id="bicycle">
         <a href="#">
           <span class="mode">Bicycling</span>
-          <span class="footprint"></span>
+          <span class="footprint">&hellip;</span>
         </a>
       </li>
       <li id="transit">
         <a href="#">
           <span class="mode">Transit</span>
-          <span class="footprint"></span>
+          <span class="footprint">&hellip;</span>
         </a>
       </li>
   </body>

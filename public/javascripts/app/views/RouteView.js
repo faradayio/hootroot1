@@ -6,7 +6,7 @@ RouteView.prototype.output = function(directions) {
     var detail = segment.instructions + '<br />Emissions: <span class="emissions"><em>Loading...</em></span>'
     html += '<li id="segment_' + segment.index + '" class="driving">' + detail + '</li>'
   })
-  html += '</ul><p>Total emissions: <span id="emissions_total"><em>Loading</em></span></p></div>'
+  html += '</ul></div>'
   return html
 }
 
@@ -27,5 +27,5 @@ RouteView.prototype.updateSegmentEmissions = function(index, emissionEstimate) {
 }
 
 RouteView.prototype.updateTotalEmissions = function(directions) {
-  $('#emissions_total').html(directions.totalEmissions)
+  $('#modes li.selected .footprint').html(Math.round(directions.totalEmissions * 100) / 100)
 }
