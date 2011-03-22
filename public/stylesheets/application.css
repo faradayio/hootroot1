@@ -142,15 +142,12 @@ form#search button {
   );
 }
 
-#route, #otherroute {
+.route {
+  display: none;
   position: absolute;
   width: 300px;
   top: 10px;
   left: 10px;
-}
-
-#route ul, #otherroute ul {
-  display: none;
 }
 
 #modes {

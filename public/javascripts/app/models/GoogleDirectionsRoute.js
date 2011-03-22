@@ -20,10 +20,10 @@ GoogleDirectionsRoute.generateOverviewPath = function(steps) {
   for(i in steps) {
     var step = steps[i];
     if(step.start_position) {
-      var startLatLng = new GoogleService.latLng(
+      var startLatLng = new google.maps.LatLng(
         step.start_position.lat, step.start_position.lon );
       path.push(startLatLng);
-      var endLatLng = new GoogleService.latLng(
+      var endLatLng = new google.maps.LatLng(
           step.end_position.lat, step.end_position.lon);
       path.push(endLatLng);
     }
@@ -43,9 +43,9 @@ GoogleDirectionsRoute.generateBounds = function(steps) {
 
   if(coords.sWLat != null && coords.sWLng != null && 
      coords.nELat != null && coords.nELng != null) {
-    var southWest = new GoogleService.latLng(coords.sWLat, coords.sWLng);
-    var northEast = new GoogleService.latLng(coords.nELat, coords.nELng);
-    return new GoogleService.latLngBounds(southWest, northEast);
+    var southWest = new google.maps.LatLng(coords.sWLat, coords.sWLng);
+    var northEast = new google.maps.LatLng(coords.nELat, coords.nELng);
+    return new google.maps.LatLngBounds(southWest, northEast);
   } else {
     return null;
   }
@@ -73,14 +73,15 @@ GoogleDirectionsRoute.generateSteps = function(steps) {
 
     googleStep.duration = step.duration;
     googleStep.instructions = step.instructions;
+    googleStep.travel_mode = step.travel_mode;
     googleStep.path = [];
 
     if(step.start_position) {
-      googleStep.start_location = new GoogleService.latLng(step.start_position.lat, step.start_position.lon);
+      googleStep.start_location = new google.maps.LatLng(step.start_position.lat, step.start_position.lon);
       googleStep.path.push(googleStep.start_location);
     }
     if(step.end_position) {
-      googleStep.end_location = new GoogleService.latLng(step.end_position.lat, step.end_position.lon);
+      googleStep.end_location = new google.maps.LatLng(step.end_position.lat, step.end_position.lon);
       googleStep.path.push(googleStep.end_location);
     }
 

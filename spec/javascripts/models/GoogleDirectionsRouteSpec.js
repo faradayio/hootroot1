@@ -1,7 +1,7 @@
 describe('GoogleDirectionsRoute', function() {
   it('creates a google.maps.DirectionsRoute-like object from Hopstop directions', function() {
     var route = new GoogleDirectionsRoute(HopStopResult.realSubway);
-    expect(route.bounds).toBeInstanceOf(GoogleService.latLngBounds)
+    expect(route.bounds).toBeInstanceOf(google.maps.LatLngBounds)
     expect(route.copyrights).toContain('HopStop');
     expect(route.overview_path.length).toBe(4);
     expect(route.legs.length).toBe(1);
@@ -44,6 +44,7 @@ describe('GoogleDirectionsRoute', function() {
       expect(steps[0].end_location.lat()).toBeClose(40.68265, 0.00001);
       expect(steps[0].end_location.lng()).toBeClose(-73.91002, 0.00001);
       expect(steps[0].instructions).toMatch('Start out');
+      expect(steps[0].travel_mode).toMatch('WALKING');
       expect(steps[0].path[0].lat()).toBeClose(40.6819, 0.0001);
       expect(steps[0].path[0].lng()).toBeClose(-73.90871, 0.00001);
       expect(steps[0].path[1].lat()).toBeClose(40.68265, 0.00001);

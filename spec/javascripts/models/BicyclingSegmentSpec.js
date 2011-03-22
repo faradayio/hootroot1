@@ -1,18 +1,21 @@
 describe('BicyclingSegment', function() {
-  describe('#getEmissionEstimateWithIndex', function() {
-    it('results in zero emissions', function() {
-      var walk = new BicyclingSegment(0, {
+  describe('#getEmissionEstimateWithSegment', function() {
+    var bicycling, emissions, segment;
+    beforeEach(function() {
+      var bicycling = new BicyclingSegment(0, {
         distance: { value: 28.5 },
-        instructions: 'Go here' })
-      
-      var emissions, index
-      walk.getEmissionEstimateWithIndex(function(f_index, emissionEstimate) {
-        index = f_index
-        emissions = emissionEstimate.value()
-      })
+        instructions: 'Go here' });
+      bicycling.getEmissionEstimateWithSegment(function(f_segment, emissionEstimate) {
+        segment = f_segment;
+        emissions = emissionEstimate.value();
+      });
+    });
 
-      expect(index).toBe(0)
-      expect(emissions).toBe(0)
-    })
-  })
-})
+    it('passes a segment parameter', function() {
+      expect(segment.index).toBe(0);
+    });
+    it('passes an emissions parameter', function() {
+      expect(emissions).toBe(0);
+    });
+  });
+});

@@ -133,7 +133,7 @@ beforeEach(function() {
       },
       steps: [
         { travel_mode: 'WALKING',
-          distance: { value: 54 },
+          duration: { value: 54 },
           instructions: 'Go there',
           start_position: {
             lat: 23.546,
@@ -145,7 +145,7 @@ beforeEach(function() {
           }
         },
         { travel_mode: 'SUBWAYING',
-          distance: { value: 688 },
+          duration: { value: 688 },
           instructions: 'Go there',
           start_position: {
             lat: 23.546,
@@ -157,7 +157,7 @@ beforeEach(function() {
           }
         },
         { travel_mode: 'WALKING',
-          distance: { value: 298 },
+          duration: { value: 298 },
           instructions: 'Go there',
           start_position: {
             lat: 23.546,

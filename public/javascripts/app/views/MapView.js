@@ -1,10 +1,10 @@
 function MapView(mapId) {
   this.mapId = mapId
-  var ll = new GoogleService.latLng(37.774107, -122.419281)
+  var ll = new google.maps.LatLng(37.774107, -122.419281)
   this.options = {
     zoom: 13,
     center: ll,
-    mapTypeId: GoogleService.mapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP
   }
 
   return true
@@ -13,7 +13,7 @@ function MapView(mapId) {
 MapView.prototype.canvas = function() { return $(this.mapId) }
 MapView.prototype.googleMap = function () {
   if(this.google_map == null) {
-    this.google_map = new GoogleService.map(this.canvas().get(0), this.options)
+    this.google_map = new google.maps.Map(this.canvas().get(0), this.options)
   }
   return this.google_map
 }

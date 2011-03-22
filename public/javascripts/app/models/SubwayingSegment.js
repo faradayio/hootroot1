@@ -7,6 +7,7 @@ SubwayingSegment = function(index, step) {
   }
   this.instructions = step.instructions;
   this.rail_class = 'heavy rail';
+  this.mode = 'SUBWAYING';
 }
 SubwayingSegment.prototype = new Segment();
 
@@ -15,4 +16,4 @@ Carbon.emitter(SubwayingSegment, function(emitter) {
   emitter.provide('distance_estimate', { as: 'distance' });
   emitter.provide('duration');
   emitter.provide('rail_class');
-})
+});

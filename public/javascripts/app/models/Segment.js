@@ -18,23 +18,21 @@ Segment.create = function(index, step) {
   }
 };
 
-Segment.prototype.getEmissionEstimateWithIndex = function(onSuccess, onError) {
+Segment.prototype.getEmissionEstimateWithSegment = function(onSuccess, onError) {
   this.getEmissionEstimate(
-    this.onGetEmissionEstimateWithIndexSuccess(onSuccess),
-    this.onGetEmissionEstimateWithIndexError(onError));
+    $.proxy(this.onGetEmissionEstimateWithSegmentSuccess(onSuccess), this),
+    $.proxy(this.onGetEmissionEstimateWithSegmentError(onError), this));
 };
 
 // Events
 
-Segment.prototype.onGetEmissionEstimateWithIndexSuccess = function(onSuccess) {
-  var index = this.index;
+Segment.prototype.onGetEmissionEstimateWithSegmentSuccess = function(onSuccess) {
   return function(emissionEstimate) {
-    onSuccess(index, emissionEstimate);
+    onSuccess(this, emissionEstimate);
   };
 };
-Segment.prototype.onGetEmissionEstimateWithIndexError = function(onError) {
-  var index = this.index;
+Segment.prototype.onGetEmissionEstimateWithSegmentError = function(onError) {
   return function() {
-    onError(index);
+    onError(this);
   };
 }

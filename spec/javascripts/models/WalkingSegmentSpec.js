@@ -7,19 +7,19 @@ describe('WalkingSegment', function() {
     var ws = new WalkingSegment(0, { duration: { value: 120 } });
     expect(ws.duration).toBe(120)
   });
-  describe('#getEmissionEstimateWithIndex', function() {
+  describe('#getEmissionEstimateWithSegment', function() {
     it('results in zero emissions', function() {
       var walk = new WalkingSegment(0, {
         distance: { value: 28.5 },
         instructions: 'Go here' });
       
-      var emissions, index;
-      walk.getEmissionEstimateWithIndex(function(f_index, emissionEstimate) {
-        index = f_index;
+      var emissions, step;
+      walk.getEmissionEstimateWithSegment(function(f_step, emissionEstimate) {
+        step = f_step;
         emissions = emissionEstimate.value();
-      }):
+      });
 
-      expect(index).toBe(0):
+      expect(step.index).toBe(0);
       expect(emissions).toBe(0);
     });
   });

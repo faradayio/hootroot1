@@ -7,6 +7,7 @@ BussingSegment = function(index, step) {
   }
   this.instructions = step.instructions;
   this.bus_class = 'city transit';
+  this.mode = 'BUSSING';
 }
 BussingSegment.prototype = new Segment();
 
