@@ -16,7 +16,7 @@ IndexController.prototype.init = function() {
   $('#go').click($.proxy(this.routeButtonClick, this));
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
   $('#modes li').click(this.onModeClick(this));
-  $('#modes li').hover(this.onModeHover);
+  $('#modes li').hover(this.onModeHoverIn(this),this.onModeHoverOut(this));
   $('#when').val('Today');
 };
 
@@ -65,6 +65,21 @@ IndexController.prototype.onModeClick = function(controller) {
   };
 };
 
+IndexController.prototype.onModeHoverIn = function(controller) {
+  return function() {
+    var direction = controller.directions[this.id];
+    controller.directionsDisplay.setDirections(direction.directionsResult);
+  };
+};
+
+IndexController.prototype.onModeHoverOut = function(controller) {
+  return function() {
+    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirection = controller.directions[originalDirectionId];
+    controller.directionsDisplay.setDirections(originalDirection.directionsResult);
+  };
+};
+
 IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
   this.routeViews[directions.mode.toLowerCase()].update(directions);
   this.getEmissions(directions);
@@ -81,9 +96,9 @@ IndexController.prototype.onSegmentEmissionsSuccess = function(segment, emission
   var routeView = this.routeViews[segment.mode.toLowerCase()];
   routeView.updateSegmentEmissions(segment, emissionEstimate);
   routeView.updateTotalEmissions();
-}
+};
 
 IndexController.prototype.onSegmentEmissionsFailure = function(segment) {
   var routeView = this.routeViews[segment.mode.toLowerCase()];
-  routeView.updateSegmentEmissions(segment, 'Unable to fetch emissions')
-}
+  routeView.updateSegmentEmissions(segment, 'Unable to fetch emissions');
+};

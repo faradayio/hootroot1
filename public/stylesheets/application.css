@@ -187,6 +187,17 @@ form#search button {
   color: gray;
 }
 
+#modes li:hover {
+  color: #333;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(220,220,220)),
+      color-stop(1, rgb(190,190,190))
+  );
+}
+
 #modes li.selected {
   background-image: -webkit-gradient(
       linear,
