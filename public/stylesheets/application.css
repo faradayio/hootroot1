@@ -266,6 +266,10 @@ form#search button {
   outline: none;
 }
 
+#modes li.loading a {
+  background: url(images/loading.gif) no-repeat 78px 5px;
+}
+
 #modes li span {
   display: block;
 }
