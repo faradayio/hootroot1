@@ -235,6 +235,7 @@ form#search button {
   text-decoration: none;
   text-align: center;
   color: inherit;
+  outline: none;
 }
 
 #modes li span {
@@ -247,4 +248,13 @@ form#search button {
 
 #modes li span.footprint:after {
   content: " kg CO₂";
+}
+
+#hopstop {
+  position: absolute;
+  bottom: 0;
+  width: 330px;
+  height: 60px;
+  left: 50%;
+  background: url(images/hopstop.png) no-repeat 205px 50%;
 }

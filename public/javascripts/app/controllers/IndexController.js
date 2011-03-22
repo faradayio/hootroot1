@@ -62,6 +62,11 @@ IndexController.prototype.onModeClick = function(controller) {
     $(this).addClass('selected');
     var direction = controller.directions[this.id];
     controller.directionsDisplay.setDirections(direction.directionsResult);
+    if (this.id == 'publictransit' && $('#hopstop').is(':hidden')) {
+      $('#hopstop').show('slide', { direction: 'down' }, 500);
+    } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
+      $('#hopstop').hide('slide', { direction: 'down' }, 500);
+    }
   };
 };
 
