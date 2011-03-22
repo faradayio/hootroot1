@@ -3,6 +3,7 @@ Directions = function(origin, destination, mode) {
   this.destination = destination;
   this.mode = mode;
   this.directionsResult = null;
+  this.segmentEmissionsSuccessCount = 0;
 }
 
 Directions.create = function(origin, destination, mode, day) {
@@ -40,9 +41,10 @@ Directions.prototype.eachSegment = function(lambda) {
   }
 };
 
-Directions.prototype.getEmissions = function(onSuccess, onError) {
+Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
   var onSuccessWithTotalEmissionUpdate = this.onSegmentEmissions(onSuccess);
   this.totalEmissions = 0.0;
+  this.segmentEmissionsSuccessCount = 0;
   this.eachSegment(function(segment) {
     segment.getEmissionEstimateWithSegment(onSuccessWithTotalEmissionUpdate, onError);
   });
@@ -52,10 +54,15 @@ Directions.prototype.getEmissions = function(onSuccess, onError) {
 
 // Events
 
-Directions.prototype.onSegmentEmissions = function(onSuccess) {
+Directions.prototype.onSegmentEmissions = function(onSuccess, onFinish) {
   return $.proxy(function(index, emissionEstimate) {
       this.totalEmissions += emissionEstimate.value();
       onSuccess(this, index, emissionEstimate);
+
+      this.segmentEmissionsSuccessCount++;
+      if(onFinish && this.segmentEmissionsSuccessCount == this.segments().length) {
+        onFinish(this);
+      }
     },
     this);
 };

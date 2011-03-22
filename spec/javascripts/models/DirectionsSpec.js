@@ -45,16 +45,16 @@ describe('Directions', function() {
 
   describe('#getEmissions', function() {
     it('gets emissions for all segments', function() {
-      directions.directionsResult = GoogleResult.driving
+      directions.directionsResult = GoogleResult.driving;
       directions.eachSegment(function(segment) {
-        segment.getEmissionEstimateWithSegment = jasmine.createSpy()
-      })
+        segment.getEmissionEstimateWithSegment = jasmine.createSpy();
+      });
       directions.getEmissions(function() {}, function() {})
       directions.eachSegment(function(segment) {
-        expect(segment.getEmissionEstimateWithSegment).toHaveBeenCalled()
-      })
-    })
-  })
+        expect(segment.getEmissionEstimateWithSegment).toHaveBeenCalled();
+      });
+    });
+  });
 
   describe('#onSegmentEmissions', function() {
     it('updates the total emissions', function() {
@@ -73,6 +73,19 @@ describe('Directions', function() {
       });
       directions.getEmissions(function() {}, function() {});
       expect(directions.totalEmissions).toBeClose(98.6, 0.01);
+    });
+    it('fires the onFinish event when all segments have calculated emissions', function() {
+      var onFinish = jasmine.createSpy('onFinish');
+      directions.directionsResult = GoogleResult.driving
+
+      var onner = directions.onSegmentEmissions(function() {}, onFinish);
+      onner(0, { value: function() { return 1; } });
+      onner(1, { value: function() { return 1; } });
+      onner(2, { value: function() { return 1; } });
+      onner(3, { value: function() { return 1; } });
+      directions.getEmissions(function() {}, function() {}, onFinish);
+
+      expect(onFinish).toHaveBeenCalledWith(directions);
     });
   });
 });
