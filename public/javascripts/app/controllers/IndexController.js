@@ -26,7 +26,7 @@ IndexController.prototype.getEmissions = function(directions) {
   directions.getEmissions(
       $.proxy(this.onSegmentEmissionsSuccess, this),
       $.proxy(this.onSegmentEmissionsFailure, this),
-      $.proxy(this.onSegmentEmissionsFinish, this));
+      this.onSegmentEmissionsFinish);
 };
 
 IndexController.prototype.getDirections = function () {
