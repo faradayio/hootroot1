@@ -68,6 +68,7 @@ IndexController.prototype.onModeClick = function(controller) {
 IndexController.prototype.onModeHoverIn = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
+    controller.directionsDisplay.setOptions({ preserveViewport: true });
     controller.directionsDisplay.setDirections(direction.directionsResult);
   };
 };
@@ -76,6 +77,7 @@ IndexController.prototype.onModeHoverOut = function(controller) {
   return function() {
     var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
+    controller.directionsDisplay.setOptions({ preserveViewport: true });
     controller.directionsDisplay.setDirections(originalDirection.directionsResult);
   };
 };
@@ -84,6 +86,7 @@ IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
   this.routeViews[directions.mode.toLowerCase()].update(directions);
   this.getEmissions(directions);
   if(directions.mode == 'DRIVING') {
+    this.directionsDisplay.setOptions({ preserveViewport: false });
     this.directionsDisplay.setDirections(directions.directionsResult);
   }
 }
