@@ -18,6 +18,7 @@ IndexController.prototype.init = function() {
   $('#modes li').click(this.onModeClick(this));
   $('#modes li').hover(this.onModeHoverIn(this),this.onModeHoverOut(this));
   $('#when').val('Today');
+  $('#example').click(this.onExampleClick);
 };
 
 
@@ -53,6 +54,8 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
   $('#search').hide('drop', { direction: 'up' }, 500);
+  $('h1').hide('drop', { direction: 'up' }, 500);
+  $('#meta').hide();
   $('#modes').show('slide', { direction: 'up' }, 500);
 };
 
@@ -110,3 +113,8 @@ IndexController.prototype.onSegmentEmissionsFailure = function(segment) {
   var routeView = this.routeViews[segment.mode.toLowerCase()];
   routeView.updateSegmentEmissions(segment, 'Unable to fetch emissions');
 };
+
+IndexController.prototype.onExampleClick = function() {
+  $('#origin').val('1916 Broadway, New York, NY');
+  $('#destination').val('162 Madison Ave, New York, NY');
+}

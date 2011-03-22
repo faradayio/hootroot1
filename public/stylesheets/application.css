@@ -60,6 +60,18 @@ body, input, select, button {
   font-family: "Brighter Planet", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", sans-serif;
 }
 
+h1 {
+  position: absolute;
+  width: 386px;
+  height: 96px;
+  background: url(images/hootroot.png) no-repeat -6px 0;
+  top: 50%;
+  left: 50%;
+  margin: -98px 0 0 -193px;
+  z-index: 10;
+  text-indent: -9999px;
+}
+
 form#search {
   position: absolute;
   width: 100%;
@@ -140,6 +152,22 @@ form#search button {
       rgb(221,221,221) 0%,
       rgb(200,200,200) 100%
   );
+}
+
+#meta {
+  position: absolute;
+  width: 400px;
+  height: 2em;
+  left: 50%;
+  margin-left: -200px;
+  top: 50%;
+  margin-top: 60px;
+  text-align: right;
+  text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
+}
+
+#meta a {
+  color: blue;
 }
 
 .route {

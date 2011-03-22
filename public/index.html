@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MapPrint - Your Journey's Carbon Footprint</title>
+    <title>Hootroot · give a hoot, green your route</title>
     <link type="text/css" rel="stylesheet" href="stylesheets/application.css" />
     <meta charset="utf-8" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -34,17 +34,16 @@
     </script>
   </head>
   <body>
+    <h1>Hootroot</h1>
     <div id="map_canvas"></div>
     <form id="search">
       <fieldset>
         <legend>Get directions</legend>
         <button id="go" type="button">Route</button>
         <label for="origin">Origin:</label>
-        <!-- <input type="text" id="origin" placeholder="Where from?" /> -->
-        <input type="text" id="origin" value="1916 broadway, new york, ny" />
+        <input type="text" id="origin" placeholder="Where from?" valu="1916 broadway, new york, ny" />
         <label for="destination">Destination:</label>
-        <!-- <input type="text" id="destination" placeholder="Where to?" /> -->
-        <input type="text" id="destination" value="162 madison ave, new york, ny" />
+        <input type="text" id="destination" placeholder="Where to?" valu="162 madison ave, new york, ny" />
         <div id="public_transit" style="display: none;">
           <label for="when">When:</label>
           <input id="when" value="Today" />
@@ -52,6 +51,7 @@
         </div>
       </fieldset>
     </form>
+    <p id="meta"><a href="#" id="example">Example directions</a> &middot; <a href="#FIXME">About Hootroot</a></p>
     <div id="hopstop" style="display: none;"></div>
     <ul id="modes" style="display: none;">
       <li id="driving" class="selected">
