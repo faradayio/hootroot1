@@ -3,6 +3,19 @@ describe('Directions', function() {
 
   beforeEach(function() {
     directions = Directions.create('Lansing, MI', 'Ann Arbor, MI', 'DRIVING')
+    directions.directionsResult = GoogleResult.driving
+    fakeAjax({
+      urls: {
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.688': {
+          successData: {emission: 6.8}},
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.128': {
+          successData: {emission: 1.2}},
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.045': {
+          successData: {emission: 0.4}},
+        'http://carbon.brighterplanet.com/automobile_trips.json?distance=9.025': {
+          successData: {emission: 90.2}}
+      }
+    });
   })
 
   describe('.create', function() {
@@ -26,7 +39,6 @@ describe('Directions', function() {
 
   describe('#segments', function() {
     it('returns an array of segments', function() {
-      directions.directionsResult = GoogleResult.driving
       var segments = directions.segments()
 
       expect(segments[0].distance).toEqual(0.688)
@@ -45,7 +57,6 @@ describe('Directions', function() {
 
   describe('#getEmissions', function() {
     it('gets emissions for all segments', function() {
-      directions.directionsResult = GoogleResult.driving;
       directions.eachSegment(function(segment) {
         segment.getEmissionEstimateWithSegment = jasmine.createSpy();
       });
@@ -54,36 +65,28 @@ describe('Directions', function() {
         expect(segment.getEmissionEstimateWithSegment).toHaveBeenCalled();
       });
     });
+    it('fires the onFinish event when all segments have calculated emissions', function() {
+      var onFinish = jasmine.createSpy('onFinish');
+
+      directions.getEmissions(function() {}, function() {}, onFinish);
+
+      expect(onFinish).toHaveBeenCalledWith(directions);
+    });
   });
 
-  describe('#onSegmentEmissions', function() {
+  describe('#onSegmentEmissionsSuccess', function() {
     it('updates the total emissions', function() {
-      directions.directionsResult = GoogleResult.driving
-      fakeAjax({
-        urls: {
-          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.688': {
-            successData: {emission: 6.8}},
-          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.128': {
-            successData: {emission: 1.2}},
-          'http://carbon.brighterplanet.com/automobile_trips.json?distance=0.045': {
-            successData: {emission: 0.4}},
-          'http://carbon.brighterplanet.com/automobile_trips.json?distance=9.025': {
-            successData: {emission: 90.2}}
-        }
-      });
       directions.getEmissions(function() {}, function() {});
       expect(directions.totalEmissions).toBeClose(98.6, 0.01);
     });
     it('fires the onFinish event when all segments have calculated emissions', function() {
       var onFinish = jasmine.createSpy('onFinish');
-      directions.directionsResult = GoogleResult.driving
 
-      var onner = directions.onSegmentEmissions(function() {}, onFinish);
+      var onner = directions.onSegmentEmissionsSuccess(function() {}, onFinish);
       onner(0, { value: function() { return 1; } });
       onner(1, { value: function() { return 1; } });
       onner(2, { value: function() { return 1; } });
       onner(3, { value: function() { return 1; } });
-      directions.getEmissions(function() {}, function() {}, onFinish);
 
       expect(onFinish).toHaveBeenCalledWith(directions);
     });

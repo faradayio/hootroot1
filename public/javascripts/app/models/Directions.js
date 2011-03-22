@@ -42,7 +42,7 @@ Directions.prototype.eachSegment = function(lambda) {
 };
 
 Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
-  var onSuccessWithTotalEmissionUpdate = this.onSegmentEmissions(onSuccess);
+  var onSuccessWithTotalEmissionUpdate = this.onSegmentEmissionsSuccess(onSuccess, onFinish);
   this.totalEmissions = 0.0;
   this.segmentEmissionsSuccessCount = 0;
   this.eachSegment(function(segment) {
@@ -54,7 +54,7 @@ Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
 
 // Events
 
-Directions.prototype.onSegmentEmissions = function(onSuccess, onFinish) {
+Directions.prototype.onSegmentEmissionsSuccess = function(onSuccess, onFinish) {
   return $.proxy(function(index, emissionEstimate) {
       this.totalEmissions += emissionEstimate.value();
       onSuccess(this, index, emissionEstimate);

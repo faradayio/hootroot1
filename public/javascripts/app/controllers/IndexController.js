@@ -25,7 +25,8 @@ IndexController.prototype.init = function() {
 IndexController.prototype.getEmissions = function(directions) {
   directions.getEmissions(
       $.proxy(this.onSegmentEmissionsSuccess, this),
-      $.proxy(this.onSegmentEmissionsFailure, this));
+      $.proxy(this.onSegmentEmissionsFailure, this),
+      $.proxy(this.onSegmentEmissionsFinish, this));
 };
 
 IndexController.prototype.getDirections = function () {
@@ -47,7 +48,7 @@ IndexController.prototype.getDirections = function () {
 
 IndexController.prototype.originDestinationInputKeyup = function(event) {
   if(event.keyCode == 13) {
-    this.getDirections();
+    this.routeButtonClick();
   }
 };
 
@@ -112,6 +113,10 @@ IndexController.prototype.onSegmentEmissionsSuccess = function(segment, emission
 IndexController.prototype.onSegmentEmissionsFailure = function(segment) {
   var routeView = this.routeViews[segment.mode.toLowerCase()];
   routeView.updateSegmentEmissions(segment, 'Unable to fetch emissions');
+};
+
+IndexController.prototype.onSegmentEmissionsFinish = function(segment) {  // tell 'em, SoulJa Boy
+  $('li#' + segment.mode.toLowerCase()).removeClass('loading');
 };
 
 IndexController.prototype.onExampleClick = function() {
