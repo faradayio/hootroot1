@@ -21,6 +21,10 @@ IndexController.prototype.init = function() {
   $('#example').click(this.onExampleClick);
   $('#aboutlink').click(this.onAboutClick);
   $('#about').click(this.onAboutClick);
+  $('#directions').click(this.onDirectionsClick);
+  $('#link').click(this.onLinkClick);
+  $('#tweet').click(this.onTweetClick);
+  $('#restart').click(this.onRestartClick);
 };
 
 
@@ -58,6 +62,7 @@ IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
   $('#search').hide('drop', { direction: 'up' }, 500);
   $('h1').hide('drop', { direction: 'up' }, 500);
+  $('#nav').show('slide', { direction: 'up' }, 500);
   $('#meta').hide();
   $('#modes').show('slide', { direction: 'down' }, 500);
   if ($('#about').is(':visible')) {
@@ -135,4 +140,26 @@ IndexController.prototype.onAboutClick = function() {
   $('#about').toggle('slide', { direction: 'up' }, 500);
   return false;
 }
+
+IndexController.prototype.onDirectionsClick = function() {
+  return false;
+}
+
+IndexController.prototype.onLinkClick = function() {
+  return false;
+}
+
+IndexController.prototype.onTweetClick = function() {
+  return false;
+}
+
+IndexController.prototype.onRestartClick = function() {
+  $('#search').show('drop', { direction: 'up' }, 500);
+  $('h1').show('drop', { direction: 'up' }, 500);
+  $('#nav').hide('slide', { direction: 'up' }, 500);
+  $('#meta').show();
+  $('#modes').hide('slide', { direction: 'down' }, 500);
+  return false;
+}
+
 

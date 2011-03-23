@@ -207,6 +207,101 @@ form#search button {
   color: blue;
 }
 
+#nav {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  left: 0;
+  padding: 0 0 5px;
+  font-size: 13px;
+}
+
+#nav h2 {
+  position: absolute;
+  top: 1px;
+  left: 50%;
+  width: 66px;
+  height: 23px;
+  background: url(images/hootroot-small.png);
+  text-indent: -9999px;
+  margin: 0 0 0 -155px;
+}
+
+#nav ul {
+  list-style: none;
+  width: 280px;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(221,221,221)),
+      color-stop(1, rgb(200,200,200))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(221,221,221) 0%,
+      rgb(200,200,200) 100%
+  );
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+  border-left: 1px solid white;
+  -moz-box-shadow: 1px 1px 0 rgba(0,0,0,0.3), 0 0 5px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 1px 1px 0 rgba(0,0,0,0.3), 0 0 5px rgba(0,0,0,0.3);
+  box-shadow: 1px 1px 0 rgba(0,0,0,0.3), 0 0 5px rgba(0,0,0,0.3);
+  overflow: auto;
+  margin: 0 auto;
+}
+
+#nav ul li {
+  float: right;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #f4f4f4;
+  border-right: 1px solid #bbb;
+  text-shadow: 0 1px 0 #eee;
+  color: #333;
+}
+
+#nav ul li:hover {
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(200,200,200)),
+      color-stop(1, rgb(180,180,180))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(200,200,200) 0%,
+      rgb(180,180,180) 100%
+  );
+  text-shadow: 0 1px 0 #ddd
+}
+
+#nav ul li:last-child {
+  -moz-border-radius: 5px 0 0 0;
+  -webkit-border-radius: 5px 0 0 0;
+  border-radius: 5px 0 0 0;
+}
+
+#nav ul li:first-child {
+  border-right: none;
+  -moz-border-radius: 0 5px 0 0;
+  -webkit-border-radius: 0 5px 0 0;
+  border-radius: 0 5px 0 0;
+}
+
+#nav ul li a {
+  display: block;
+  padding: 5px 5px;
+  text-decoration: none;
+  text-align: center;
+  color: inherit;
+  outline: none;
+}
+
 .route {
   display: none;
   position: absolute;
