@@ -48,6 +48,12 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: 'Iconic';
+  src: url('fonts/iconic_stroke.eot');
+  src: local('☺'), url("fonts/iconic_stroke.svg#iconic") format('svg'), url("fonts/iconic_stroke.otf") format('opentype');
+}
+
 /* ---------- */
 
 html, body {
@@ -213,24 +219,26 @@ form#search button {
   top: 0;
   width: 100%;
   left: 0;
-  padding: 0 0 5px;
+  padding: 0 0 50px;
   font-size: 13px;
+  z-index: 3;
 }
 
 #nav h2 {
   position: absolute;
-  top: 1px;
+  top: 0;
   left: 50%;
-  width: 66px;
-  height: 23px;
-  background: url(images/hootroot-small.png);
+  width: 72px;
+  height: 31px;
+  background: url(images/hootroot-small.png) no-repeat 0 4px;
   text-indent: -9999px;
-  margin: 0 0 0 -155px;
+  margin: 0 0 0 -103px;
+  border-right: 1px solid #bbb;
 }
 
 #nav ul {
   list-style: none;
-  width: 280px;
+  width: 176px;
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -261,7 +269,8 @@ form#search button {
   border-left: 1px solid #f4f4f4;
   border-right: 1px solid #bbb;
   text-shadow: 0 1px 0 #eee;
-  color: #333;
+  color: #666;
+  width: 33px;
 }
 
 #nav ul li:hover {
@@ -277,20 +286,15 @@ form#search button {
       rgb(200,200,200) 0%,
       rgb(180,180,180) 100%
   );
-  text-shadow: 0 1px 0 #ddd
-}
-
-#nav ul li:last-child {
-  -moz-border-radius: 5px 0 0 0;
-  -webkit-border-radius: 5px 0 0 0;
-  border-radius: 5px 0 0 0;
+  text-shadow: 0 1px 0 #ddd;
+  color: #333;
 }
 
 #nav ul li:first-child {
   border-right: none;
-  -moz-border-radius: 0 5px 0 0;
-  -webkit-border-radius: 0 5px 0 0;
-  border-radius: 0 5px 0 0;
+  -moz-border-radius: 0 0 5px 0;
+  -webkit-border-radius: 0 0 5px 0;
+  border-radius: 0 0 5px 0;
 }
 
 #nav ul li a {
@@ -300,6 +304,47 @@ form#search button {
   text-align: center;
   color: inherit;
   outline: none;
+  outline: none;
+  text-align: center;
+}
+
+#nav ul li a:before {
+  font-family: "Iconic";
+  font-size: 24px;
+  line-height: 18px;
+  position: relative;
+  left: 1px;
+}
+
+#nav ul li#directions a:before { content: "."; }
+#nav ul li#link a:before { content: "/"; }
+#nav ul li#tweet a:before { content: "q"; }
+#nav ul li#restart a:before { content: "["; }
+
+#nav ul li a:hover:after {
+  content: attr(title);
+  position: absolute;
+  top: 32px;
+  width: 75px;
+  margin: 0 0 0 -48px;
+  background: #FBB03B;
+  padding: 5px 0;
+  text-align: center;
+  font-size: 13px;
+  color: #333;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+  -moz-box-shadow: 0 1px 1px 0 rgba(0,0,0,0.3);
+}
+
+#nav ul li#restart a:hover:after {
+  margin: 0 0 0 -69px;
+}
+
+#nav ul li a span {
+  display: none;
 }
 
 .route {
