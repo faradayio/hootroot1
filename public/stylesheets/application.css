@@ -74,6 +74,7 @@ h1 {
 
 form#search {
   position: absolute;
+  z-index: 5;
   width: 100%;
   top: 50%;
   margin: -20px 0 0;
@@ -154,16 +155,52 @@ form#search button {
   );
 }
 
+#about {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 50%;
+  z-index: 3;
+}
+
+#about .about {
+  width: 398px;
+  background: #e0e0e0;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-radius: 0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #ddd;
+  -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  box-shadow: 0 0 2px rgba(0,0,0,0.15);
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+#about .about p {
+  margin: 70px 10px 10px;
+  font-size: 16px;
+}
+
+#about .about p a {
+  color: blue;
+}
+
+#about .brighter_planet_cm1_badge {
+  margin: 10px auto 0;
+}
+
 #meta {
   position: absolute;
   width: 400px;
   height: 2em;
   left: 50%;
-  margin-left: -200px;
+  margin-left: -205px;
   top: 50%;
   margin-top: 60px;
   text-align: right;
   text-shadow: 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white, 0 0 1px white;
+  z-index: 1;
 }
 
 #meta a {
@@ -313,6 +350,7 @@ form#search button {
   margin: 0;
   color: white;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+  opacity: 0.95;
 }
 
 #brighter_planet a {

@@ -19,6 +19,8 @@ IndexController.prototype.init = function() {
   $('#modes li').hover(this.onModeHoverIn(this),this.onModeHoverOut(this));
   $('#when').val('Today');
   $('#example').click(this.onExampleClick);
+  $('#aboutlink').click(this.onAboutClick);
+  $('#about').click(this.onAboutClick);
 };
 
 
@@ -58,6 +60,9 @@ IndexController.prototype.routeButtonClick = function() {
   $('h1').hide('drop', { direction: 'up' }, 500);
   $('#meta').hide();
   $('#modes').show('slide', { direction: 'down' }, 500);
+  if ($('#about').is(':visible')) {
+    $('#about').hide('drop', { direction: 'up' }, 500);
+  }
 };
 
 IndexController.prototype.onModeClick = function(controller) {
@@ -71,6 +76,7 @@ IndexController.prototype.onModeClick = function(controller) {
     } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
       $('#hopstop').hide('slide', { direction: 'down' }, 500);
     }
+    return false;
   };
 };
 
@@ -122,4 +128,11 @@ IndexController.prototype.onSegmentEmissionsFinish = function(segment) {  // tel
 IndexController.prototype.onExampleClick = function() {
   $('#origin').val('1916 Broadway, New York, NY');
   $('#destination').val('162 Madison Ave, New York, NY');
+  return false;
 }
+
+IndexController.prototype.onAboutClick = function() {
+  $('#about').toggle('slide', { direction: 'up' }, 500);
+  return false;
+}
+
