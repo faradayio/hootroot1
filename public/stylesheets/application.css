@@ -300,3 +300,16 @@ form#search button {
   left: 50%;
   background: url(images/hopstop.png) no-repeat 210px 50%;
 }
+
+#brighter_planet {
+  width: 250px;
+  height: 50px;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  margin: 0 0 0 -125px;
+}
+
+#brighter_planet .brighter_planet_cm1_badge {
+  margin: 0 auto;
+}

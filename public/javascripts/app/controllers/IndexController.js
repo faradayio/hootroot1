@@ -57,7 +57,8 @@ IndexController.prototype.routeButtonClick = function() {
   $('#search').hide('drop', { direction: 'up' }, 500);
   $('h1').hide('drop', { direction: 'up' }, 500);
   $('#meta').hide();
-  $('#modes').show('slide', { direction: 'up' }, 500);
+  $('#modes').show('slide', { direction: 'down' }, 500);
+  $('#brighter_planet').show('slide', { direction: 'up' }, 500);
 };
 
 IndexController.prototype.onModeClick = function(controller) {
