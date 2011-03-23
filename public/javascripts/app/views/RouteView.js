@@ -7,7 +7,7 @@ RouteView.prototype.output = function() {
   var html = '<ul>';
   var id = this.id;
   this.directions.eachSegment(function(segment) {
-    var detail = segment.instructions + '<br />Emissions: <span class="emissions"><em>Loading...</em></span>';
+    var detail = '<p class="instructions">' + segment.instructions + '</p><p class="emissions">Emissions: <span class="emissions"><em>Loading...</em></span></p>';
     html += '<li id="' + id + '_segment_' + segment.index + '" class="' + id + '">' + detail + '</li>';
   });
   html += '</ul>';
@@ -26,7 +26,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
     output = emissionEstimate.toString();
   }
 
-  $('#' + this.id + '_segment_' + segment.index + ' .emissions').html(output);
+  $('#' + this.id + '_segment_' + segment.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {

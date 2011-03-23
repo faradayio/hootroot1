@@ -561,5 +561,16 @@ form#linkform button {
   vertical-align: top;
 }
 
-#routing ul li:first-child {
+#routing ul li:last-child {
+  border: none;
+}
+
+#routing ul li p {
+  margin: 0;
+}
+
+#routing ul li p.emissions {
+  position: absolute;
+  bottom: 20px;
+  margin: 0 0 20px;
 }
