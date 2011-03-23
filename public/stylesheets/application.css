@@ -558,6 +558,7 @@ form#linkform button {
   padding: 0 20px;
   white-space: normal;
   margin: 20px 0 0;
+  vertical-align: top;
 }
 
 #routing ul li:first-child {
