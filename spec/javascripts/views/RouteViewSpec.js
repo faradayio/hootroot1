@@ -9,15 +9,15 @@ describe('RouteView', function() {
 
   describe('#update', function() {
     it('updates the #route div with directions', function() {
-      setFixtures('<ul id="modes"><li id="driving"><div class="route"></div></li></ul>');
+      setFixtures('<div id="routing"><div class="driving"></div></div>');
       routeView.update();
-      expect($('#driving .route').html()).toContain('Go there');
+      expect($('#routing .driving').html()).toContain('Go there');
     });
   });
 
   describe('#updateSegmentEmissions', function() {
     it('updates the emissions of a segment', function() {
-      setFixtures('<ul id="modes"><li id="driving"><div class="route"></div></li></ul>');
+      setFixtures('<div id="routing"><div class="driving"></div></div>');
       routeView.update();
       var emissionEstimate = {
         methodology: function() { },

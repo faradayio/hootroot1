@@ -55,9 +55,9 @@ Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
 // Events
 
 Directions.prototype.onSegmentEmissionsSuccess = function(onSuccess, onFinish) {
-  return $.proxy(function(index, emissionEstimate) {
+  return $.proxy(function(segment, emissionEstimate) {
       this.totalEmissions += emissionEstimate.value();
-      onSuccess(this, index, emissionEstimate);
+      onSuccess(this.mode, segment, emissionEstimate);
 
       this.segmentEmissionsSuccessCount++;
       if(onFinish && this.segmentEmissionsSuccessCount == this.segments().length) {

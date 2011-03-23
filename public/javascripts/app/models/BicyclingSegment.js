@@ -11,5 +11,6 @@ BicyclingSegment.prototype.getEmissionEstimate = function(onSuccess, onError) {
   estimate.data = {
     emission: 0
   };
+  estimate.methodology = null;
   onSuccess(estimate);
 };

@@ -118,8 +118,8 @@ IndexController.prototype.onDirectionsRouteFailure = function(result, status) {
   alert('Failed to get directions');
 }
 
-IndexController.prototype.onSegmentEmissionsSuccess = function(segment, emissionEstimate) {
-  var routeView = this.routeViews[segment.mode.toLowerCase()];
+IndexController.prototype.onSegmentEmissionsSuccess = function(mode, segment, emissionEstimate) {
+  var routeView = this.routeViews[mode.toLowerCase()];
   routeView.updateSegmentEmissions(segment, emissionEstimate);
   routeView.updateTotalEmissions();
 };
