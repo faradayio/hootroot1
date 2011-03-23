@@ -181,11 +181,17 @@ form#search button {
 #modes {
   position: absolute;
   bottom: 0;
-  width: 398px;
+  width: 408px;
   left: 50%;
-  margin: 0 0 0 -199px;
+  margin: 0 0 0 -209px;
+  padding: 5px 5px 0 5px;
+  overflow: hidden;
+}
+
+#modes ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -202,11 +208,15 @@ form#search button {
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
   border-right: 1px solid rgba(0,0,0,0.3);
+  -moz-box-shadow: -1px -1px 0 white, 0 0 5px rgba(0,0,0,0.3);
+  -webkit-box-shadow: -1px -1px 0 white, 0 0 5px rgba(0,0,0,0.3);
+  box-shadow: -1px -1px 0 white, 0 0 5px rgba(0,0,0,0.3);
+  overflow: auto;
 }
 
 #modes li {
   float: left;
-  width: 98px;
+  width: 100px;
   margin: 0;
   padding: 0;
   border-left: 1px solid #f4f4f4;
@@ -288,5 +298,5 @@ form#search button {
   width: 330px;
   height: 60px;
   left: 50%;
-  background: url(images/hopstop.png) no-repeat 205px 50%;
+  background: url(images/hopstop.png) no-repeat 210px 50%;
 }
