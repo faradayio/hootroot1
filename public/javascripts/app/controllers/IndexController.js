@@ -23,6 +23,7 @@ IndexController.prototype.init = function() {
   $('#about').click(this.onAboutClick);
   $('#directions').click(this.onDirectionsClick);
   $('#link').click(this.onLinkClick);
+  $('#linkclose').click(this.onLinkClick);
   $('#tweet').click(this.onTweetClick);
   $('#restart').click(this.onRestartClick);
 };
@@ -152,6 +153,7 @@ IndexController.prototype.onLinkClick = function() {
 }
 
 IndexController.prototype.onTweetClick = function() {
+  window.open('http://twitter.com/?status=FIXME');
   return false;
 }
 

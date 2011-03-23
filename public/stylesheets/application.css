@@ -158,6 +158,8 @@ form button {
       rgb(221,221,221) 0%,
       rgb(200,200,200) 100%
   );
+  text-shadow: 0 1px 1px #eee;
+  color: #333;
 }
 
 form#search button {
@@ -406,11 +408,11 @@ form#linkform button {
   border-left: 1px solid #f4f4f4;
   border-right: 1px solid #bbb;
   text-shadow: 0 1px 0 #eee;
-  color: gray;
+  color: #444;
 }
 
 #modes li:hover {
-  color: #333;
+  color: #222;
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -433,7 +435,7 @@ form#linkform button {
       rgb(200,200,200) 0%,
       rgb(180,180,180) 100%
   );
-  color: #333;
+  color: #222;
   text-shadow: 0 1px 0 #ddd
 }
 
