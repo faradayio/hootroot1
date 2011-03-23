@@ -15,7 +15,7 @@ RouteView.prototype.output = function() {
 };
 
 RouteView.prototype.update = function() {
-  $('#' + this.id + ' .route').html(this.output());
+  $('#routing .' + this.id).html(this.output());
 };
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {

@@ -82,6 +82,8 @@ IndexController.prototype.onModeClick = function(controller) {
     } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
       $('#hopstop').hide('slide', { direction: 'down' }, 500);
     }
+    $('#routing div').hide();
+    $('#routing .' + this.id).show();
     return false;
   };
 };
@@ -143,6 +145,8 @@ IndexController.prototype.onAboutClick = function() {
 }
 
 IndexController.prototype.onDirectionsClick = function() {
+  $('#wrapper').toggleClass('with_directions');
+  $('#routing').toggle();
   return false;
 }
 
