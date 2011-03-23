@@ -78,7 +78,7 @@ h1 {
   text-indent: -9999px;
 }
 
-form#search {
+form {
   position: absolute;
   z-index: 5;
   width: 100%;
@@ -86,7 +86,7 @@ form#search {
   margin: -20px 0 0;
 }
 
-form#search fieldset {
+form fieldset {
   width: 400px;
   margin: 0 auto;
   background: #eee;
@@ -98,15 +98,15 @@ form#search fieldset {
   padding: 0;
 }
 
-form#search fieldset legend {
+form fieldset legend {
   display: none;
 }
 
-form#search fieldset label {
+form fieldset label {
   display: none;
 }
 
-form#search input {
+form input {
   margin: 5px 0 5px 5px;
   border-top: 1px solid #aaa;
   border-left: 1px solid #aaa;
@@ -128,7 +128,7 @@ form#search select {
   display: none;
 }
 
-form#search button {
+form button {
   float: right;
   width: 100px;
   border: 0;
@@ -140,7 +140,6 @@ form#search button {
   -webkit-border-radius: 0 5px 5px 0;
   border-radius: 0 5px 5px 0;
   -moz-box-shadow: -1px 0 0 #ddd;
-  height: 75px;
   position: relative;
   right: -1px;
   top: -1px;
@@ -159,6 +158,14 @@ form#search button {
       rgb(221,221,221) 0%,
       rgb(200,200,200) 100%
   );
+}
+
+form#search button {
+  height: 75px;
+}
+
+form#linkform button {
+  height: 41px;
 }
 
 #about {

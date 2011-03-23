@@ -146,6 +146,8 @@ IndexController.prototype.onDirectionsClick = function() {
 }
 
 IndexController.prototype.onLinkClick = function() {
+  $('#permalink').val('FIXME');
+  $('#linkform').toggle('drop', { direction: 'up' }, 500);
   return false;
 }
 
