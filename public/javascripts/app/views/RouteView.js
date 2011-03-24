@@ -21,9 +21,9 @@ RouteView.prototype.update = function() {
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
   if(emissionEstimate.methodology) {
-    output = '<a href="' + emissionEstimate.methodology() + '">' + emissionEstimate.toString() + '</a>';
+    output = '<a href="' + emissionEstimate.methodology() + '">' + (Math.round(emissionEstimate.value() * 100) / 100) + ' kg CO₂</a>';
   } else {
-    output = emissionEstimate.toString();
+    output = (Math.round(emissionEstimate.value() * 100) / 100) + ' kg CO₂';
   }
 
   $('#' + this.id + '_segment_' + segment.index + ' span.emissions').html(output);
