@@ -1,6 +1,22 @@
 Url = {
+  get: function() {
+    return document.URL;
+  },
+  go: function(destination) {
+    document.location.href = destination;
+  },
+
+  baseUrl: function() {
+    var match = this.get().match(/^([^#]*)/);
+    var base = match[1];
+    if(!base.match(/\/$/)) {
+      base += '/';
+    }
+    return base; // your base no longer belongs to us
+  },
+
   spi: function() {
-    var match = document.url.match(/#!(.*)/);
+    var match = this.get().match(/#!(.*)/);
     if(match) {
       return match[1];
     } else {
@@ -10,7 +26,7 @@ Url = {
 
   getSpiPathParameter: function(name) {
     if(this.spi()) {
-      var parts = document.url.split('/');
+      var parts = this.get().split('/');
       i = 0;
       while(i + 1 <= parts.length) {
         var part_name = parts[i];
@@ -28,5 +44,9 @@ Url = {
   },
   destination: function() {
     return this.getSpiPathParameter('to');
+  },
+
+  generate: function(from, to) {
+    return this.baseUrl() + '#!/from/' + from + '/to/' + to;
   }
 };

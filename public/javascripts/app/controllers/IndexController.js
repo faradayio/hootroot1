@@ -22,10 +22,20 @@ IndexController.prototype.init = function() {
   $('#aboutlink').click(this.onAboutClick);
   $('#about').click(this.onAboutClick);
   $('#directions').click(this.onDirectionsClick);
-  $('#link').click(this.onLinkClick);
-  $('#linkclose').click(this.onLinkClick);
+  $('#link').click($.proxy(this.onLinkClick, this));
+  $('#linkclose').click($.proxy(this.onLinkClick, this));
   $('#tweet').click(this.onTweetClick);
   $('#restart').click(this.onRestartClick);
+
+  if(Url.origin()) {
+    $('#origin').val(Url.origin());
+  }
+  if(Url.destination()) {
+    $('#destination').val(Url.destination());
+  }
+  if(Url.origin() && Url.destination()) {
+    this.routeButtonClick();
+  }
 };
 
 
@@ -51,6 +61,10 @@ IndexController.prototype.getDirections = function () {
   this.directionsDisplay.setMap(this.mapView.googleMap());
 }
 
+IndexController.prototype.currentUrl = function() {
+  return Url.generate($('#origin').val(), $('#destination').val());
+};
+
 //////  Events 
 
 IndexController.prototype.originDestinationInputKeyup = function(event) {
@@ -69,6 +83,7 @@ IndexController.prototype.routeButtonClick = function() {
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
   }
+  Url.go(this.currentUrl());
 };
 
 IndexController.prototype.onModeClick = function(controller) {
@@ -151,7 +166,7 @@ IndexController.prototype.onDirectionsClick = function() {
 }
 
 IndexController.prototype.onLinkClick = function() {
-  $('#permalink').val('FIXME');
+  $('#permalink').val(this.currentUrl());
   $('#linkform').toggle('drop', { direction: 'up' }, 500);
   return false;
 }
