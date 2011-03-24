@@ -445,6 +445,19 @@ form#linkform button {
       color-stop(0, rgb(220,220,220)),
       color-stop(1, rgb(190,190,190))
   );
+  cursor: pointer;
+}
+
+#modes li.disabled:hover {
+  color: #222;
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(221,221,221)),
+      color-stop(1, rgb(200,200,200))
+  );
+  cursor: default;
 }
 
 #modes li.selected {
@@ -585,3 +598,4 @@ form#linkform button {
 
 #routing ul li p.emissions a {
   color: inherit;
+}

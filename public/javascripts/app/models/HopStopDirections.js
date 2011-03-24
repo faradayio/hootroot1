@@ -48,7 +48,7 @@ HopStopDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
         this.directionsResult = { routes: [new GoogleDirectionsRoute(data)] };
         onSuccess(this);
       }, this),
-      error: onError,
+      error: $.proxy(function(result) { onError(this, result); }, this),
       timeout: onError
     });
   }

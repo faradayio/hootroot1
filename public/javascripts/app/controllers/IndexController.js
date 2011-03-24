@@ -55,7 +55,7 @@ IndexController.prototype.getDirections = function () {
     this.directions[mode] = direction;
     direction.route(
       $.proxy(this.onDirectionsRouteSuccess, this),
-      this.onDirectionsRouteFailure);
+      $.proxy(this.onDirectionsRouteFailure, this));
   }
   this.directionsDisplay.setMap(null); 
   this.directionsDisplay.setMap(this.mapView.googleMap());
@@ -100,6 +100,7 @@ IndexController.prototype.routeButtonClick = function() {
   $('h1').hide('drop', { direction: 'up' }, 500);
   $('#nav').show('slide', { direction: 'up' }, 500);
   $('#meta').hide();
+  $('#modes .failed').each(function(element) { $(element).removeClass('failed'); });
   $('#modes').show('slide', { direction: 'down' }, 500);
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
@@ -149,8 +150,9 @@ IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
   }
 }
 
-IndexController.prototype.onDirectionsRouteFailure = function(result, status) {
-  alert('Failed to get directions');
+IndexController.prototype.onDirectionsRouteFailure = function(directions, result) {
+  var routeView = this.routeViews[directions.mode.toLowerCase()];
+  routeView.fail();
 }
 
 IndexController.prototype.onSegmentEmissionsSuccess = function(mode, segment, emissionEstimate) {

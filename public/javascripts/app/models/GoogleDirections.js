@@ -24,7 +24,7 @@ GoogleDirections.prototype.route = function (onSuccess, onFailure) {
       this.directionsResult = result
       onSuccess(this)
     } else {
-      onFailure(result, status)
+      onFailure(this, result, status)
     }
   }, this))
 }
