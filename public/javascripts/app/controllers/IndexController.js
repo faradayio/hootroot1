@@ -94,6 +94,7 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 };
 
 IndexController.prototype.routeButtonClick = function() {
+  Url.go(this.currentUrl());
   this.getDirections();
   $('#search').hide('drop', { direction: 'up' }, 500);
   $('h1').hide('drop', { direction: 'up' }, 500);
@@ -103,7 +104,6 @@ IndexController.prototype.routeButtonClick = function() {
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
   }
-  Url.go(this.currentUrl());
 };
 
 IndexController.prototype.onModeClick = function(controller) {
