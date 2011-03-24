@@ -208,10 +208,15 @@ form#linkform button {
 #about .about p {
   margin: 70px 10px 10px;
   font-size: 16px;
+  color: #333;
 }
 
 #about .about p a {
   color: blue;
+}
+
+#about .about p span {
+  color: #777;
 }
 
 #about .brighter_planet_cm1_badge {
