@@ -10,6 +10,7 @@ function IndexController(mapId) {
 IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT'];
 
 IndexController.prototype.init = function() {
+  Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
   this.mapView.resize();
   this.mapView.googleMap();
 

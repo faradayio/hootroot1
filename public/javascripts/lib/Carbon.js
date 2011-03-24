@@ -58,6 +58,10 @@ EmissionEstimator.prototype.params = function() {
     }
   }
 
+  if(Carbon.key) {
+    params['key'] = Carbon.key;
+  }
+
   return params;
 };
 
