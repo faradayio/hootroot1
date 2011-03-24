@@ -24,7 +24,7 @@ IndexController.prototype.init = function() {
   $('#directions').click(this.onDirectionsClick);
   $('#link').click($.proxy(this.onLinkClick, this));
   $('#linkclose').click($.proxy(this.onLinkClick, this));
-  $('#tweet').click(this.onTweetClick);
+  $('#tweet').click($.proxy(this.onTweetClick, this));
   $('#restart').click(this.onRestartClick);
 
   if(Url.origin()) {
@@ -63,6 +63,26 @@ IndexController.prototype.getDirections = function () {
 
 IndexController.prototype.currentUrl = function() {
   return Url.generate($('#origin').val(), $('#destination').val());
+};
+
+IndexController.prototype.getTweet = function() {
+  document.body.style.cursor = 'wait';
+  $.ajax('http://is.gd/create.php', {
+    data: { url: this.currentUrl(), format: 'json' },
+    dataType: 'json',
+    success: function(data) {
+      document.body.style.cursor = 'default';
+      if(data.shorturl) {
+        var status = "Check out my trip's carbon footprint: " + data.shorturl;
+        document.location.href = 'http://twitter.com/?status=' + status;
+      } else {
+        alert('Failed to shorten URL: ' + data.errormessage);
+      }
+    },
+    error :function(data) {
+      document.body.style.cursor = 'default';
+    }
+  });
 };
 
 //////  Events 
@@ -172,7 +192,7 @@ IndexController.prototype.onLinkClick = function() {
 }
 
 IndexController.prototype.onTweetClick = function() {
-  window.open('http://twitter.com/?status=FIXME');
+  this.getTweet();
   return false;
 }
 
