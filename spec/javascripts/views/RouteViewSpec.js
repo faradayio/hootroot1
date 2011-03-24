@@ -21,11 +21,12 @@ describe('RouteView', function() {
       routeView.update();
       var emissionEstimate = {
         methodology: function() { },
-        toString: function() { return 'BINGO' }
+        toString: function() { return 123.5 },
+        value: function() { return 123.5 }
       };
       var segment = Segment.create(0, { distance: 1.0,  travel_mode: 'DRIVING' });
       routeView.updateSegmentEmissions(segment, emissionEstimate);
-      expect($('#driving_segment_0').html()).toContain('BINGO');
+      expect($('#driving_segment_0').html()).toContain('123.5');
     });
   });
 });
