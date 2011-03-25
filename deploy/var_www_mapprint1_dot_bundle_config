@@ -1,0 +1,5 @@
+--- 
+BUNDLE_FROZEN: "1"
+BUNDLE_WITHOUT: development:test
+BUNDLE_PATH: /var/www/mapprint1/vendor/bundler
+BUNDLE_BIN: /var/www/mapprint1/vendor/bundler_bin

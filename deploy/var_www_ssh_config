@@ -1,0 +1,6 @@
+Host github.com
+  User git
+  IdentityFile /var/www/.ssh/mapprint1_deploy_rsa-2011-03-24
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+
