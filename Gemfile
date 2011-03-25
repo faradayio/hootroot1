@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.3'
+gem 'rails', '3.0.5'
 
 gem 'aaronh-chronic'
 gem 'httparty'
@@ -21,6 +21,5 @@ group :test do
   gem 'jasmine'
   gem 'rspec'
   gem 'rspec-rails'
-  gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'timecop'
 end
