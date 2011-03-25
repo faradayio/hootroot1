@@ -74,7 +74,7 @@ IndexController.prototype.getTweet = function() {
     success: function(data) {
       document.body.style.cursor = 'default';
       if(data.shorturl) {
-        var status = "Check out my trip's carbon footprint: " + data.shorturl;
+        var status = "My trip's carbon footprint: " + data.shorturl + " (via Hootroot)";
         document.location.href = 'http://twitter.com/?status=' + status;
       } else {
         alert('Failed to shorten URL: ' + data.errormessage);
