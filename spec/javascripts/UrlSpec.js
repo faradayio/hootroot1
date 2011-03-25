@@ -1,4 +1,11 @@
 describe('Url', function() {
+  describe('get', function() {
+    it('decodes the URL', function() {
+      Url.actual = function() { return 'http://hootroot.com/#!/a%20b%20c/d%20e%2C%20f'; };
+      expect(Url.spi()).toBe('/a b c/d e, f');
+    });
+  });
+
   describe('spi', function() {
     it('returns null if there is no SPI path', function() {
       Url.get = function() { return 'http://hootroot.com' };
@@ -9,8 +16,8 @@ describe('Url', function() {
       expect(Url.spi()).toBeNull();
     });
     it('returns the SPI path', function() {
-      Url.get = function() { return 'http://hootroot.com/#!/foo/bar' };
-      expect(Url.spi()).toBe('/foo/bar');
+      Url.get = function() { return 'http://hootroot.com/#!/foo/bar baz' };
+      expect(Url.spi()).toBe('/foo/bar baz');
     });
   });
 
@@ -60,8 +67,7 @@ describe('Url', function() {
 
   describe('generate', function() {
     it('encodes addresses with spaces', function() {
-      Url.get = function() { return 'http://hootroot.com/#!/foo/bar' };
-//
+      document.URL = 'http://hootroot.com/#!/foo/bar';
       expect(Url.generate('123 Main St, Anytown, US', '321 Maple St')).
         toBe('http://hootroot.com/#!/from/123%20Main%20St%2C%20Anytown%2C%20US/to/321%20Maple%20St');
     });

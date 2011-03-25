@@ -1,6 +1,8 @@
 Url = {
+  actual: function() { return document.URL },
+
   get: function() {
-    return document.URL;
+    return decodeURIComponent(this.actual());
   },
   go: function(destination) {
     document.location.href = destination;
