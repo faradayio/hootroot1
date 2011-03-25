@@ -1,0 +1,4 @@
+* hoptoad (api key env var)
+* remove activerecord if it's not used
+* move session secret to env var
+* update to rails 3.0.5
