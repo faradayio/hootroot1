@@ -37,5 +37,5 @@ RouteView.prototype.fail = function() {
   $('#' + this.id).removeClass('loading');
   $('#' + this.id).addClass('disabled');
   $('#' + this.id).unbind('click');
-  $('#' + this.id).unbind('hover');
+  $('#' + this.id).unbind('mouseenter mouseleave');
 };

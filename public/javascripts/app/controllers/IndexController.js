@@ -16,8 +16,6 @@ IndexController.prototype.init = function() {
 
   $('#go').click($.proxy(this.routeButtonClick, this));
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
-  $('#modes li').click(this.onModeClick(this));
-  $('#modes li').hover(this.onModeHoverIn(this),this.onModeHoverOut(this));
   $('#when').val('Today');
   $('#example').click(this.onExampleClick);
   $('#aboutlink').click(this.onAboutClick);
@@ -47,11 +45,25 @@ IndexController.prototype.getEmissions = function(directions) {
       this.onSegmentEmissionsFinish);
 };
 
+IndexController.prototype.reset = function() {
+  var controller = this;
+  $('#modes li').each(function(i, li) {
+    li = $(li);
+    li.click(controller.onModeClick(controller));
+    li.hover(controller.onModeHoverIn(controller),
+             controller.onModeHoverOut(controller));
+    li.addClass('loading');
+    li.removeClass('disabled');
+    li.find('.footprint').html('...');
+  });
+};
+
 IndexController.prototype.getDirections = function () {
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i].toLowerCase();
     var direction = Directions.create(
       $('#origin').val(), $('#destination').val(), IndexController.modes[i]);
+    this.reset();
     this.routeViews[mode] = new RouteView(direction);
     this.directions[mode] = direction;
     direction.route(
