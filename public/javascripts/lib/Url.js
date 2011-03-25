@@ -47,6 +47,6 @@ Url = {
   },
 
   generate: function(from, to) {
-    return this.baseUrl() + '#!/from/' + from + '/to/' + to;
+    return this.baseUrl() + '#!/from/' + encodeURIComponent(from) + '/to/' + encodeURIComponent(to);
   }
 };

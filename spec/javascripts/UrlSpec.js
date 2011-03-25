@@ -57,4 +57,13 @@ describe('Url', function() {
       expect(Url.baseUrl()).toBe('http://hootroot.com/');
     });
   });
+
+  describe('generate', function() {
+    it('encodes addresses with spaces', function() {
+      Url.get = function() { return 'http://hootroot.com/#!/foo/bar' };
+//
+      expect(Url.generate('123 Main St, Anytown, US', '321 Maple St')).
+        toBe('http://hootroot.com/#!/from/123%20Main%20St%2C%20Anytown%2C%20US/to/321%20Maple%20St');
+    });
+  });
 });
