@@ -84,6 +84,33 @@ describe('HopStopDirections', function() {
     })
   });
 
+  describe('#isAllWalkingSegments', function() {
+    it('returns true if all segments are walking segments', function() {
+      directions.segments = function() {
+        return [
+          new WalkingSegment(0, {}),
+          new WalkingSegment(0, {}),
+          new WalkingSegment(0, {}),
+          new WalkingSegment(0, {}),
+        ]
+      };
+
+      expect(directions.isAllWalkingSegments()).toBeTruthy();
+    });
+    it('returns false if at least one segment is not a walking segment', function() {
+      directions.segments = function() {
+        return [
+          new WalkingSegment(0, {}),
+          new WalkingSegment(0, {}),
+          new SubwayingSegment(0, {}),
+          new WalkingSegment(0, {}),
+        ]
+      };
+
+      expect(directions.isAllWalkingSegments()).toBeFalsy();
+    });
+  });
+
   describe('#onGeocodeSuccess', function() {
     beforeEach(function() {
       directions.x1 = 1;
@@ -118,6 +145,16 @@ describe('HopStopDirections', function() {
     it('runs the onError method on failure', function() {
       fakeAjax({
         urls: { '/hopstops?x1=1&y1=2&x2=3&y2=4&mode=WALKING&when=now' : { errorMessage: 'OMG' } }
+      });
+      var onError = jasmine.createSpy('onError');
+      directions.isFullyGeocoded = function() { return true };
+
+      directions.onGeocodeSuccess(function() {}, onError);
+      expect(onError).toHaveBeenCalled();
+    });
+    it('runs the onError method if all segments are walking segments', function() {
+      fakeAjax({
+        urls: { '/hopstops?x1=1&y1=2&x2=3&y2=4&mode=WALKING&when=now' : { successData: HopStopResult.walking } }
       });
       var onError = jasmine.createSpy('onError');
       directions.isFullyGeocoded = function() { return true };

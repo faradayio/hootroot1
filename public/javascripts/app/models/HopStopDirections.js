@@ -20,6 +20,14 @@ HopStopDirections.prototype.isFullyGeocoded = function() {
   return this.x1 != null && this.y1 != null && this.x2 != null && this.y2 != null;
 };
 
+HopStopDirections.prototype.isAllWalkingSegments = function() {
+  var result = true;
+  this.eachSegment(function(segment) {
+    result = result && segment instanceof WalkingSegment;
+  });
+  return result;
+};
+
 HopStopDirections.prototype.onGeocodeOriginSuccess = function(geocode, onSuccess, onError) {
   this.x1 = geocode[0].geometry.location.lng();
   this.y1 = geocode[0].geometry.location.lat();
@@ -46,7 +54,11 @@ HopStopDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
       data: request,
       success: $.proxy(function(data) {
         this.directionsResult = { routes: [new GoogleDirectionsRoute(data)] };
-        onSuccess(this);
+        if(this.isAllWalkingSegments()) {
+          onError(this, data);
+        } else {
+          onSuccess(this);
+        }
       }, this),
       error: $.proxy(function(result) { onError(this, result); }, this),
       timeout: onError
