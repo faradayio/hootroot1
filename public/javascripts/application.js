@@ -892,6 +892,14 @@ IndexController.prototype.init = function() {
   $('#linkclose').click($.proxy(this.onLinkClick, this));
   $('#tweet').click($.proxy(this.onTweetClick, this));
   $('#restart').click(this.onRestartClick);
+  var controller = this;
+  $('#modes li').each(function(i, li) {
+    li = $(li);
+    li.click(controller.onModeClick(controller));
+    li.hover(controller.onModeHoverIn(controller),
+             controller.onModeHoverOut(controller));
+  });
+  this.reset();
 
   if(Url.origin()) {
     $('#origin').val(Url.origin());
@@ -916,9 +924,6 @@ IndexController.prototype.reset = function() {
   var controller = this;
   $('#modes li').each(function(i, li) {
     li = $(li);
-    li.click(controller.onModeClick(controller));
-    li.hover(controller.onModeHoverIn(controller),
-             controller.onModeHoverOut(controller));
     li.addClass('loading');
     li.removeClass('disabled');
     li.find('.footprint').html('...');
