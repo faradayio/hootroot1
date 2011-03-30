@@ -41,9 +41,13 @@ FlyingDirections.prototype.distanceEstimate = function() {
 };
 
 FlyingDirections.prototype.duration = function() {
-  var rate = 0.1202;  // that's like 433 km/hr
+  var rate = 0.0056818;  // that's like 400mph
   return rate * this.distanceEstimate();
 }
+
+FlyingDirections.prototype.totalTime = function() {
+  return TimeFormatter.format(this.duration());
+};
 
 FlyingDirections.prototype.isFullyGeocoded = function() {
   return this.originLatLng != null && this.destinationLatLng != null;
@@ -73,6 +77,10 @@ FlyingDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
       warnings: [],
       bounds: GoogleDirectionsRoute.generateBounds(this.steps())
     }};
-    onSuccess(this, this.directionsResult);
+    if(this.distanceEstimate() < 0) {
+      onError(this, data);
+    } else {
+      onSuccess(this, this.directionsResult);
+    }
   }
 };
