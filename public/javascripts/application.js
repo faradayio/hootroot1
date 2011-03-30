@@ -500,6 +500,11 @@ HopStopSegment.prototype.durationInHours = function() {
   if(this.duration)
     return this.duration / 3600;
 };
+
+HopStopSegment.prototype.durationInMinutes = function() {
+  if(this.duration)
+    return this.duration / 60;
+};
 Carbon = function() {
   this.attribute_map = {};
 };
@@ -703,7 +708,7 @@ BussingSegment.prototype = new HopStopSegment();
 Carbon.emitter(BussingSegment, function(emitter) {
   emitter.emitAs('bus_trip');
   emitter.provide('distance');
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('duration', { as: 'durationInMinutes' });
   emitter.provide('bus_class');
 });
 function DrivingSegment(index, step) {
