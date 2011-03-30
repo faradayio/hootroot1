@@ -388,9 +388,9 @@ form#linkform button {
 #modes {
   position: absolute;
   bottom: 0;
-  width: 408px;
+  width: 510px;
   left: 50%;
-  margin: 0 0 0 -209px;
+  margin: 0 0 0 -259px;
   padding: 5px 5px 0 5px;
   overflow: hidden;
 }
@@ -521,7 +521,7 @@ form#linkform button {
   bottom: 0;
   width: 330px;
   height: 60px;
-  left: 50%;
+  left: 55%;
   background: url(images/hopstop.png) no-repeat 210px 50%;
 }
 
