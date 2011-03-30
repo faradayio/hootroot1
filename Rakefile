@@ -24,7 +24,9 @@ namespace :js do
       public/javascripts/app/models/GoogleDirectionsRoute.js
       public/javascripts/app/models/HopStopDirections.js
       public/javascripts/app/models/Segment.js
+      public/javascripts/app/models/HopStopSegment.js
       public/javascripts/lib/Carbon.js
+      public/javascripts/lib/TimeFormatter.js
       public/javascripts/app/models/BicyclingSegment.js
       public/javascripts/app/models/BussingSegment.js
       public/javascripts/app/models/DrivingSegment.js
