@@ -13,6 +13,6 @@ BussingSegment.prototype = new HopStopSegment();
 Carbon.emitter(BussingSegment, function(emitter) {
   emitter.emitAs('bus_trip');
   emitter.provide('distance');
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('duration', { as: 'durationInMinutes' });
   emitter.provide('bus_class');
 });
