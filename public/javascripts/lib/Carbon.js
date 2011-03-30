@@ -57,7 +57,7 @@ EmissionEstimator.prototype.params = function() {
     if(value) 
       result = this.emitter[emitter_field];
     if(typeof result == 'function')
-      result = result();
+      result = result.apply(this.emitter);
     if(result)
       params[characteristic] = result;
   }
