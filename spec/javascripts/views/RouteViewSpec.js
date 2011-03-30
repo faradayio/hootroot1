@@ -26,7 +26,7 @@ describe('RouteView', function() {
       };
       var segment = Segment.create(0, { distance: 1.0,  travel_mode: 'DRIVING' });
       routeView.updateSegmentEmissions(segment, emissionEstimate);
-      expect($('#driving_segment_0').html()).toContain('123.5');
+      expect($('#driving_segment_0').html()).toContain('272.27');
     });
   });
 });
