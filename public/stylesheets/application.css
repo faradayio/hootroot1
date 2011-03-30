@@ -513,7 +513,7 @@ form#linkform button {
 }
 
 #modes li span.footprint:after {
-  content: " kg CO₂";
+  content: " lbs CO₂";
 }
 
 #hopstop {

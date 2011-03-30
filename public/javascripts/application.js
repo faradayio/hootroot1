@@ -800,17 +800,19 @@ RouteView.prototype.update = function() {
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
+  var value = (Math.round(emissionEstimate.value() * 100 * 2.2046) / 100);
   if(emissionEstimate.methodology) {
-    output = '<a href="' + emissionEstimate.methodology() + '">' + (Math.round(emissionEstimate.value() * 100) / 100) + ' kg CO₂</a>';
+    output = '<a href="' + emissionEstimate.methodology() + '">' + value + ' lbs CO₂</a>';
   } else {
-    output = (Math.round(emissionEstimate.value() * 100) / 100) + ' kg CO₂';
+    output = value.toString() + ' lbs CO₂';
   }
 
   $('#' + this.id + '_segment_' + segment.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
-  $('#' + this.id + ' .footprint').html(Math.round(this.directions.totalEmissions * 100) / 100);
+  var value = (Math.round(this.directions.totalEmissions * 100 * 2.2046) / 100);
+  $('#' + this.id + ' .footprint').html(value);
 };
 
 RouteView.prototype.fail = function() {
