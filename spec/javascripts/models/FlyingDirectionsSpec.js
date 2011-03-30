@@ -9,10 +9,13 @@ describe('FlyingDirections', function() {
   describe('#steps', function() {
     it('returns an array of a single step', function() {
       directions.isFullyGeocoded = function() { return true; };
+      directions.distanceEstimate = function() { return 90000000; };
+      directions.originLatLng = { lat: function() { return 1; }, lng: function() { return 2; } };
+      directions.destinationLatLng = { lat: function() { return 3; }, lng: function() { return 4; } };
       directions.onGeocodeSuccess
       var steps = directions.steps();
 
-      expect(steps[0].duration.value).toEqual(54);
+      expect(steps[0].duration.value).toEqual(511362);
     });
   })
 
@@ -96,13 +99,15 @@ describe('FlyingDirections', function() {
       expect(onSuccess).toHaveBeenCalled();
     });
     it('sets directionResult on success', function() {
+      directions.distanceEstimate = function() { return 90000000; };
       directions.onGeocodeSuccess(function() {});
-      expect(directions.directionsResult.routes.length).toBe(1);
+      expect(directions.directionsResult.routes.legs.length).toBe(1);
     });
-    it('runs the onError method on failure', function() {
+    it('runs the onError method if the distance is too short', function() {
       var onError = jasmine.createSpy('onError');
       directions.isFullyGeocoded = function() { return true };
 
+      directions.distanceEstimate = function() { return 0; };
       directions.onGeocodeSuccess(function() {}, onError);
       expect(onError).toHaveBeenCalled();
     });
