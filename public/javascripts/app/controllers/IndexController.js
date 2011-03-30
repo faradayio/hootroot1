@@ -55,6 +55,7 @@ IndexController.prototype.reset = function() {
     li.addClass('loading');
     li.removeClass('disabled');
     li.find('.footprint').html('...');
+    li.find('.total_time').html('');
   });
 };
 
