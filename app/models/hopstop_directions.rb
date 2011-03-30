@@ -4,7 +4,6 @@ module HopstopDirections
   extend self
 
   def parse(crack_hash)
-    puts "crack hash: #{crack_hash.inspect}"
     response = crack_hash['HopStopResponse']
     simplified_hash = {}
 

@@ -17,7 +17,7 @@ class HopstopStep
     new :instructions => fields[:directions],
       :start_position => parse_start_position(fields[:coordinates]),
       :end_position => parse_end_position(fields[:coordinates]),
-      :duration => fields[:time].to_i,
+      :duration => { 'value' => fields[:time].to_i },
       :travel_mode => parse_travel_mode(fields[:travel_mode])
   end
 
@@ -64,7 +64,7 @@ class HopstopStep
   end
 
   def merge!(other)
-    self.duration += other.duration
+    self.duration['value'] += other.duration['value']
     instruction_parts = self.instructions.split(/,\s*/)
     instruction_parts[1] = other.instructions
     self.instructions = instruction_parts.join(', ')

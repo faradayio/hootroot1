@@ -23,28 +23,28 @@ describe HopstopStep do
       walking_step.start_position['lon'].should == '-73.90871'
       walking_step.end_position['lat'].should == '40.68265'
       walking_step.end_position['lon'].should == '-73.91002'
-      walking_step.duration.should == 99
+      walking_step.duration['value'].should == 99
       walking_step.travel_mode.should == 'WALKING'
     end
     it 'parses a subway step' do
       subway_step.instructions.should == 'Take the 6 train from Canal Street station heading Uptown / to Pelham Bay Park'
       subway_step.start_position.should be_nil
       subway_step.end_position.should be_nil
-      subway_step.duration.should == 300
+      subway_step.duration['value'].should == 300
       subway_step.travel_mode.should == 'SUBWAYING'
     end
     it 'parses a subway en-route step' do
       subway_enroute_step.instructions.should == 'Pass Spring Street'
       subway_enroute_step.start_position.should be_nil
       subway_enroute_step.end_position.should be_nil
-      subway_enroute_step.duration.should == 94
+      subway_enroute_step.duration['value'].should == 94
       subway_enroute_step.travel_mode.should == 'SUBWAYING'
     end
     it 'parses an exit step' do
       exit_step.instructions.should == 'Exit near intersection of E 32nd St and Park Ave S'
       exit_step.start_position.should be_nil
       exit_step.end_position.should be_nil
-      exit_step.duration.should == 120
+      exit_step.duration['value'].should == 120
       exit_step.travel_mode.should == 'ENTRANCEEXIT'
     end
   end
@@ -124,19 +124,19 @@ describe HopstopStep do
   describe '#merge!' do
     it 'combines two steps into one, preserving position and travel_mode' do
       a = HopstopStep.new :instructions => 'Take subway', :start_position => 12.3, 
-        :end_position => 13.4, :duration => 123, :travel_mode => 'SUBWAYING'
-      b = HopstopStep.new :instructions => 'Pass X St', :duration => 62, :travel_mode => 'SUBWAYING'
+        :end_position => 13.4, :duration => { 'value' => 123 }, :travel_mode => 'SUBWAYING'
+      b = HopstopStep.new :instructions => 'Pass X St', :duration => { 'value' => 62 }, :travel_mode => 'SUBWAYING'
 
       a.merge!(b)
       a.start_position.should == 12.3
       a.end_position.should == 13.4
-      a.duration.should == 185
+      a.duration['value'].should == 185
       a.travel_mode.should == 'SUBWAYING'
     end
     it 'combines instructions of two steps with the same mode' do
       a = HopstopStep.new :instructions => 'Take subway', :start_position => 12.3, 
-        :end_position => 13.4, :duration => 123, :travel_mode => 'SUBWAYING'
-      b = HopstopStep.new :instructions => 'Pass X St', :duration => 62, :travel_mode => 'SUBWAYING'
+        :end_position => 13.4, :duration => { 'value' => 123 }, :travel_mode => 'SUBWAYING'
+      b = HopstopStep.new :instructions => 'Pass X St', :duration => { 'value' => 62 }, :travel_mode => 'SUBWAYING'
       a.merge!(b)
       a.instructions.should == 'Take subway, Pass X St'
     end
