@@ -9,6 +9,8 @@ Directions = function(origin, destination, mode) {
 Directions.create = function(origin, destination, mode, day) {
   if(mode == 'PUBLICTRANSIT' || mode == 'SUBWAYING' || mode == 'BUSSING') {
     return new HopStopDirections(origin, destination, mode, day);
+  } else if(mode == 'FLYING') {
+    return new FlyingDirections(origin, destination, mode);
   } else {
     return new GoogleDirections(origin, destination, mode);
   }

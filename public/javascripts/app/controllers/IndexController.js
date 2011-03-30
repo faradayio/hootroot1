@@ -7,7 +7,7 @@ function IndexController(mapId) {
   return true;
 }
 
-IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT'];
+IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
 IndexController.prototype.init = function() {
   Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
@@ -59,6 +59,7 @@ IndexController.prototype.reset = function() {
 };
 
 IndexController.prototype.getDirections = function () {
+  this.clearFlightPath();
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i].toLowerCase();
     var direction = Directions.create(
@@ -98,6 +99,37 @@ IndexController.prototype.getTweet = function() {
   });
 };
 
+IndexController.prototype.displayDirectionsFor = function(directions) {
+  if(directions.mode == 'FLYING') { 
+    this.flightPath().display();
+  } else {
+    this.directionsDisplay.setOptions({ preserveViewport: true });
+    this.directionsDisplay.setDirections(directions.directionsResult);
+    this.directionsDisplay.setMap(this.mapView.googleMap());
+  }
+};
+
+IndexController.prototype.hideDirectionsFor = function(directions) {
+  if(directions.mode == 'FLYING') { 
+    this.flightPath().hide();
+  } else {
+    this.directionsDisplay.setMap(null);
+  }
+};
+
+IndexController.prototype.flightPath = function() {
+  if(!this._flightPath) {
+    var flight = this.directions['flying'];
+    this._flightPath = new FlightPath(this, flight.originLatLng, flight.destinationLatLng); 
+  }
+  return this._flightPath;
+};
+
+IndexController.prototype.clearFlightPath = function() {
+  this._flightPath = null;
+};
+
+
 //////  Events 
 
 IndexController.prototype.originDestinationInputKeyup = function(event) {
@@ -122,10 +154,16 @@ IndexController.prototype.routeButtonClick = function() {
 
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
-    $('#modes li').removeClass('selected');
+    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirection = controller.directions[originalDirectionId];
+    $('#' + originalDirectionId).removeClass('selected');
     $(this).addClass('selected');
+
     var direction = controller.directions[this.id];
-    controller.directionsDisplay.setDirections(direction.directionsResult);
+
+    controller.hideDirectionsFor(originalDirection);
+    controller.displayDirectionsFor(direction);
+
     if (this.id == 'publictransit' && $('#hopstop').is(':hidden')) {
       $('#hopstop').show('slide', { direction: 'down' }, 500);
     } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
@@ -140,17 +178,20 @@ IndexController.prototype.onModeClick = function(controller) {
 IndexController.prototype.onModeHoverIn = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    controller.directionsDisplay.setOptions({ preserveViewport: true });
-    controller.directionsDisplay.setDirections(direction.directionsResult);
+    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirection = controller.directions[originalDirectionId];
+    controller.hideDirectionsFor(originalDirection);
+    controller.displayDirectionsFor(direction);
   };
 };
 
 IndexController.prototype.onModeHoverOut = function(controller) {
   return function() {
+    var direction = controller.directions[this.id];
     var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
-    controller.directionsDisplay.setOptions({ preserveViewport: true });
-    controller.directionsDisplay.setDirections(originalDirection.directionsResult);
+    controller.hideDirectionsFor(direction);
+    controller.displayDirectionsFor(originalDirection);
   };
 };
 

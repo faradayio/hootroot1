@@ -20,6 +20,7 @@ namespace :js do
       public/javascripts/lib/jquery.placeholdize.min.js
       public/javascripts/lib/jquery-ui-1.8.11.custom.min.js
       public/javascripts/app/models/Directions.js
+      public/javascripts/app/models/FlyingDirections.js
       public/javascripts/app/models/GoogleDirections.js
       public/javascripts/app/models/GoogleDirectionsRoute.js
       public/javascripts/app/models/HopStopDirections.js
@@ -30,10 +31,12 @@ namespace :js do
       public/javascripts/app/models/BicyclingSegment.js
       public/javascripts/app/models/BussingSegment.js
       public/javascripts/app/models/DrivingSegment.js
+      public/javascripts/app/models/FlyingSegment.js
       public/javascripts/app/models/SubwayingSegment.js
       public/javascripts/app/models/WalkingSegment.js
       public/javascripts/app/views/MapView.js
       public/javascripts/app/views/RouteView.js
+      public/javascripts/app/models/FlightPath.js
       public/javascripts/app/controllers/IndexController.js
       public/javascripts/lib/Url.js
     }

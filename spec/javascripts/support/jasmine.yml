@@ -15,6 +15,7 @@ src_files:
     - public/javascripts/jquery-1.5.min.js
     - public/javascripts/lib/**/*.js
     - public/javascripts/app/models/Segment.js
+    - public/javascripts/app/models/HopStopSegment.js
     - public/javascripts/app/models/Directions.js
     - public/javascripts/app/models/GoogleDirections.js
     - public/javascripts/app/models/HopStopDirections.js

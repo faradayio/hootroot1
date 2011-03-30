@@ -109,6 +109,8 @@ var i={};i[g]=(f=="show"?b=="pos"?"+=":"-=":b=="pos"?"-=":"+=")+e;a.animate(i,{q
 Directions.create = function(origin, destination, mode, day) {
   if(mode == 'PUBLICTRANSIT' || mode == 'SUBWAYING' || mode == 'BUSSING') {
     return new HopStopDirections(origin, destination, mode, day);
+  } else if(mode == 'FLYING') {
+    return new FlyingDirections(origin, destination, mode);
   } else {
     return new GoogleDirections(origin, destination, mode);
   }
@@ -173,6 +175,84 @@ Directions.prototype.onSegmentEmissionsSuccess = function(onSuccess, onFinish) {
       }
     },
     this);
+};
+FlyingDirections = function(origin, destination, mode) {
+  this.origin = origin;
+  this.destination = destination;
+  this.mode = 'FLYING';
+  this.geocoder = new google.maps.Geocoder();
+}
+FlyingDirections.prototype = new Directions();
+
+FlyingDirections.prototype.route = function (onSuccess, onError) {
+  this.geocoder.geocode({ address: this.origin },
+      $.proxy(function(geocode) { this.onGeocodeOriginSuccess(geocode, onSuccess, onError) },
+              this));
+  this.geocoder.geocode({ address: this.destination },
+      $.proxy(function(geocode) { this.onGeocodeDestinationSuccess(geocode, onSuccess, onError) },
+              this));
+};
+
+FlyingDirections.prototype.steps = function() {
+  return [{
+    travel_mode: 'FLYING',
+    distance: { value: this.distanceEstimate() },
+    duration: { value: this.duration() },
+    instructions: 'Hop on a plane',
+    start_position: {
+      lat: this.originLatLng.lat(),
+      lon: this.originLatLng.lng()
+    },
+    end_position: {
+      lat: this.destinationLatLng.lat(),
+      lon: this.destinationLatLng.lng()
+    }
+  }];
+};
+
+FlyingDirections.prototype.distanceEstimate = function() {
+  if(!this._distanceEstimate) {
+    this._distanceEstimate = google.maps.geometry.spherical.computeDistanceBetween(
+      this.originLatLng, this.destinationLatLng);
+  }
+  return this._distanceEstimate;
+};
+
+FlyingDirections.prototype.duration = function() {
+  var rate = 0.1202;  // that's like 433 km/hr
+  return rate * this.distanceEstimate();
+}
+
+FlyingDirections.prototype.isFullyGeocoded = function() {
+  return this.originLatLng != null && this.destinationLatLng != null;
+};
+
+FlyingDirections.prototype.isLongEnough = function() {
+  return this.distanceEstimate() > 500;
+};
+
+FlyingDirections.prototype.onGeocodeOriginSuccess = function(geocode, onSuccess, onError) {
+  this.originLatLng = geocode[0].geometry.location;
+  this.onGeocodeSuccess(onSuccess, onError);
+};
+FlyingDirections.prototype.onGeocodeDestinationSuccess = function(geocode, onSuccess, onError) {
+  this.destinationLatLng = geocode[0].geometry.location;
+  this.onGeocodeSuccess(onSuccess, onError);
+};
+
+FlyingDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
+  if(this.isFullyGeocoded()) {
+    this.directionsResult = { routes: {
+      legs: [{
+        duration: { value: this.duration() },
+        distance: { value: this.distanceEstimate() },
+        steps: this.steps(),
+      }],
+      warnings: [],
+      bounds: GoogleDirectionsRoute.generateBounds(this.steps())
+    }};
+    onSuccess(this, this.directionsResult);
+  }
 };
 GoogleDirections = function(origin, destination, mode) {
   this.origin = origin
@@ -378,6 +458,8 @@ Segment.create = function(index, step) {
     return new BussingSegment(index, step);
   } else if(step.travel_mode == 'LIGHTRAILING') {
     return new LightRailingSegment(index, step);
+  } else if(step.travel_mode == 'FLYING') {
+    return new FlyingSegment(index, step);
   } else {
     throw "Could not create a Segment for travel_mode: " + step.travel_mode;
   }
@@ -612,6 +694,21 @@ Carbon.emitter(DrivingSegment, function(emitter) {
   emitter.emitAs('automobile_trip');
   emitter.provide('distance');
 });
+FlyingSegment = function(index, step) {
+  this.index = index;
+  if(step.distance)
+    this.distance = parseFloat(step.distance.value) / 1000.0;
+  this.instructions = step.instructions;
+  this.trips = 1;
+  this.mode = 'FLYING';
+}
+FlyingSegment.prototype = new Segment();
+
+Carbon.emitter(FlyingSegment, function(emitter) {
+  emitter.emitAs('flight');
+  emitter.provide('distance_estimate', { as: 'distance' });
+  emitter.provide('trips');
+});
 SubwayingSegment = function(index, step) {
   this.index = index;
   if(step.distance)
@@ -714,6 +811,50 @@ RouteView.prototype.fail = function() {
   $('#' + this.id).unbind('click');
   $('#' + this.id).unbind('mouseenter mouseleave');
 };
+FlightPath = function(controller, originLatLng, destinationLatLng) {
+  this.controller = controller;
+  this.directions = controller.directions['flying'];
+  this.originLatLng = originLatLng;
+  this.destinationLatLng = destinationLatLng;
+};
+
+FlightPath.prototype.polyLine = function() {
+  if(!this._polyLine) {
+    this._polyLine = new google.maps.Polyline({
+      path: [this.directions.originLatLng,this.directions.destinationLatLng],
+      geodesic: true,
+      strokeColor: '#89E',
+      strokeWeight: 4,
+      strokeOpacity: 0.85
+    });
+  }
+
+  return this._polyLine;
+};
+
+FlightPath.prototype.markers = function() {
+  if(!this._markers) {
+    this._markers = [];
+    this._markers.push(new google.maps.Marker({ position: this.originLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
+    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
+  }
+
+  return this._markers;
+};
+
+FlightPath.prototype.display = function() {
+  this.polyLine().setMap(this.controller.mapView.googleMap());
+  for(var i in this.markers()) {
+    this.markers()[i].setMap(this.controller.mapView.googleMap());
+  }
+};
+FlightPath.prototype.hide = function() {
+  this.polyLine().setMap(null);
+  for(var i in this.markers()) {
+    this.markers()[i].setMap(null);
+  }
+};
+
 function IndexController(mapId) {
   this.mapView = new MapView(mapId);
   this.directionsDisplay = new google.maps.DirectionsRenderer();
@@ -723,7 +864,7 @@ function IndexController(mapId) {
   return true;
 }
 
-IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT'];
+IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
 IndexController.prototype.init = function() {
   Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
@@ -775,6 +916,7 @@ IndexController.prototype.reset = function() {
 };
 
 IndexController.prototype.getDirections = function () {
+  this.clearFlightPath();
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i].toLowerCase();
     var direction = Directions.create(
@@ -814,6 +956,37 @@ IndexController.prototype.getTweet = function() {
   });
 };
 
+IndexController.prototype.displayDirectionsFor = function(directions) {
+  if(directions.mode == 'FLYING') { 
+    this.flightPath().display();
+  } else {
+    this.directionsDisplay.setOptions({ preserveViewport: true });
+    this.directionsDisplay.setDirections(directions.directionsResult);
+    this.directionsDisplay.setMap(this.mapView.googleMap());
+  }
+};
+
+IndexController.prototype.hideDirectionsFor = function(directions) {
+  if(directions.mode == 'FLYING') { 
+    this.flightPath().hide();
+  } else {
+    this.directionsDisplay.setMap(null);
+  }
+};
+
+IndexController.prototype.flightPath = function() {
+  if(!this._flightPath) {
+    var flight = this.directions['flying'];
+    this._flightPath = new FlightPath(this, flight.originLatLng, flight.destinationLatLng); 
+  }
+  return this._flightPath;
+};
+
+IndexController.prototype.clearFlightPath = function() {
+  this._flightPath = null;
+};
+
+
 //////  Events 
 
 IndexController.prototype.originDestinationInputKeyup = function(event) {
@@ -838,10 +1011,16 @@ IndexController.prototype.routeButtonClick = function() {
 
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
-    $('#modes li').removeClass('selected');
+    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirection = controller.directions[originalDirectionId];
+    $('#' + originalDirectionId).removeClass('selected');
     $(this).addClass('selected');
+
     var direction = controller.directions[this.id];
-    controller.directionsDisplay.setDirections(direction.directionsResult);
+
+    controller.hideDirectionsFor(originalDirection);
+    controller.displayDirectionsFor(direction);
+
     if (this.id == 'publictransit' && $('#hopstop').is(':hidden')) {
       $('#hopstop').show('slide', { direction: 'down' }, 500);
     } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
@@ -856,17 +1035,20 @@ IndexController.prototype.onModeClick = function(controller) {
 IndexController.prototype.onModeHoverIn = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    controller.directionsDisplay.setOptions({ preserveViewport: true });
-    controller.directionsDisplay.setDirections(direction.directionsResult);
+    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirection = controller.directions[originalDirectionId];
+    controller.hideDirectionsFor(originalDirection);
+    controller.displayDirectionsFor(direction);
   };
 };
 
 IndexController.prototype.onModeHoverOut = function(controller) {
   return function() {
+    var direction = controller.directions[this.id];
     var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
-    controller.directionsDisplay.setOptions({ preserveViewport: true });
-    controller.directionsDisplay.setDirections(originalDirection.directionsResult);
+    controller.hideDirectionsFor(direction);
+    controller.displayDirectionsFor(originalDirection);
   };
 };
 
