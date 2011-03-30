@@ -1,10 +1,9 @@
 function WalkingSegment(index, step) {
   this.index = index;
-  if(step.distance) {
+  if(step.distance)
     this.distance = parseFloat(step.distance.value) / 1000.0;
-  } else if(step.duration) {
+  if(step.duration)
     this.duration = step.duration.value;
-  }
   this.instructions = step.instructions;
   this.mode = 'WALKING';
 };

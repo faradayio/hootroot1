@@ -150,6 +150,14 @@ Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
   });
 };
 
+Directions.prototype.totalTime = function() {
+  var totalTime = 0;
+  this.eachSegment(function(segment) {
+    totalTime += segment.duration;
+  });
+  return TimeFormatter.format(totalTime);
+};
+
 
 
 // Events
@@ -355,7 +363,7 @@ HopStopDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
     });
   }
 };
-Segment = function() {}
+Segment = function() {};
 
 Segment.create = function(index, step) {
   if(step.travel_mode == 'DRIVING') {
@@ -393,6 +401,13 @@ Segment.prototype.onGetEmissionEstimateWithSegmentError = function(onError) {
     onError(this);
   };
 }
+HopStopSegment = function() {}
+HopStopSegment.prototype = Segment.prototype;
+
+HopStopSegment.prototype.durationInHours = function() {
+  if(this.duration)
+    return this.duration / 3600;
+};
 Carbon = function() {
   this.attribute_map = {};
 };
@@ -448,9 +463,13 @@ EmissionEstimator.prototype.params = function() {
   for(var characteristic in this.carbon.attribute_map) {
     var emitter_field = this.carbon.attribute_map[characteristic];
     var value = this.emitter[emitter_field];
-    if(value) {
-      params[characteristic] = this.emitter[emitter_field];
-    }
+    var result;
+    if(value) 
+      result = this.emitter[emitter_field];
+    if(typeof result == 'function')
+      result = result.apply(this.emitter);
+    if(result)
+      params[characteristic] = result;
   }
 
   if(Carbon.key) {
@@ -507,9 +526,46 @@ EmissionEstimate.prototype.toString = function() {
 String.prototype.pluralize = function() {
   return this + 's';
 }
+TimeFormatter = {
+  format: function(seconds) {
+    if(seconds == 0)
+      return '';
+
+    var parts = this.getParts(seconds);
+    var output = [];
+    if(parts.hours > 0) {
+      output.push(parts.hours + 'hrs');
+    }
+
+    if(parts.minutes != null) {
+      if(parts.minutes != 1) {
+        output.push(parts.minutes + 'mins');
+      } else {
+        output.push(parts.minutes + 'min');
+      }
+    }
+
+    return output.join(', ');
+  },
+
+  getParts: function(seconds) {
+    var result = {};
+    var hours = Math.floor(seconds / 3600);
+    if(hours > 0)
+      result.hours = hours;
+
+    var minutes = Math.ceil((seconds - (hours * 3600)) / 60);
+    if(hours == 0 || minutes > 0)
+      result.minutes = minutes;
+    
+    return result;
+  }
+}
 function BicyclingSegment(index, step) {
   this.index = index;
   this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.duration)
+    this.duration = step.duration.value;
   this.instructions = step.instructions;
   this.mode = 'BICYCLING';
 }
@@ -525,26 +581,28 @@ BicyclingSegment.prototype.getEmissionEstimate = function(onSuccess, onError) {
 };
 BussingSegment = function(index, step) {
   this.index = index;
-  if(step.distance) {
+  if(step.distance)
     this.distance = parseFloat(step.distance.value) / 1000.0;
-  } else if(step.duration) {
-    this.duration = step.duration / 3600;
-  }
+  if(step.duration)
+    this.duration = step.duration.value;
   this.instructions = step.instructions;
   this.bus_class = 'city transit';
   this.mode = 'BUSSING';
 }
-BussingSegment.prototype = new Segment();
+BussingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(BussingSegment, function(emitter) {
   emitter.emitAs('bus_trip');
   emitter.provide('distance');
-  emitter.provide('duration');
+  emitter.provide('duration', { as: 'durationInHours' });
   emitter.provide('bus_class');
 });
 function DrivingSegment(index, step) {
   this.index = index;
-  this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.distance)
+    this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.duration)
+    this.duration = step.duration.value;
   this.instructions = step.instructions;
   this.mode = 'DRIVING';
 }
@@ -556,30 +614,28 @@ Carbon.emitter(DrivingSegment, function(emitter) {
 });
 SubwayingSegment = function(index, step) {
   this.index = index;
-  if(step.distance) {
+  if(step.distance)
     this.distance = parseFloat(step.distance.value) / 1000.0;
-  } else if(step.duration) {
-    this.duration = step.duration / 3600;
-  }
+  if(step.duration)
+    this.duration = step.duration.value;
   this.instructions = step.instructions;
   this.rail_class = 'heavy rail';
   this.mode = 'SUBWAYING';
 }
-SubwayingSegment.prototype = new Segment();
+SubwayingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(SubwayingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
   emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration');
+  emitter.provide('duration', { as: 'durationInHours' });
   emitter.provide('rail_class');
 });
 function WalkingSegment(index, step) {
   this.index = index;
-  if(step.distance) {
+  if(step.distance)
     this.distance = parseFloat(step.distance.value) / 1000.0;
-  } else if(step.duration) {
+  if(step.duration)
     this.duration = step.duration.value;
-  }
   this.instructions = step.instructions;
   this.mode = 'WALKING';
 };
@@ -746,7 +802,7 @@ IndexController.prototype.getTweet = function() {
     success: function(data) {
       document.body.style.cursor = 'default';
       if(data.shorturl) {
-        var status = "Check out my trip's carbon footprint: " + data.shorturl;
+        var status = "My trip's carbon footprint: " + data.shorturl + " (via Hootroot)";
         document.location.href = 'http://twitter.com/?status=' + status;
       } else {
         alert('Failed to shorten URL: ' + data.errormessage);
@@ -821,6 +877,7 @@ IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
     this.directionsDisplay.setOptions({ preserveViewport: false });
     this.directionsDisplay.setDirections(directions.directionsResult);
   }
+  $('#' + directions.mode.toLowerCase() + ' a').append(directions.totalTime());
 }
 
 IndexController.prototype.onDirectionsRouteFailure = function(directions, result) {

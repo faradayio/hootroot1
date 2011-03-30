@@ -3,7 +3,7 @@ describe('WalkingSegment', function() {
     var ws = new WalkingSegment(0, { distance: { value: 3401 } });
     expect(ws.distance).toBeClose(3.401, 0.0001)
   });
-  it('uses duration if no distance given', function() {
+  it('provides duration', function() {
     var ws = new WalkingSegment(0, { duration: { value: 120 } });
     expect(ws.duration).toBe(120)
   });
