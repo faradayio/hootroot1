@@ -119,6 +119,10 @@ describe HopstopStep do
       HopstopStep.parse_travel_mode('T').
         should == 'WALKING'
     end
+    it 'returns AMTRAKING for an Amtrak segment (U)' do
+      HopstopStep.parse_travel_mode('U').
+        should == 'AMTRAKING'
+    end
   end
 
   describe '#merge!' do

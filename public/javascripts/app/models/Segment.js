@@ -15,6 +15,8 @@ Segment.create = function(index, step) {
     return new LightRailingSegment(index, step);
   } else if(step.travel_mode == 'FLYING') {
     return new FlyingSegment(index, step);
+  } else if(step.travel_mode == 'AMTRAKING') {
+    return new AmtrakingSegment(index, step);
   } else {
     throw "Could not create a Segment for travel_mode: " + step.travel_mode;
   }

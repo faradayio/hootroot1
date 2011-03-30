@@ -468,6 +468,8 @@ Segment.create = function(index, step) {
     return new LightRailingSegment(index, step);
   } else if(step.travel_mode == 'FLYING') {
     return new FlyingSegment(index, step);
+  } else if(step.travel_mode == 'AMTRAKING') {
+    return new AmtrakingSegment(index, step);
   } else {
     throw "Could not create a Segment for travel_mode: " + step.travel_mode;
   }
@@ -651,6 +653,23 @@ TimeFormatter = {
     return result;
   }
 }
+AmtrakingSegment = function(index, step) {
+  this.index = index;
+  if(step.distance)
+    this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.duration)
+    this.duration = step.duration.value;
+  this.instructions = step.instructions;
+  this.rail_class = 'intercity rail';
+}
+AmtrakingSegment.prototype = new HopStopSegment();
+
+Carbon.emitter(AmtrakingSegment, function(emitter) {
+  emitter.emitAs('rail_trip');
+  emitter.provide('distance_estimate', { as: 'distance' });
+  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('rail_class');
+})
 function BicyclingSegment(index, step) {
   this.index = index;
   this.distance = parseFloat(step.distance.value) / 1000.0;
@@ -717,6 +736,23 @@ Carbon.emitter(FlyingSegment, function(emitter) {
   emitter.provide('distance_estimate', { as: 'distance' });
   emitter.provide('trips');
 });
+LightRailingSegment = function(index, step) {
+  this.index = index;
+  if(step.distance)
+    this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.duration)
+    this.duration = step.duration.value;
+  this.instructions = step.instructions;
+  this.rail_class = 'light rail';
+}
+LightRailingSegment.prototype = new HopStopSegment();
+
+Carbon.emitter(LightRailingSegment, function(emitter) {
+  emitter.emitAs('rail_trip');
+  emitter.provide('distance_estimate', { as: 'distance' });
+  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('rail_class');
+})
 SubwayingSegment = function(index, step) {
   this.index = index;
   if(step.distance)

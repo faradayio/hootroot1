@@ -28,10 +28,12 @@ namespace :js do
       public/javascripts/app/models/HopStopSegment.js
       public/javascripts/lib/Carbon.js
       public/javascripts/lib/TimeFormatter.js
+      public/javascripts/app/models/AmtrakingSegment.js
       public/javascripts/app/models/BicyclingSegment.js
       public/javascripts/app/models/BussingSegment.js
       public/javascripts/app/models/DrivingSegment.js
       public/javascripts/app/models/FlyingSegment.js
+      public/javascripts/app/models/LightRailingSegment.js
       public/javascripts/app/models/SubwayingSegment.js
       public/javascripts/app/models/WalkingSegment.js
       public/javascripts/app/views/MapView.js
