@@ -77,8 +77,8 @@ FlyingDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
       warnings: [],
       bounds: GoogleDirectionsRoute.generateBounds(this.steps())
     }};
-    if(this.distanceEstimate() < 0) {
-      onError(this, data);
+    if(this.distanceEstimate() < 300000) {  // don't show for < 300km
+      onError(this, this.directionsResult);
     } else {
       onSuccess(this, this.directionsResult);
     }
