@@ -91,4 +91,14 @@ describe('Directions', function() {
       expect(onFinish).toHaveBeenCalledWith(directions);
     });
   });
+
+  describe('#totalTime', function() {
+    it("sums each segment's duration and pretty prints the result", function() {
+      expect(directions.totalTime()).toBe('6mins');
+    });
+    it('returns empty string if there are no segments', function() {
+      directions._segments = [];
+      expect(directions.totalTime()).toBe('');
+    });
+  });
 });

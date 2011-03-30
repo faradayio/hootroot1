@@ -161,6 +161,7 @@ IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
     this.directionsDisplay.setOptions({ preserveViewport: false });
     this.directionsDisplay.setDirections(directions.directionsResult);
   }
+  $('#' + directions.mode.toLowerCase() + 'a').append(directions.totalTime());
 }
 
 IndexController.prototype.onDirectionsRouteFailure = function(directions, result) {

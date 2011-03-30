@@ -3,8 +3,13 @@ describe('LightRailingSegment', function() {
     var ws = new LightRailingSegment(0, { distance: { value: 3401 } });
     expect(ws.distance).toBeClose(3.401, 0.0001)
   });
-  it('uses duration if no distance given', function() {
-    var ws = new LightRailingSegment(0, { duration: 120 });
-    expect(ws.duration).toBeClose(0.03, 0.01);
+  it('provides duration in seconds', function() {
+    var ws = new LightRailingSegment(0, { duration: { value: 120 } });
+    expect(ws.duration).toBe(120);
+  });
+
+  it('provides duration in hours', function() {
+    var ws = new LightRailingSegment(0, { duration: { value: 7201 } });
+    expect(ws.durationInHours()).toBeClose(2.00, 0.01);
   });
 });

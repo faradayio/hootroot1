@@ -26,10 +26,10 @@ describe('Segment', function() {
       expect(segment).toBeInstanceOf(BussingSegment)
     })
     it('throws an exception for an invalid travel mode', function() {
-      var step = { distance: 1, travel_mode: 'HITCHHIKING' }
+      var step = { distance: 1, travel_mode: 'HITCHHIKING' };
       expect(function() {
-        Segment.create(0, step)
+        Segment.create(0, step);
       }).toThrow();
     });
-  })
-})
+  });
+});

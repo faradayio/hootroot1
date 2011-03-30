@@ -1,4 +1,4 @@
-Segment = function() {}
+Segment = function() {};
 
 Segment.create = function(index, step) {
   if(step.travel_mode == 'DRIVING') {

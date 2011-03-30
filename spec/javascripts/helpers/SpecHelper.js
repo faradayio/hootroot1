@@ -37,15 +37,19 @@ beforeEach(function() {
           steps: [
             { travel_mode: 'DRIVING',
               distance: { value: 688 },
+              duration: { value: 30 },
               instructions: 'Go there' },
             { travel_mode: 'DRIVING',
               distance: { value: 128 },
+              duration: { value: 2 },
               instructions: 'Go there' },
             { travel_mode: 'DRIVING',
               distance: { value: 45 },
+              duration: { value: 1 },
               instructions: 'Go there' },
             { travel_mode: 'DRIVING',
               distance: { value: 9025 },
+              duration: { value: 300 },
               instructions: 'Go there' },
           ]
         }]
@@ -68,12 +72,15 @@ beforeEach(function() {
           steps: [
             { travel_mode: 'WALKING',
               distance: { value: 321 },
+              duration: { value: 300 },
               instructions: 'Go there' },
             { travel_mode: 'WALKING',
               distance: { value: 1609 },
+              duration: { value: 1600 },
               instructions: 'Go there' },
             { travel_mode: 'WALKING',
               distance: { value: 321 },
+              duration: { value: 300 },
               instructions: 'Go there' }
           ]
         }]
@@ -101,18 +108,22 @@ beforeEach(function() {
         },
         { travel_mode: 'SUBWAYING',
           distance: { value: 1479 },
+          duration: { value: 200 },
           instructions: 'Take the J train from Chauncey St station heading to Broad St'
         },
         { travel_mode: 'WALKING',
           distance: { value: 240 },
+          duration: { value: 5 },
           instructions: 'Exit near intersection of Canal St and Lafayette St'
         },
         { travel_mode: 'SUBWAYING',
           distance: { value: 948 },
+          duration: { value: 18 },
           instructions: 'Take the 6 train from Canal Street station heading Uptown / to Pelham Bay Park'
         },
         { travel_mode: 'WALKING',
           distance: { value: 154 },
+          duration: { value: 18 },
           instructions: 'Exit near intersection of E 32nd St and Park Ave',
           start_position: {
             lat: 40.74577,
@@ -190,10 +201,12 @@ beforeEach(function() {
         },
         { travel_mode: 'WALKING',
           distance: { value: 240 },
+          duration: { value: 18 },
           instructions: 'Exit near intersection of Canal St and Lafayette St'
         },
         { travel_mode: 'WALKING',
           distance: { value: 154 },
+          duration: { value: 10 },
           instructions: 'Exit near intersection of E 32nd St and Park Ave',
           start_position: {
             lat: 40.74577,

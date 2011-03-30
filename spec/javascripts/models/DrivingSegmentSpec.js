@@ -3,6 +3,11 @@ describe('DrivingSegment', function() {
     var ds = new DrivingSegment(0, { distance: { value: 3401 } });
     expect(ds.distance).toBeClose(3.401, 0.0001)
   });
+  it('provides duration', function() {
+    var ds = new DrivingSegment(0, { duration: { value: 3401 } });
+    expect(ds.duration).toBe(3401);
+  });
+
   describe('#getEmissionEstimateWithSegment', function() {
     var emissions, segment;
     beforeEach(function() {

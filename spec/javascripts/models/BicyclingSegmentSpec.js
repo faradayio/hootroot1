@@ -1,9 +1,18 @@
 describe('BicyclingSegment', function() {
+  it('provides duration', function() {
+    var bicycling = new BicyclingSegment(0, {
+      distance: { value: 28.5 },
+      duration: { value: 4800 },
+      instructions: 'Go here' });
+    expect(bicycling.duration).toBe(4800);
+  });
+
   describe('#getEmissionEstimateWithSegment', function() {
-    var bicycling, emissions, segment;
+    var emissions, segment;
     beforeEach(function() {
       var bicycling = new BicyclingSegment(0, {
         distance: { value: 28.5 },
+        duration: { value: 4800 },
         instructions: 'Go here' });
       bicycling.getEmissionEstimateWithSegment(function(f_segment, emissionEstimate) {
         segment = f_segment;

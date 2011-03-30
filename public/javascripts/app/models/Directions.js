@@ -50,6 +50,14 @@ Directions.prototype.getEmissions = function(onSuccess, onError, onFinish) {
   });
 };
 
+Directions.prototype.totalTime = function() {
+  var totalTime = 0;
+  this.eachSegment(function(segment) {
+    totalTime += segment.duration;
+  });
+  return TimeFormatter.format(totalTime);
+};
+
 
 
 // Events
