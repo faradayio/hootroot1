@@ -53,9 +53,13 @@ EmissionEstimator.prototype.params = function() {
   for(var characteristic in this.carbon.attribute_map) {
     var emitter_field = this.carbon.attribute_map[characteristic];
     var value = this.emitter[emitter_field];
-    if(value) {
-      params[characteristic] = this.emitter[emitter_field];
-    }
+    var result;
+    if(value) 
+      result = this.emitter[emitter_field];
+    if(typeof result == 'function')
+      result = result();
+    if(result)
+      params[characteristic] = result;
   }
 
   if(Carbon.key) {
