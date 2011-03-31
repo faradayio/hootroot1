@@ -31,6 +31,7 @@ namespace :js do
       public/javascripts/app/models/AmtrakingSegment.js
       public/javascripts/app/models/BicyclingSegment.js
       public/javascripts/app/models/BussingSegment.js
+      public/javascripts/app/models/CommuterRailingSegment.js
       public/javascripts/app/models/DrivingSegment.js
       public/javascripts/app/models/FlyingSegment.js
       public/javascripts/app/models/LightRailingSegment.js

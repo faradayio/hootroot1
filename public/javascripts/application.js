@@ -198,7 +198,7 @@ FlyingDirections.prototype.steps = function() {
     travel_mode: 'FLYING',
     distance: { value: this.distanceEstimate() },
     duration: { value: this.duration() },
-    instructions: 'Hop on a plane',
+    instructions: this.distanceEstimate() + ' mile flight',
     start_position: {
       lat: this.originLatLng.lat(),
       lon: this.originLatLng.lng()
@@ -470,6 +470,8 @@ Segment.create = function(index, step) {
     return new FlyingSegment(index, step);
   } else if(step.travel_mode == 'AMTRAKING') {
     return new AmtrakingSegment(index, step);
+  } else if(step.travel_mode == 'COMMUTERRAILING') {
+    return new CommuterRailingSegment(index, step);
   } else {
     throw "Could not create a Segment for travel_mode: " + step.travel_mode;
   }
@@ -711,6 +713,23 @@ Carbon.emitter(BussingSegment, function(emitter) {
   emitter.provide('duration', { as: 'durationInMinutes' });
   emitter.provide('bus_class');
 });
+CommuterRailingSegment = function(index, step) {
+  this.index = index;
+  if(step.distance)
+    this.distance = parseFloat(step.distance.value) / 1000.0;
+  if(step.duration)
+    this.duration = step.duration.value;
+  this.instructions = step.instructions;
+  this.rail_class = 'commuter rail';
+}
+CommuterRailingSegment.prototype = new HopStopSegment();
+
+Carbon.emitter(CommuterRailingSegment, function(emitter) {
+  emitter.emitAs('rail_trip');
+  emitter.provide('distance_estimate', { as: 'distance' });
+  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('rail_class');
+})
 function DrivingSegment(index, step) {
   this.index = index;
   if(step.distance)

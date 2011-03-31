@@ -7,7 +7,8 @@ class Hopstop
   base_uri 'www.hopstop.com/ws' 
   
   attr_accessor :licenseKey,
-    :directions, :x1, :y1, :x2, :y2, :mode_name, :when_string
+    :directions, :x1, :y1, :x2, :y2, :mode_name, :when_string,
+    :max_walking_trip_shown, :max_walked
 
   def self.route(x1, y1, x2, y2, mode = 'PUBLICTRANSIT', when_string = 'now')
     hopstop = new :x1 => x1, :y1 => y1, :x2 => x2, :y2 => y2, :mode_name => mode,
@@ -19,6 +20,8 @@ class Hopstop
     attributes.each do |name, value|
       self.send "#{name}=", value
     end
+    self.max_walking_trip_shown ||= 30 * 60 # 30min
+    self.max_walked ||= 5  # 5mi
   end
 
   def when_string

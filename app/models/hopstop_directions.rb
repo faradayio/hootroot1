@@ -28,8 +28,12 @@ module HopstopDirections
   def parse_steps(step_list)
     steps = []
     step_list.split("\n").each do |line|
-      step = HopstopStep.parse(line)
       previous_step = steps.last
+      step = HopstopStep.parse(line)
+      if (previous_step.nil? or step.travel_mode != previous_step.travel_mode) and
+         step.public_transit?
+        step.duration['value'] = 0 
+      end
       if previous_step && step.mergable?(previous_step)
         previous_step.merge!(step) 
       else

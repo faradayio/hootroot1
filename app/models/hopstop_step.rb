@@ -48,17 +48,24 @@ class HopstopStep
     when 'E' then 'ENTRANCEEXIT'
     when 'L' then 'LIGHTRAILING'
     when 'U' then 'AMTRAKING'
+    when 'R' then 'COMMUTERRAILING'
     else
       raise UnknownTransitType, "Don't know what '#{field}' is"
     end
   end
 
-  attr_accessor :instructions, :start_position, :end_position, :duration, :travel_mode
+  attr_accessor :instructions, :start_position, :end_position, :duration, :travel_mode,
+    :first_of_its_kind
 
   def initialize(attrs = {})
     attrs.each do |name, value|
       self.send "#{name}=", value
     end
+    self.first_of_its_kind ||= false
+  end
+
+  def public_transit?
+    !['WALKING','ENTRANCEEXIT'].include?(travel_mode)
   end
 
   def to_hash
