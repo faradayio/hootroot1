@@ -89,6 +89,7 @@ describe('FlyingDirections', function() {
       directions.destinationLatLng = { lat: function() { return 3; }, lng: function() { return 4; } };
       directions.mode = 'WALKING';
       directions.when = 'now';
+      directions.distanceEstimate = function() { return 90000000; };
     });
 
     it('calls onSuccess when origin and destination have been geocoded', function() {
@@ -99,7 +100,6 @@ describe('FlyingDirections', function() {
       expect(onSuccess).toHaveBeenCalled();
     });
     it('sets directionResult on success', function() {
-      directions.distanceEstimate = function() { return 90000000; };
       directions.onGeocodeSuccess(function() {});
       expect(directions.directionsResult.routes.legs.length).toBe(1);
     });

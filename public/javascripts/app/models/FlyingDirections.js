@@ -54,7 +54,7 @@ FlyingDirections.prototype.isFullyGeocoded = function() {
 };
 
 FlyingDirections.prototype.isLongEnough = function() {
-  return this.distanceEstimate() > 500;
+  return this.distanceEstimate() > 115000;
 };
 
 FlyingDirections.prototype.onGeocodeOriginSuccess = function(geocode, onSuccess, onError) {
@@ -77,10 +77,10 @@ FlyingDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
       warnings: [],
       bounds: GoogleDirectionsRoute.generateBounds(this.steps())
     }};
-    if(this.distanceEstimate() < 115000) {  // don't show for < 115km
-      onError(this, this.directionsResult);
-    } else {
+    if(this.isLongEnough()) {  // don't show unless it's a long enough flight
       onSuccess(this, this.directionsResult);
+    } else {
+      onError(this, this.directionsResult);
     }
   }
 };
