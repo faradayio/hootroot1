@@ -39,6 +39,7 @@ namespace :js do
       public/javascripts/app/views/MapView.js
       public/javascripts/app/views/RouteView.js
       public/javascripts/app/models/FlightPath.js
+      public/javascripts/app/controllers/HootBarController.js
       public/javascripts/app/controllers/IndexController.js
       public/javascripts/lib/Url.js
     }

@@ -85,26 +85,6 @@ IndexController.prototype.currentUrl = function() {
   return Url.generate($('#origin').val(), $('#destination').val());
 };
 
-IndexController.prototype.getTweet = function() {
-  document.body.style.cursor = 'wait';
-  $.ajax('http://is.gd/create.php', {
-    data: { url: this.currentUrl(), format: 'json' },
-    dataType: 'json',
-    success: function(data) {
-      document.body.style.cursor = 'default';
-      if(data.shorturl) {
-        var status = "My trip's carbon footprint: " + data.shorturl + " (via Hootroot)";
-        document.location.href = 'http://twitter.com/?status=' + status;
-      } else {
-        alert('Failed to shorten URL: ' + data.errormessage);
-      }
-    },
-    error :function(data) {
-      document.body.style.cursor = 'default';
-    }
-  });
-};
-
 IndexController.prototype.displayDirectionsFor = function(directions) {
   if(directions.mode == 'FLYING') { 
     this.flightPath().display();
@@ -242,35 +222,3 @@ IndexController.prototype.onExampleClick = function() {
   $('#destination').val('162 Madison Ave, New York, NY');
   return false;
 }
-
-IndexController.prototype.onAboutClick = function() {
-  $('#about').toggle('slide', { direction: 'up' }, 500);
-  return false;
-}
-
-IndexController.prototype.onDirectionsClick = function() {
-  $('#wrapper').toggleClass('with_directions');
-  $('#routing').toggle();
-  return false;
-}
-
-IndexController.prototype.onLinkClick = function() {
-  $('#permalink').val(this.currentUrl());
-  $('#linkform').toggle('drop', { direction: 'up' }, 500);
-  return false;
-}
-
-IndexController.prototype.onTweetClick = function() {
-  this.getTweet();
-  return false;
-}
-
-IndexController.prototype.onRestartClick = function() {
-  $('#search').show('drop', { direction: 'up' }, 500);
-  $('h1').show('drop', { direction: 'up' }, 500);
-  $('#nav').hide('slide', { direction: 'up' }, 500);
-  $('#meta').show();
-  $('#modes').hide('slide', { direction: 'down' }, 500);
-  return false;
-}
-
