@@ -1,4 +1,6 @@
 class HopstopStep
+  class UnknownTransitType < StandardError; end
+
   FIELDS = %w{directions time travel_mode thumbnail_url thumb_height thumb_width _ _ _ _ _ _ stop_id _ coordinates vehicle_id vehicle_name}.map(&:to_sym)
 
   # fields
@@ -46,6 +48,8 @@ class HopstopStep
     when 'E' then 'ENTRANCEEXIT'
     when 'L' then 'LIGHTRAILING'
     when 'U' then 'AMTRAKING'
+    else
+      raise UnknownTransitType, "Don't know what '#{field}' is"
     end
   end
 
