@@ -5,7 +5,7 @@ HootBarController = function(indexController) {
 HootBarController.prototype.init = function() {
   $('#aboutlink').click(this.onAboutClick);
   $('#about').click(this.onAboutClick);
-  $('#directions').click(this.onDirectionsClick);
+  $('#directions').click($.proxy(this.onDirectionsClick, this));
   $('#link').click($.proxy(this.onLinkClick, this));
   $('#linkclose').click($.proxy(this.onLinkClick, this));
   $('#tweet').click($.proxy(this.onTweetClick, this));
@@ -38,8 +38,7 @@ HootBarController.prototype.onAboutClick = function() {
 };
 
 HootBarController.prototype.onDirectionsClick = function() {
-  $('#wrapper').toggleClass('with_directions');
-  $('#routing').toggle();
+  this.indexController.currentRoute().toggleDirections();
   return false;
 };
 

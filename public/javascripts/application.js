@@ -872,6 +872,11 @@ RouteView.prototype.updateDirections = function() {
   $('#routing .' + this.mode).html(html);
 };
 
+RouteView.prototype.toggleDirections = function() {
+  $('#wrapper').toggleClass('with_directions');
+  $('#routing').toggle();
+}
+
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
   var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
@@ -994,7 +999,7 @@ HootBarController = function(indexController) {
 HootBarController.prototype.init = function() {
   $('#aboutlink').click(this.onAboutClick);
   $('#about').click(this.onAboutClick);
-  $('#directions').click(this.onDirectionsClick);
+  $('#directions').click($.proxy(this.onDirectionsClick, this));
   $('#link').click($.proxy(this.onLinkClick, this));
   $('#linkclose').click($.proxy(this.onLinkClick, this));
   $('#tweet').click($.proxy(this.onTweetClick, this));
@@ -1027,8 +1032,7 @@ HootBarController.prototype.onAboutClick = function() {
 };
 
 HootBarController.prototype.onDirectionsClick = function() {
-  $('#wrapper').toggleClass('with_directions');
-  $('#routing').toggle();
+  this.indexController.currentRoute().toggleDirections();
   return false;
 };
 
@@ -1117,6 +1121,10 @@ IndexController.prototype.currentUrl = function() {
   return Url.generate($('#origin').val(), $('#destination').val());
 };
 
+IndexController.prototype.currentRoute = function() {
+  return this.routeViewFor($('#modes .selected').get(0).id);
+};
+
 IndexController.prototype.displayDirectionsFor = function(directions) {
   if(directions.mode == 'FLYING') { 
     this.flightPath().display();
@@ -1188,18 +1196,23 @@ IndexController.prototype.routeButtonClick = function() {
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
     var newMode = controller.routeViewFor(this.id);
-    newMode.select();
 
     var oldDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var oldDirection = controller.directions[oldDirectionId];
 
     var newDirection = controller.directions[this.id];
 
-    controller.hideDirectionsFor(oldDirection);
-    controller.displayDirectionsFor(newDirection);
+    if(oldDirection.mode == newDirection.mode) {
+      newMode.toggleDirections();
+    } else {
+      newMode.select();
 
-    $('#routing div').hide();
-    $('#routing .' + this.id).show();
+      controller.hideDirectionsFor(oldDirection);
+      controller.displayDirectionsFor(newDirection);
+
+      $('#routing div').hide();
+      $('#routing .' + this.id).show();
+    }
 
     return false;
   };

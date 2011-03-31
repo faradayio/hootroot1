@@ -63,6 +63,10 @@ IndexController.prototype.currentUrl = function() {
   return Url.generate($('#origin').val(), $('#destination').val());
 };
 
+IndexController.prototype.currentRoute = function() {
+  return this.routeViewFor($('#modes .selected').get(0).id);
+};
+
 IndexController.prototype.displayDirectionsFor = function(directions) {
   if(directions.mode == 'FLYING') { 
     this.flightPath().display();
@@ -134,18 +138,23 @@ IndexController.prototype.routeButtonClick = function() {
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
     var newMode = controller.routeViewFor(this.id);
-    newMode.select();
 
     var oldDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var oldDirection = controller.directions[oldDirectionId];
 
     var newDirection = controller.directions[this.id];
 
-    controller.hideDirectionsFor(oldDirection);
-    controller.displayDirectionsFor(newDirection);
+    if(oldDirection.mode == newDirection.mode) {
+      newMode.toggleDirections();
+    } else {
+      newMode.select();
 
-    $('#routing div').hide();
-    $('#routing .' + this.id).show();
+      controller.hideDirectionsFor(oldDirection);
+      controller.displayDirectionsFor(newDirection);
+
+      $('#routing div').hide();
+      $('#routing .' + this.id).show();
+    }
 
     return false;
   };

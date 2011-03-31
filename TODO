@@ -1,3 +1,2 @@
 * hoptoad (api key env var)
-* proposal: if a mode tab is clicked but it's *already* selected, it should toggle the directions display
 * use distance rather than duration for amtrak

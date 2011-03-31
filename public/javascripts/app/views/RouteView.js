@@ -24,6 +24,11 @@ RouteView.prototype.updateDirections = function() {
   $('#routing .' + this.mode).html(html);
 };
 
+RouteView.prototype.toggleDirections = function() {
+  $('#wrapper').toggleClass('with_directions');
+  $('#routing').toggle();
+}
+
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
   var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
