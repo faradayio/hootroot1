@@ -498,6 +498,7 @@ form#linkform button {
   text-align: center;
   color: inherit;
   outline: none;
+  min-height: 45px;
 }
 
 #modes li.loading a {
@@ -512,8 +513,13 @@ form#linkform button {
   font-size: 12px;
 }
 
-#modes li span.footprint:after {
+#modes li span.footprint.complete:after {
   content: " lbs CO₂";
+}
+
+#modes li span.total_time {
+  font-size: 12px;
+  font-style: italic;
 }
 
 #hopstop {

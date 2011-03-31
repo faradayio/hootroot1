@@ -32,7 +32,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
 
 RouteView.prototype.updateTotalEmissions = function() {
   var value = (Math.round(this.directions.totalEmissions * 100 * 2.2046) / 100);
-  $('#' + this.id + ' .footprint').html(value);
+  $('#' + this.id + ' .footprint').html(value).addClass('complete');
 };
 
 RouteView.prototype.fail = function() {
