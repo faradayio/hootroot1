@@ -2,15 +2,18 @@ describe('RouteView', function() {
   var routeView;
 
   beforeEach(function() {
+    setFixtures('<div id="ok"></div>');
+    var controller = new IndexController('ok');
     var directions = Directions.create('Lansing, MI', 'Ann Arbor, MI', 'DRIVING');
     directions.directionsResult = GoogleResult.driving;
-    routeView = new RouteView(directions);
+    controller.directions.driving = directions;
+    routeView = new RouteView(controller, 'DRIVING');
   });
 
-  describe('#update', function() {
+  describe('#updateDirections', function() {
     it('updates the #route div with directions', function() {
       setFixtures('<div id="routing"><div class="driving"></div></div>');
-      routeView.update();
+      routeView.updateDirections();
       expect($('#routing .driving').html()).toContain('Go there');
     });
   });
@@ -18,7 +21,7 @@ describe('RouteView', function() {
   describe('#updateSegmentEmissions', function() {
     it('updates the emissions of a segment', function() {
       setFixtures('<div id="routing"><div class="driving"></div></div>');
-      routeView.update();
+      routeView.updateDirections();
       var emissionEstimate = {
         methodology: function() { },
         toString: function() { return 123.5 },

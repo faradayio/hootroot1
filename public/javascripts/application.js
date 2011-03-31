@@ -1,3 +1,4 @@
+
 /*!
  * jQuery JavaScript Library v1.5
  * http://jquery.com/
@@ -818,24 +819,33 @@ MapView.prototype.resize = function() {
   this.canvas().width('100%')
   this.canvas().height('100%')
 }
-function RouteView(directions) {
-  this.directions = directions;
-  this.id = this.directions.mode.toLowerCase();
+function RouteView(controller, mode) {
+  this.controller = controller;
+  this.mode = mode.toLowerCase();
+  this.element = $('#' + this.mode);
+  this.isEnabled = false;
 }
+
+RouteView.prototype.directions = function() {
+  if(!this._directions) {
+    this._directions = this.controller.directions[this.mode];
+  }
+  return this._directions;
+};
 
 RouteView.prototype.output = function() {
   var html = '<ul>';
-  var id = this.id;
-  this.directions.eachSegment(function(segment) {
+  var mode = this.mode;
+  this.directions().eachSegment(function(segment) {
     var detail = '<p class="instructions">' + segment.instructions + '</p><p class="emissions">Emissions: <span class="emissions"><em>Loading...</em></span></p>';
-    html += '<li id="' + id + '_segment_' + segment.index + '" class="' + id + '">' + detail + '</li>';
+    html += '<li id="' + mode + '_segment_' + segment.index + '" class="' + mode + '">' + detail + '</li>';
   });
   html += '</ul>';
   return html;
 };
 
-RouteView.prototype.update = function() {
-  $('#routing .' + this.id).html(this.output());
+RouteView.prototype.updateDirections = function() {
+  $('#routing .' + this.mode).html(this.output());
 };
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
@@ -847,31 +857,74 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
     output = value.toString() + ' lbs CO₂';
   }
 
-  $('#' + this.id + '_segment_' + segment.index + ' span.emissions').html(output);
+  $('#' + this.mode + '_segment_' + segment.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
-  var value = (Math.round(this.directions.totalEmissions * 100 * 2.2046) / 100);
-  $('#' + this.id + ' .footprint').html(value).addClass('complete');
+  var value = (Math.round(this.directions().totalEmissions * 100 * 2.2046) / 100);
+  $('#' + this.mode + ' .footprint').html(value).addClass('complete');
 };
 
-RouteView.prototype.fail = function() {
-  $('#' + this.id).removeClass('loading');
-  $('#' + this.id).addClass('disabled');
-  $('#' + this.id).unbind('click');
-  $('#' + this.id).unbind('mouseenter mouseleave');
+RouteView.prototype.select = function() {
+  $('#modes .selected').removeClass('selected');
+  this.element.addClass('selected');
+
+  if (this.mode == 'publictransit' && $('#hopstop').is(':hidden')) {
+    $('#hopstop').show('slide', { direction: 'down' }, 500);
+  } else if (this.mode != 'publictransit' && $('#hopstop').is(':visible') ) {
+    $('#hopstop').hide('slide', { direction: 'down' }, 500);
+  }
+}
+
+RouteView.prototype.enable = function() {
+  if(!this.isEnabled) {
+    this.start();
+    this.element.removeClass('disabled');
+    this.element.find('.footprint').html('...');
+    this.element.find('.total_time').html('');
+    this.element.click(this.controller.onModeClick(this.controller));
+    this.element.hover(this.controller.onModeHoverIn(this.controller),
+                       this.controller.onModeHoverOut(this.controller));
+    this.isEnabled = true;
+  }
+
+  return this;
+}
+
+RouteView.prototype.disable = function() {
+  if(this.isEnabled) {
+    this.finish();
+    this.element.addClass('disabled');
+    this.element.unbind('click');
+    this.element.unbind('mouseenter mouseleave');
+    this.isEnabled = false;
+  }
 };
-FlightPath = function(controller, originLatLng, destinationLatLng) {
+
+RouteView.prototype.start = function() {
+  this.element.addClass('loading');
+  return this;
+}
+
+RouteView.prototype.finish = function() {
+  this.element.removeClass('loading');
+}
+FlightPath = function(controller, directions) {
   this.controller = controller;
-  this.directions = controller.directions['flying'];
-  this.originLatLng = originLatLng;
-  this.destinationLatLng = destinationLatLng;
+  this.directions = directions;
 };
+
+FlightPath.prototype.originLatLng = function() {
+  return this.directions.originLatLng;
+}
+FlightPath.prototype.destinationLatLng = function() {
+  return this.directions.destinationLatLng;
+}
 
 FlightPath.prototype.polyLine = function() {
-  if(!this._polyLine) {
+  if(!this._polyLine && this.originLatLng() && this.destinationLatLng()) {
     this._polyLine = new google.maps.Polyline({
-      path: [this.directions.originLatLng,this.directions.destinationLatLng],
+      path: [this.originLatLng(),this.destinationLatLng()],
       geodesic: true,
       strokeColor: '#89E',
       strokeWeight: 4,
@@ -883,10 +936,10 @@ FlightPath.prototype.polyLine = function() {
 };
 
 FlightPath.prototype.markers = function() {
-  if(!this._markers) {
+  if(!this._markers && this.originLatLng() && this.destinationLatLng()) {
     this._markers = [];
-    this._markers.push(new google.maps.Marker({ position: this.originLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
-    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
+    this._markers.push(new google.maps.Marker({ position: this.originLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
+    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
   }
 
   return this._markers;
@@ -899,10 +952,76 @@ FlightPath.prototype.display = function() {
   }
 };
 FlightPath.prototype.hide = function() {
-  this.polyLine().setMap(null);
+  if(this.polyLine())
+    this.polyLine().setMap(null);
   for(var i in this.markers()) {
     this.markers()[i].setMap(null);
   }
+};
+
+HootBarController = function(indexController) {
+  this.indexController = indexController;
+}
+
+HootBarController.prototype.init = function() {
+  $('#aboutlink').click(this.onAboutClick);
+  $('#about').click(this.onAboutClick);
+  $('#directions').click(this.onDirectionsClick);
+  $('#link').click($.proxy(this.onLinkClick, this));
+  $('#linkclose').click($.proxy(this.onLinkClick, this));
+  $('#tweet').click($.proxy(this.onTweetClick, this));
+  $('#restart').click(this.onRestartClick);
+}
+
+HootBarController.prototype.getTweet = function() {
+  document.body.style.cursor = 'wait';
+  $.ajax('http://is.gd/create.php', {
+    data: { url: this.indexController.currentUrl(), format: 'json' },
+    dataType: 'json',
+    success: function(data) {
+      document.body.style.cursor = 'default';
+      if(data.shorturl) {
+        var status = "My trip's carbon footprint: " + data.shorturl + " (via Hootroot)";
+        document.location.href = 'http://twitter.com/?status=' + status;
+      } else {
+        alert('Failed to shorten URL: ' + data.errormessage);
+      }
+    },
+    error :function(data) {
+      document.body.style.cursor = 'default';
+    }
+  });
+};
+
+HootBarController.prototype.onAboutClick = function() {
+  $('#about').toggle('slide', { direction: 'up' }, 500);
+  return false;
+};
+
+HootBarController.prototype.onDirectionsClick = function() {
+  $('#wrapper').toggleClass('with_directions');
+  $('#routing').toggle();
+  return false;
+};
+
+HootBarController.prototype.onLinkClick = function() {
+  $('#permalink').val(this.indexController.currentUrl());
+  $('#linkform').toggle('drop', { direction: 'up' }, 500);
+  return false;
+};
+
+HootBarController.prototype.onTweetClick = function() {
+  this.getTweet();
+  return false;
+};
+
+HootBarController.prototype.onRestartClick = function() {
+  $('#search').show('drop', { direction: 'up' }, 500);
+  $('h1').show('drop', { direction: 'up' }, 500);
+  $('#nav').hide('slide', { direction: 'up' }, 500);
+  $('#meta').show();
+  $('#modes').hide('slide', { direction: 'down' }, 500);
+  return false;
 };
 
 function IndexController(mapId) {
@@ -910,6 +1029,9 @@ function IndexController(mapId) {
   this.directionsDisplay = new google.maps.DirectionsRenderer();
   this.directions = {};
   this.routeViews = {};
+  var modes = IndexController.modes;
+  for(var i in modes) { this.routeViews[modes[i].toLowerCase()] = new RouteView(this, modes[i]); }
+  this.hootBarController = new HootBarController(this);
 
   return true;
 }
@@ -925,21 +1047,10 @@ IndexController.prototype.init = function() {
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
   $('#when').val('Today');
   $('#example').click(this.onExampleClick);
-  $('#aboutlink').click(this.onAboutClick);
-  $('#about').click(this.onAboutClick);
-  $('#directions').click(this.onDirectionsClick);
-  $('#link').click($.proxy(this.onLinkClick, this));
-  $('#linkclose').click($.proxy(this.onLinkClick, this));
-  $('#tweet').click($.proxy(this.onTweetClick, this));
-  $('#restart').click(this.onRestartClick);
-  var controller = this;
-  $('#modes li').each(function(i, li) {
-    li = $(li);
-    li.click(controller.onModeClick(controller));
-    li.hover(controller.onModeHoverIn(controller),
-             controller.onModeHoverOut(controller));
-  });
-  this.reset();
+  this.hootBarController.init();
+  for(var i in this.routeViews) {
+    this.routeViews[i].enable();
+  }
 
   if(Url.origin()) {
     $('#origin').val(Url.origin());
@@ -960,25 +1071,11 @@ IndexController.prototype.getEmissions = function(directions) {
       this.onSegmentEmissionsFinish);
 };
 
-IndexController.prototype.reset = function() {
-  var controller = this;
-  $('#modes li').each(function(i, li) {
-    li = $(li);
-    li.addClass('loading');
-    li.removeClass('disabled');
-    li.find('.footprint').html('...');
-    li.find('.total_time').html('');
-  });
-};
-
 IndexController.prototype.getDirections = function () {
-  this.clearFlightPath();
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i].toLowerCase();
     var direction = Directions.create(
       $('#origin').val(), $('#destination').val(), IndexController.modes[i]);
-    this.reset();
-    this.routeViews[mode] = new RouteView(direction);
     this.directions[mode] = direction;
     direction.route(
       $.proxy(this.onDirectionsRouteSuccess, this),
@@ -990,26 +1087,6 @@ IndexController.prototype.getDirections = function () {
 
 IndexController.prototype.currentUrl = function() {
   return Url.generate($('#origin').val(), $('#destination').val());
-};
-
-IndexController.prototype.getTweet = function() {
-  document.body.style.cursor = 'wait';
-  $.ajax('http://is.gd/create.php', {
-    data: { url: this.currentUrl(), format: 'json' },
-    dataType: 'json',
-    success: function(data) {
-      document.body.style.cursor = 'default';
-      if(data.shorturl) {
-        var status = "My trip's carbon footprint: " + data.shorturl + " (via Hootroot)";
-        document.location.href = 'http://twitter.com/?status=' + status;
-      } else {
-        alert('Failed to shorten URL: ' + data.errormessage);
-      }
-    },
-    error :function(data) {
-      document.body.style.cursor = 'default';
-    }
-  });
 };
 
 IndexController.prototype.displayDirectionsFor = function(directions) {
@@ -1031,9 +1108,8 @@ IndexController.prototype.hideDirectionsFor = function(directions) {
 };
 
 IndexController.prototype.flightPath = function() {
-  if(!this._flightPath) {
-    var flight = this.directions['flying'];
-    this._flightPath = new FlightPath(this, flight.originLatLng, flight.destinationLatLng); 
+  if(!this._flightPath && this.directions.flying) {
+    this._flightPath = new FlightPath(this, this.directions.flying); 
   }
   return this._flightPath;
 };
@@ -1041,6 +1117,16 @@ IndexController.prototype.flightPath = function() {
 IndexController.prototype.clearFlightPath = function() {
   this._flightPath = null;
 };
+
+IndexController.prototype.routeViewFor = function(directions_or_mode) {
+  var mode;
+  if(directions_or_mode.mode) {
+    mode = directions_or_mode.mode;
+  } else {
+    mode = directions_or_mode;
+  }
+  return this.routeViews[mode.toLowerCase()];
+}
 
 
 //////  Events 
@@ -1059,37 +1145,34 @@ IndexController.prototype.routeButtonClick = function() {
   $('#nav').show('slide', { direction: 'up' }, 500);
   $('#meta').hide();
   $('#modes .failed').each(function(element) { $(element).removeClass('failed'); });
-  this.selectMode($('#modes li:first'));
+  for(var i in this.routeViews) { this.routeViews[i].enable().start(); }
+  this.routeViews.driving.select();
+  if(this.flightPath()) {
+    this.flightPath().hide();
+    this.clearFlightPath();
+  }
   $('#modes').show('slide', { direction: 'down' }, 500);
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
   }
 };
 
-IndexController.prototype.selectMode = function(chosen) {
-  $('#modes .selected').removeClass('selected');
-  chosen.addClass('selected');
-}
-
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
-    controller.selectMode($(this));
-    
-    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
-    var originalDirection = controller.directions[originalDirectionId];
+    var newMode = controller.routeViewFor(this.id);
+    newMode.select();
 
-    var direction = controller.directions[this.id];
+    var oldDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
+    var oldDirection = controller.directions[oldDirectionId];
 
-    controller.hideDirectionsFor(originalDirection);
-    controller.displayDirectionsFor(direction);
+    var newDirection = controller.directions[this.id];
 
-    if (this.id == 'publictransit' && $('#hopstop').is(':hidden')) {
-      $('#hopstop').show('slide', { direction: 'down' }, 500);
-    } else if (this.id != 'publictransit' && $('#hopstop').is(':visible') ) {
-      $('#hopstop').hide('slide', { direction: 'down' }, 500);
-    }
+    controller.hideDirectionsFor(oldDirection);
+    controller.displayDirectionsFor(newDirection);
+
     $('#routing div').hide();
     $('#routing .' + this.id).show();
+
     return false;
   };
 };
@@ -1115,7 +1198,7 @@ IndexController.prototype.onModeHoverOut = function(controller) {
 };
 
 IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
-  this.routeViews[directions.mode.toLowerCase()].update(directions);
+  this.routeViewFor(directions).updateDirections(directions);
   this.getEmissions(directions);
   if(directions.mode == 'DRIVING') {
     this.directionsDisplay.setOptions({ preserveViewport: false });
@@ -1125,19 +1208,17 @@ IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
 }
 
 IndexController.prototype.onDirectionsRouteFailure = function(directions, result) {
-  var routeView = this.routeViews[directions.mode.toLowerCase()];
-  routeView.fail();
+  this.routeViewFor(directions).disable();
 }
 
 IndexController.prototype.onSegmentEmissionsSuccess = function(mode, segment, emissionEstimate) {
-  var routeView = this.routeViews[mode.toLowerCase()];
+  var routeView = this.routeViewFor(mode);
   routeView.updateSegmentEmissions(segment, emissionEstimate);
   routeView.updateTotalEmissions();
 };
 
 IndexController.prototype.onSegmentEmissionsFailure = function(segment) {
-  var routeView = this.routeViews[segment.mode.toLowerCase()];
-  routeView.updateSegmentEmissions(segment, 'Unable to fetch emissions');
+  this.routeViewFor(segment.mode).updateSegmentEmissions(segment, 'Unable to fetch emissions');
 };
 
 IndexController.prototype.onSegmentEmissionsFinish = function(segment) {  // tell 'em, SoulJa Boy
@@ -1149,38 +1230,6 @@ IndexController.prototype.onExampleClick = function() {
   $('#destination').val('162 Madison Ave, New York, NY');
   return false;
 }
-
-IndexController.prototype.onAboutClick = function() {
-  $('#about').toggle('slide', { direction: 'up' }, 500);
-  return false;
-}
-
-IndexController.prototype.onDirectionsClick = function() {
-  $('#wrapper').toggleClass('with_directions');
-  $('#routing').toggle();
-  return false;
-}
-
-IndexController.prototype.onLinkClick = function() {
-  $('#permalink').val(this.currentUrl());
-  $('#linkform').toggle('drop', { direction: 'up' }, 500);
-  return false;
-}
-
-IndexController.prototype.onTweetClick = function() {
-  this.getTweet();
-  return false;
-}
-
-IndexController.prototype.onRestartClick = function() {
-  $('#search').show('drop', { direction: 'up' }, 500);
-  $('h1').show('drop', { direction: 'up' }, 500);
-  $('#nav').hide('slide', { direction: 'up' }, 500);
-  $('#meta').show();
-  $('#modes').hide('slide', { direction: 'down' }, 500);
-  return false;
-}
-
 Url = {
   actual: function() { return document.URL },
 

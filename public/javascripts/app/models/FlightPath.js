@@ -1,14 +1,19 @@
-FlightPath = function(controller, originLatLng, destinationLatLng) {
+FlightPath = function(controller, directions) {
   this.controller = controller;
-  this.directions = controller.directions['flying'];
-  this.originLatLng = originLatLng;
-  this.destinationLatLng = destinationLatLng;
+  this.directions = directions;
 };
 
+FlightPath.prototype.originLatLng = function() {
+  return this.directions.originLatLng;
+}
+FlightPath.prototype.destinationLatLng = function() {
+  return this.directions.destinationLatLng;
+}
+
 FlightPath.prototype.polyLine = function() {
-  if(!this._polyLine) {
+  if(!this._polyLine && this.originLatLng() && this.destinationLatLng()) {
     this._polyLine = new google.maps.Polyline({
-      path: [this.directions.originLatLng,this.directions.destinationLatLng],
+      path: [this.originLatLng(),this.destinationLatLng()],
       geodesic: true,
       strokeColor: '#89E',
       strokeWeight: 4,
@@ -20,10 +25,10 @@ FlightPath.prototype.polyLine = function() {
 };
 
 FlightPath.prototype.markers = function() {
-  if(!this._markers) {
+  if(!this._markers && this.originLatLng() && this.destinationLatLng()) {
     this._markers = [];
-    this._markers.push(new google.maps.Marker({ position: this.originLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
-    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng, icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
+    this._markers.push(new google.maps.Marker({ position: this.originLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
+    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
   }
 
   return this._markers;
@@ -36,7 +41,8 @@ FlightPath.prototype.display = function() {
   }
 };
 FlightPath.prototype.hide = function() {
-  this.polyLine().setMap(null);
+  if(this.polyLine())
+    this.polyLine().setMap(null);
   for(var i in this.markers()) {
     this.markers()[i].setMap(null);
   }
