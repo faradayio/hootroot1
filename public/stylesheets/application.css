@@ -266,6 +266,7 @@ form#linkform button {
 #nav ul {
   list-style: none;
   width: 176px;
+  background: rgb(221,221,221);
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -301,6 +302,7 @@ form#linkform button {
 }
 
 #nav ul li:hover {
+  background: rgb(200,200,200);
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -403,6 +405,7 @@ form#linkform button {
   list-style: none;
   padding: 0;
   margin: 0;
+  background: rgb(221,221,221);
   background-image: -webkit-gradient(
       linear,
       left top,
@@ -437,6 +440,7 @@ form#linkform button {
 }
 
 #modes li.disabled, #modes li.disabled:hover {
+  background: rgb(231,231,231);
   background-image: -webkit-gradient(
       linear,
       left top,
