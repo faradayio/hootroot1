@@ -4,22 +4,22 @@ describe('TimeFormatter', function() {
       expect(TimeFormatter.format(0)).toBe('');
     });
     it('converts 1 second', function() {
-      expect(TimeFormatter.format(1)).toBe('1min');
+      expect(TimeFormatter.format(1)).toBe('1 min');
     });
     it('converts 59 seconds', function() {
-      expect(TimeFormatter.format(59)).toBe('1min');
+      expect(TimeFormatter.format(59)).toBe('1 min');
     });
     it('converts 60 seconds', function() {
-      expect(TimeFormatter.format(60)).toBe('1min');
+      expect(TimeFormatter.format(60)).toBe('1 min');
     });
     it('converts 90 seconds', function() {
-      expect(TimeFormatter.format(90)).toBe('2mins');
+      expect(TimeFormatter.format(90)).toBe('2 mins');
     });
     it('converts 7200 seconds', function() {
-      expect(TimeFormatter.format(7200)).toBe('2hrs');
+      expect(TimeFormatter.format(7200)).toBe('2 hrs');
     });
     it('converts 7201 seconds', function() {
-      expect(TimeFormatter.format(7201)).toBe('2hrs, 1min');
+      expect(TimeFormatter.format(7201)).toBe('2 hrs, 1 min');
     });
   });
 

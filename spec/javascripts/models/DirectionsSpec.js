@@ -94,7 +94,7 @@ describe('Directions', function() {
 
   describe('#totalTime', function() {
     it("sums each segment's duration and pretty prints the result", function() {
-      expect(directions.totalTime()).toBe('6mins');
+      expect(directions.totalTime()).toBe('6 mins');
     });
     it('returns empty string if there are no segments', function() {
       directions._segments = [];
