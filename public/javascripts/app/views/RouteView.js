@@ -56,28 +56,32 @@ RouteView.prototype.select = function() {
 }
 
 RouteView.prototype.enable = function() {
+  this.start();
+  this.element.removeClass('disabled');
+  this.element.find('.footprint').html('...');
+  this.element.find('.total_time').html('');
+
   if(!this.isEnabled) {
-    this.start();
-    this.element.removeClass('disabled');
-    this.element.find('.footprint').html('...');
-    this.element.find('.total_time').html('');
     this.element.click(this.controller.onModeClick(this.controller));
     this.element.hover(this.controller.onModeHoverIn(this.controller),
                        this.controller.onModeHoverOut(this.controller));
-    this.isEnabled = true;
   }
+  this.isEnabled = true;
 
   return this;
 }
 
 RouteView.prototype.disable = function() {
+  this.finish();
+  this.element.addClass('disabled');
+
   if(this.isEnabled) {
-    this.finish();
-    this.element.addClass('disabled');
     this.element.unbind('click');
     this.element.unbind('mouseenter mouseleave');
-    this.isEnabled = false;
   }
+  this.isEnabled = false;
+
+  return this;
 };
 
 RouteView.prototype.start = function() {
