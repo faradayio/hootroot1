@@ -172,7 +172,7 @@ IndexController.prototype.onModeHoverOut = function(controller) {
 };
 
 IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
-  this.routeViewFor(directions).updateDirections(directions);
+  this.routeViewFor(directions).updateDirections();
   this.getEmissions(directions);
   if(directions.mode == 'DRIVING') {
     this.directionsDisplay.setOptions({ preserveViewport: false });

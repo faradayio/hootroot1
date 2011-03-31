@@ -833,7 +833,7 @@ RouteView.prototype.directions = function() {
   return this._directions;
 };
 
-RouteView.prototype.output = function() {
+RouteView.prototype.updateDirections = function() {
   var html = '<ul>';
   var mode = this.mode;
   this.directions().eachSegment(function(segment) {
@@ -841,11 +841,8 @@ RouteView.prototype.output = function() {
     html += '<li id="' + mode + '_segment_' + segment.index + '" class="' + mode + '">' + detail + '</li>';
   });
   html += '</ul>';
-  return html;
-};
 
-RouteView.prototype.updateDirections = function() {
-  $('#routing .' + this.mode).html(this.output());
+  $('#routing .' + this.mode).html(html);
 };
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
@@ -1202,7 +1199,7 @@ IndexController.prototype.onModeHoverOut = function(controller) {
 };
 
 IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
-  this.routeViewFor(directions).updateDirections(directions);
+  this.routeViewFor(directions).updateDirections();
   this.getEmissions(directions);
   if(directions.mode == 'DRIVING') {
     this.directionsDisplay.setOptions({ preserveViewport: false });
