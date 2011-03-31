@@ -1,4 +1,3 @@
-
 /*!
  * jQuery JavaScript Library v1.5
  * http://jquery.com/
@@ -631,14 +630,14 @@ TimeFormatter = {
     var parts = this.getParts(seconds);
     var output = [];
     if(parts.hours > 0) {
-      output.push(parts.hours + 'hrs');
+      output.push(parts.hours + ' hrs');
     }
 
     if(parts.minutes != null) {
       if(parts.minutes != 1) {
-        output.push(parts.minutes + 'mins');
+        output.push(parts.minutes + ' mins');
       } else {
-        output.push(parts.minutes + 'min');
+        output.push(parts.minutes + ' min');
       }
     }
 
@@ -853,7 +852,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
 
 RouteView.prototype.updateTotalEmissions = function() {
   var value = (Math.round(this.directions.totalEmissions * 100 * 2.2046) / 100);
-  $('#' + this.id + ' .footprint').html(value);
+  $('#' + this.id + ' .footprint').html(value).addClass('complete');
 };
 
 RouteView.prototype.fail = function() {

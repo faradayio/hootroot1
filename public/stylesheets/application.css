@@ -436,6 +436,22 @@ form#linkform button {
   color: #444;
 }
 
+#modes li.disabled, #modes li.disabled:hover {
+  background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0, rgb(231,231,231)),
+      color-stop(1, rgb(210,210,210))
+  );
+  background-image: -moz-linear-gradient(
+      center top,
+      rgb(231,231,231) 0%,
+      rgb(210,210,210) 100%
+  );
+  color: #999;
+}
+
 #modes li:hover {
   color: #222;
   background-image: -webkit-gradient(
@@ -449,14 +465,6 @@ form#linkform button {
 }
 
 #modes li.disabled:hover {
-  color: #222;
-  background-image: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      color-stop(0, rgb(221,221,221)),
-      color-stop(1, rgb(200,200,200))
-  );
   cursor: default;
 }
 
@@ -498,6 +506,7 @@ form#linkform button {
   text-align: center;
   color: inherit;
   outline: none;
+  min-height: 45px;
 }
 
 #modes li.loading a {
@@ -512,8 +521,17 @@ form#linkform button {
   font-size: 12px;
 }
 
-#modes li span.footprint:after {
+#modes li span.footprint.complete:after {
   content: " lbs CO₂";
+}
+
+#modes li.disabled span.footprint {
+  display: none;
+}
+
+#modes li span.total_time {
+  font-size: 12px;
+  font-style: italic;
 }
 
 #hopstop {

@@ -6,14 +6,14 @@ TimeFormatter = {
     var parts = this.getParts(seconds);
     var output = [];
     if(parts.hours > 0) {
-      output.push(parts.hours + 'hrs');
+      output.push(parts.hours + ' hrs');
     }
 
     if(parts.minutes != null) {
       if(parts.minutes != 1) {
-        output.push(parts.minutes + 'mins');
+        output.push(parts.minutes + ' mins');
       } else {
-        output.push(parts.minutes + 'min');
+        output.push(parts.minutes + ' min');
       }
     }
 
