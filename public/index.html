@@ -3,6 +3,9 @@
   <head>
     <title>Hootroot · give a hoot, green your route</title>
     <link type="text/css" rel="stylesheet" href="stylesheets/application.css" />
+    <!--[if IE]>
+    <link href="/stylesheets/ie.css" media="screen" rel="stylesheet" type="text/css" />
+    <![endif]--> 
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
     <meta charset="utf-8" />
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
@@ -13,7 +16,6 @@
           mc = new IndexController('#map_canvas');
           mc.init();
           $( 'input[placeholder], textarea[placeholder]' ).placeHoldize();
-          $('#origin').focus();
         });
       })
     </script>
