@@ -13,7 +13,7 @@ task :default => [:features, :spec]
 
 namespace :js do
   task :build do
-    `echo '' > public/javascripts/application.js`
+    `echo '' > public/javascripts/application.js` # N.B. this doesn't work on windows, you have to manually remove the first line of application.js afterwards
     jss = Dir.glob('public/javascripts/**/*.js') - ['public/javscripts/google_maps.js','public/javascripts/application.js']
     jss = %w{
       public/javascripts/jquery-1.5.min.js
