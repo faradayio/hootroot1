@@ -255,7 +255,7 @@ FlyingDirections.prototype.onGeocodeSuccess = function(onSuccess, onError) {
       warnings: [],
       bounds: GoogleDirectionsRoute.generateBounds(this.steps())
     }};
-    if(this.distanceEstimate() < 300000) {  // don't show for < 300km
+    if(this.distanceEstimate() < 115000) {  // don't show for < 115km
       onError(this, this.directionsResult);
     } else {
       onSuccess(this, this.directionsResult);
