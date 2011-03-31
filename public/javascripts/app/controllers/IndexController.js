@@ -160,7 +160,7 @@ IndexController.prototype.routeButtonClick = function() {
 
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
-    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
     $('#' + originalDirectionId).removeClass('selected');
     $(this).addClass('selected');
@@ -184,7 +184,7 @@ IndexController.prototype.onModeClick = function(controller) {
 IndexController.prototype.onModeHoverIn = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
     controller.hideDirectionsFor(originalDirection);
     controller.displayDirectionsFor(direction);
@@ -194,7 +194,7 @@ IndexController.prototype.onModeHoverIn = function(controller) {
 IndexController.prototype.onModeHoverOut = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    var originalDirectionId = this.parentElement.getElementsByClassName('selected')[0].id;
+    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
     controller.hideDirectionsFor(direction);
     controller.displayDirectionsFor(originalDirection);
