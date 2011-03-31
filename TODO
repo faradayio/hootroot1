@@ -1,5 +1,4 @@
 * hoptoad (api key env var)
-* update to rails 3.0.5
 * add a directions item for flying . . . "123 mile flight . . . 10 kg CO2 [methodology link]"
 * proposal: if a mode tab is clicked but it's *already* selected, it should toggle the directions display
 * use distance rather than duration for amtrak
