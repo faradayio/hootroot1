@@ -152,18 +152,24 @@ IndexController.prototype.routeButtonClick = function() {
   $('#nav').show('slide', { direction: 'up' }, 500);
   $('#meta').hide();
   $('#modes .failed').each(function(element) { $(element).removeClass('failed'); });
+  this.selectMode($('#modes li:first'));
   $('#modes').show('slide', { direction: 'down' }, 500);
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
   }
 };
 
+IndexController.prototype.selectMode = function(chosen) {
+  $('#modes .selected').removeClass('selected');
+  chosen.addClass('selected');
+}
+
 IndexController.prototype.onModeClick = function(controller) {
   return function() {
+    controller.selectMode($(this));
+    
     var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
     var originalDirection = controller.directions[originalDirectionId];
-    $('#' + originalDirectionId).removeClass('selected');
-    $(this).addClass('selected');
 
     var direction = controller.directions[this.id];
 
