@@ -26,7 +26,7 @@ RouteView.prototype.updateDirections = function() {
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
-  var value = (Math.round(emissionEstimate.value() * 100 * 2.2046) / 100);
+  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
   if(emissionEstimate.methodology) {
     output = '<a href="' + emissionEstimate.methodology() + '">' + value + ' lbs CO₂</a>';
   } else {
@@ -37,7 +37,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
-  var value = (Math.round(this.directions().totalEmissions * 100 * 2.2046) / 100);
+  var value = NumberFormatter.kilogramsToPounds(this.directions().totalEmissions);
   $('#' + this.mode + ' .footprint').html(value).addClass('complete');
 };
 

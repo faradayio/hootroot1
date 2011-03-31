@@ -20,7 +20,7 @@ FlyingDirections.prototype.steps = function() {
     travel_mode: 'FLYING',
     distance: { value: this.distanceEstimate() },
     duration: { value: this.duration() },
-    instructions: 'Hop on a plane',
+    instructions: NumberFormatter.metersToMiles(this.distanceEstimate()) + ' mile flight',
     start_position: {
       lat: this.originLatLng.lat(),
       lon: this.originLatLng.lng()

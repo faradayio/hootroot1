@@ -198,7 +198,7 @@ FlyingDirections.prototype.steps = function() {
     travel_mode: 'FLYING',
     distance: { value: this.distanceEstimate() },
     duration: { value: this.duration() },
-    instructions: this.distanceEstimate() + ' mile flight',
+    instructions: NumberFormatter.metersToMiles(this.distanceEstimate()) + ' mile flight',
     start_position: {
       lat: this.originLatLng.lat(),
       lon: this.originLatLng.lng()
@@ -625,6 +625,14 @@ EmissionEstimate.prototype.toString = function() {
 String.prototype.pluralize = function() {
   return this + 's';
 }
+NumberFormatter = {
+  kilogramsToPounds: function(num) {
+    return (Math.round(num * 100 * 2.2046) / 100);
+  },
+  metersToMiles: function(num) {
+    return (Math.round((num / 1609.3) * 100) / 100);
+  }
+}
 TimeFormatter = {
   format: function(seconds) {
     if(seconds == 0)
@@ -866,7 +874,7 @@ RouteView.prototype.updateDirections = function() {
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
-  var value = (Math.round(emissionEstimate.value() * 100 * 2.2046) / 100);
+  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
   if(emissionEstimate.methodology) {
     output = '<a href="' + emissionEstimate.methodology() + '">' + value + ' lbs CO₂</a>';
   } else {
@@ -877,7 +885,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
-  var value = (Math.round(this.directions().totalEmissions * 100 * 2.2046) / 100);
+  var value = NumberFormatter.kilogramsToPounds(this.directions().totalEmissions);
   $('#' + this.mode + ' .footprint').html(value).addClass('complete');
 };
 
