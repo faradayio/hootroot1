@@ -539,6 +539,7 @@ form#linkform button {
 }
 
 #hopstop {
+  display: block;
   position: absolute;
   bottom: 0;
   width: 330px;
