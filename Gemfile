@@ -11,6 +11,7 @@ end
 
 group :production do
   gem 'bson_ext',               '>= 1.0.9'
+  gem 'hoptoad_notifier'
 end
 
 group :test do
