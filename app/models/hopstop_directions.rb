@@ -11,7 +11,10 @@ module HopstopDirections
     simplified_hash['result_code'] = response['ResponseStatus']['ResultCode'].to_i
     simplified_hash['result_string'] = response['ResponseStatus']['ResultString']
 
-    fail Failure, simplified_hash['result_string'] if simplified_hash['result_code'] != 200
+    if simplified_hash['result_code'] != 200
+      puts "HopStop failed with status #{simplified_hash['result_code']}, #{simplified_hash['result_string']}"
+      fail Failure, simplified_hash['result_string'] 
+    end
 
     route_info = response['RouteInfo']
 
