@@ -854,10 +854,11 @@ function RouteView(controller, mode) {
 }
 
 RouteView.prototype.directions = function() {
-  if(!this._directions) {
-    this._directions = this.controller.directions[this.mode];
-  }
-  return this._directions;
+  return this.controller.directions[this.mode];
+};
+
+RouteView.prototype.clearDirections = function() {
+  $('#routing .' + this.mode).html('');
 };
 
 RouteView.prototype.updateDirections = function() {
@@ -908,8 +909,6 @@ RouteView.prototype.select = function() {
 RouteView.prototype.enable = function() {
   this.start();
   this.element.removeClass('disabled');
-  this.element.find('.footprint').html('...');
-  this.element.find('.total_time').html('');
 
   if(!this.isEnabled) {
     this.element.click(this.controller.onModeClick(this.controller));
@@ -931,11 +930,16 @@ RouteView.prototype.disable = function() {
   }
   this.isEnabled = false;
 
+  this.clearDirections();
+
   return this;
 };
 
 RouteView.prototype.start = function() {
+  this.clearDirections();
   this.element.addClass('loading');
+  this.element.find('.footprint').html('...');
+  this.element.find('.total_time').html('');
   return this;
 }
 
@@ -1175,7 +1179,6 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 
 IndexController.prototype.routeButtonClick = function() {
   Url.go(this.currentUrl());
-  this.getDirections();
   $('#search').hide('drop', { direction: 'up' }, 500);
   $('h1').hide('drop', { direction: 'up' }, 500);
   $('#nav').show('slide', { direction: 'up' }, 500);
@@ -1191,6 +1194,7 @@ IndexController.prototype.routeButtonClick = function() {
   if ($('#about').is(':visible')) {
     $('#about').hide('drop', { direction: 'up' }, 500);
   }
+  this.getDirections();
 };
 
 IndexController.prototype.onModeClick = function(controller) {
