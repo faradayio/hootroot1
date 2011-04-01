@@ -244,7 +244,7 @@ form#linkform button {
   overflow: hidden;
   position: absolute;
   top: 0;
-  width: 100%;
+  margin: 0 40%;
   left: 0;
   padding: 0 0 50px;
   font-size: 13px;
