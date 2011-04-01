@@ -824,9 +824,9 @@ WalkingSegment.prototype.getEmissionEstimate = function(onSuccess, onError) {
 };
 function MapView(mapId) {
   this.mapId = mapId
-  var ll = new google.maps.LatLng(37.774107, -122.419281)
+  var ll = new google.maps.LatLng(39.57, -97.82)
   this.options = {
-    zoom: 13,
+    zoom: 4,
     center: ll,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   }
