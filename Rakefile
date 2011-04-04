@@ -16,7 +16,7 @@ namespace :js do
     `echo '' > public/javascripts/application.js` # N.B. this doesn't work on windows, you have to manually remove the first line of application.js afterwards
     jss = Dir.glob('public/javascripts/**/*.js') - ['public/javscripts/google_maps.js','public/javascripts/application.js']
     jss = %w{
-      public/javascripts/jquery-1.5.min.js
+      public/javascripts/jquery-1.5.1.min.js
       public/javascripts/lib/jquery.placeholdize.min.js
       public/javascripts/lib/jquery-ui-1.8.11.custom.min.js
       public/javascripts/app/models/Directions.js

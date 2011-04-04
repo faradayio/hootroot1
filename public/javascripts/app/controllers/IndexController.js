@@ -13,27 +13,33 @@ function IndexController(mapId) {
 IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
 IndexController.prototype.init = function() {
-  Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
-  this.mapView.resize();
-  this.mapView.googleMap();
+  if(jQuery.browser.msie) {
+    $('<div id="noie">Sorry, Internet Explorer is not yet supported. In the meantime, you can try out Hootroot with <a href="http://www.google.com/chrome">Chrome</a> or <a href="http://firefox.com">Firefox</a>.</div>').
+      appendTo($(document.body));
+    $('#noie').dialog({ modal: true, beforeClose: function() { return false; } });
+  } else {
+    Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
+    this.mapView.resize();
+    this.mapView.googleMap();
 
-  $('#go').click($.proxy(this.routeButtonClick, this));
-  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
-  $('#when').val('Today');
-  $('#example').click(this.onExampleClick);
-  this.hootBarController.init();
-  for(var i in this.routeViews) {
-    this.routeViews[i].enable();
-  }
+    $('#go').click($.proxy(this.routeButtonClick, this));
+    $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
+    $('#when').val('Today');
+    $('#example').click(this.onExampleClick);
+    this.hootBarController.init();
+    for(var i in this.routeViews) {
+      this.routeViews[i].enable();
+    }
 
-  if(Url.origin()) {
-    $('#origin').val(Url.origin());
-  }
-  if(Url.destination()) {
-    $('#destination').val(Url.destination());
-  }
-  if(Url.origin() && Url.destination()) {
-    this.routeButtonClick();
+    if(Url.origin()) {
+      $('#origin').val(Url.origin());
+    }
+    if(Url.destination()) {
+      $('#destination').val(Url.destination());
+    }
+    if(Url.origin() && Url.destination()) {
+      this.routeButtonClick();
+    }
   }
 };
 
