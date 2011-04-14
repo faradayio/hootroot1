@@ -42,7 +42,7 @@ class HopstopStep
 
   def self.parse_travel_mode(field)
     case field
-    when 'B','C' then 'BUSSING'
+    when 'B','C','P' then 'BUSSING' # P seems to be regional coach, B is city bus
     when 'S' then 'SUBWAYING'
     when 'W','T' then 'WALKING'
     when 'E' then 'ENTRANCEEXIT'
