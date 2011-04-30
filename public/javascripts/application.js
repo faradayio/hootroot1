@@ -594,6 +594,125 @@ HopStopSegment.prototype.durationInMinutes = function() {
   if(this.duration)
     return this.duration / 60;
 };
+(function( jQuery ) {
+  // Create the request object
+  // (This is still attached to ajaxSettings for backward compatibility)
+  jQuery.ajaxSettings.xdr = function() {
+    return (window.XDomainRequest ? new window.XDomainRequest() : null);
+  };
+
+  // Determine support properties
+  (function( xdr ) {
+    jQuery.extend( jQuery.support, { iecors: !!xdr, });
+  })( jQuery.ajaxSettings.xdr() );
+
+  // Create transport if the browser can provide an xdr
+  if ( jQuery.support.iecors ) {
+
+    jQuery.ajaxTransport(function( s ) {
+      var callback;
+
+      return {
+        send: function( headers, complete ) {
+          var xdr = s.xdr();
+
+          xdr.onload = function() {
+            var headers = { 'Content-Type': xdr.contentType };
+            complete(200, 'OK', { text: xdr.responseText }, headers);
+          };
+          
+          // Apply custom fields if provided
+					if ( s.xhrFields ) {
+            xhr.onerror = s.xhrFields.error;
+            xhr.ontimeout = s.xhrFields.timeout;
+					}
+
+          xdr.open( s.type, s.url );
+
+          // XDR has no method for setting headers O_o
+
+          xdr.send( ( s.hasContent && s.data ) || null );
+        },
+
+        abort: function() {
+          xdr.abort();
+        }
+      };
+    });
+  }
+})( jQuery );
+String.prototype.pluralize = function() {
+  return this + 's';
+}
+EmissionEstimate = function() {};
+
+EmissionEstimate.prototype.value = function() {
+  if(this.data) {
+    return this.data.emission;
+  } else {
+    return 'No data';
+  }
+};
+
+EmissionEstimate.prototype.methodology = function() {
+  if(this.data) {
+    return this.data.methodology;
+  } else {
+    return 'No data';
+  }
+};
+
+EmissionEstimate.prototype.toString = function() {
+  return this.value().toString();
+};
+EmissionEstimator = function(emitter, carbon) {
+  this.emitter = emitter;
+  this.carbon = carbon;
+};
+
+EmissionEstimator.prototype.url = function() {
+  return 'http://carbon.brighterplanet.com/' + this.carbon.emitter_name.pluralize() + '.json';
+};
+
+EmissionEstimator.prototype.params = function() {
+  var params = {};
+  for(var attribute in this.carbon.attribute_map) {
+    var cm1_field = this.carbon.attribute_map[attribute];
+    var value = this.emitter[attribute];
+    var result;
+    if(value) 
+      result = value;
+    if(typeof result == 'function')
+      result = result.apply(this.emitter);
+    if(result)
+      params[cm1_field] = result;
+  }
+
+  if(Carbon.key) {
+    params['key'] = Carbon.key;
+  }
+
+  return params;
+};
+
+EmissionEstimator.prototype.getEmissionEstimate = function(onSuccess, onError) {
+  $.ajax({
+    url: this.url(),
+    data: this.params(),
+    dataType: 'json',
+    success: this.onEstimateSuccess(onSuccess),
+    error: onError
+  });
+};
+
+// Events
+
+EmissionEstimator.prototype.onEstimateSuccess = function(onSuccess) {
+  return $.proxy(function(result) {
+    this.emitter.emissionEstimate.data = result;
+    onSuccess(this.emitter.emissionEstimate);
+  }, this);
+};
 Carbon = function() {
   this.attribute_map = {};
 };
@@ -632,86 +751,6 @@ Carbon.prototype.provide = function(attribute, options) {
 
   this.attribute_map[attribute] = actual_field;
 };
-
-
-
-EmissionEstimator = function(emitter, carbon) {
-  this.emitter = emitter;
-  this.carbon = carbon;
-};
-
-EmissionEstimator.prototype.url = function() {
-  return 'http://carbon.brighterplanet.com/' + this.carbon.emitter_name.pluralize() + '.json';
-};
-
-EmissionEstimator.prototype.params = function() {
-  var params = {};
-  for(var characteristic in this.carbon.attribute_map) {
-    var emitter_field = this.carbon.attribute_map[characteristic];
-    var value = this.emitter[emitter_field];
-    var result;
-    if(value) 
-      result = this.emitter[emitter_field];
-    if(typeof result == 'function')
-      result = result.apply(this.emitter);
-    if(result)
-      params[characteristic] = result;
-  }
-
-  if(Carbon.key) {
-    params['key'] = Carbon.key;
-  }
-
-  return params;
-};
-
-EmissionEstimator.prototype.getEmissionEstimate = function(onSuccess, onError) {
-  $.ajax({
-    url: this.url(),
-    data: this.params(),
-    dataType: 'json',
-    success: this.onEstimateSuccess(onSuccess),
-    error: onError
-  });
-};
-
-// Events
-
-EmissionEstimator.prototype.onEstimateSuccess = function(onSuccess) {
-  return $.proxy(function(result) {
-    this.emitter.emissionEstimate.data = result;
-    onSuccess(this.emitter.emissionEstimate);
-  }, this);
-};
-
-
-
-EmissionEstimate = function() {};
-
-EmissionEstimate.prototype.value = function() {
-  if(this.data) {
-    return this.data.emission;
-  } else {
-    return 'No data';
-  }
-};
-
-EmissionEstimate.prototype.methodology = function() {
-  if(this.data) {
-    return this.data.methodology;
-  } else {
-    return 'No data';
-  }
-};
-
-EmissionEstimate.prototype.toString = function() {
-  return this.value().toString();
-};
-
-
-String.prototype.pluralize = function() {
-  return this + 's';
-}
 NumberFormatter = {
   kilogramsToPounds: function(num) {
     return (Math.round(num * 100 * 2.2046) / 100);
@@ -1161,46 +1200,36 @@ function IndexController(mapId) {
 
 IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
-IndexController.prototype.blockIe = function() {
-
-};
-
 IndexController.prototype.init = function() {
-  if(jQuery.browser.msie) {
-    $('<div id="noie">Sorry, Internet Explorer is not yet supported. In the meantime, you can try out Hootroot with <a href="http://www.google.com/chrome">Chrome</a> or <a href="http://firefox.com">Firefox</a>.</div>').
-      appendTo($(document.body));
-    $('#noie').dialog({ modal: true, beforeClose: function() { return false; } });
-  } else {
-    Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
-    this.mapView.resize();
-    this.mapView.googleMap();
+  Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
+  this.mapView.resize();
+  this.mapView.googleMap();
 
-    $('#go').click($.proxy(this.routeButtonClick, this));
-    $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
-    $('#when').val('Today');
-    $('#example').click(this.onExampleClick);
-    this.hootBarController.init();
-    for(var i in this.routeViews) {
-      this.routeViews[i].enable();
-    }
+  $('#go').click($.proxy(this.routeButtonClick, this));
+  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
+  $('#when').val('Today');
+  $('#example').click(this.onExampleClick);
+  this.hootBarController.init();
+  for(var i in this.routeViews) {
+    this.routeViews[i].enable();
+  }
 
-    if(Url.origin()) {
-      $('#origin').val(Url.origin());
-    }
-    if(Url.destination()) {
-      $('#destination').val(Url.destination());
-    }
-    if(Url.origin() && Url.destination()) {
-      this.routeButtonClick();
-    }
+  if(Url.origin()) {
+    $('#origin').val(Url.origin());
+  }
+  if(Url.destination()) {
+    $('#destination').val(Url.destination());
+  }
+  if(Url.origin() && Url.destination()) {
+    this.routeButtonClick();
   }
 };
 
 
 IndexController.prototype.getEmissions = function(directions) {
   directions.getEmissions(
-      $.proxy(this.onSegmentEmissionsSuccess, this),
-      $.proxy(this.onSegmentEmissionsFailure, this),
+      this.onSegmentEmissionsSuccess(this),
+      this.onSegmentEmissionsFailure(this),
       this.onSegmentEmissionsFinish);
 };
 
@@ -1211,8 +1240,8 @@ IndexController.prototype.getDirections = function () {
       $('#origin').val(), $('#destination').val(), IndexController.modes[i]);
     this.directions[mode] = direction;
     direction.route(
-      $.proxy(this.onDirectionsRouteSuccess, this),
-      $.proxy(this.onDirectionsRouteFailure, this));
+      this.onDirectionsRouteSuccess(this),
+      this.onDirectionsRouteFailure(this));
   }
   this.directionsDisplay.setMap(null); 
   this.directionsDisplay.setMap(this.mapView.googleMap());
@@ -1298,7 +1327,7 @@ IndexController.prototype.onModeClick = function(controller) {
   return function() {
     var newMode = controller.routeViewFor(this.id);
 
-    var oldDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
+    var oldDirectionId = $('.selected', this.parentNode).get(0).id;
     var oldDirection = controller.directions[oldDirectionId];
 
     var newDirection = controller.directions[this.id];
@@ -1322,7 +1351,7 @@ IndexController.prototype.onModeClick = function(controller) {
 IndexController.prototype.onModeHoverIn = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
+    var originalDirectionId = $('.selected', this.parentNode).get(0).id;
     var originalDirection = controller.directions[originalDirectionId];
     controller.hideDirectionsFor(originalDirection);
     controller.displayDirectionsFor(direction);
@@ -1332,35 +1361,43 @@ IndexController.prototype.onModeHoverIn = function(controller) {
 IndexController.prototype.onModeHoverOut = function(controller) {
   return function() {
     var direction = controller.directions[this.id];
-    var originalDirectionId = this.parentNode.getElementsByClassName('selected')[0].id;
+    var originalDirectionId = $('.selected', this.parentNode).get(0).id;
     var originalDirection = controller.directions[originalDirectionId];
     controller.hideDirectionsFor(direction);
     controller.displayDirectionsFor(originalDirection);
   };
 };
 
-IndexController.prototype.onDirectionsRouteSuccess = function(directions) {
-  this.routeViewFor(directions).updateDirections();
-  this.getEmissions(directions);
-  if(directions.mode == 'DRIVING') {
-    this.directionsDisplay.setOptions({ preserveViewport: false });
-    this.directionsDisplay.setDirections(directions.directionsResult);
+IndexController.prototype.onDirectionsRouteSuccess = function(controller) {
+  return function(directions) {
+    controller.routeViewFor(directions).updateDirections();
+    controller.getEmissions(directions);
+    if(directions.mode == 'DRIVING') {
+      controller.directionsDisplay.setOptions({ preserveViewport: false });
+      controller.directionsDisplay.setDirections(directions.directionsResult);
+    }
+    $('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
+  };
+}
+
+IndexController.prototype.onDirectionsRouteFailure = function(controller) {
+  return function(directions, result) {
+    controller.routeViewFor(directions).disable();
+  };
+}
+
+IndexController.prototype.onSegmentEmissionsSuccess = function(controller) {
+  return function(mode, segment, emissionEstimate) {
+    var routeView = controller.routeViewFor(mode);
+    routeView.updateSegmentEmissions(segment, emissionEstimate);
+    routeView.updateTotalEmissions();
   }
-  $('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
-}
-
-IndexController.prototype.onDirectionsRouteFailure = function(directions, result) {
-  this.routeViewFor(directions).disable();
-}
-
-IndexController.prototype.onSegmentEmissionsSuccess = function(mode, segment, emissionEstimate) {
-  var routeView = this.routeViewFor(mode);
-  routeView.updateSegmentEmissions(segment, emissionEstimate);
-  routeView.updateTotalEmissions();
 };
 
-IndexController.prototype.onSegmentEmissionsFailure = function(segment) {
-  this.routeViewFor(segment.mode).updateSegmentEmissions(segment, 'Unable to fetch emissions');
+IndexController.prototype.onSegmentEmissionsFailure = function(controller) {
+  return function(segment) {
+    controller.routeViewFor(segment.mode).updateSegmentEmissions(segment, 'Unable to fetch emissions');
+  };
 };
 
 IndexController.prototype.onSegmentEmissionsFinish = function(segment) {  // tell 'em, SoulJa Boy
