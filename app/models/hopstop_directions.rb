@@ -1,5 +1,6 @@
 module HopstopDirections
   class Failure < StandardError; end
+  class RouteNotFound < StandardError; end
 
   extend self
 
@@ -10,7 +11,10 @@ module HopstopDirections
 
     simplified_hash['result_code'] = response['ResponseStatus']['ResultCode'].to_i
     simplified_hash['result_string'] = response['ResponseStatus']['ResultString']
+    simplified_hash['fault_code'] = response['ResponseStatus']['FaultCode']
+    simplified_hash['fault_string'] = response['ResponseStatus']['FaultString']
 
+    fail RouteNotFound if simplified_hash['fault_code'] == '185'
     if simplified_hash['result_code'] != 200
       puts "HopStop failed with status #{simplified_hash['result_code']}, #{simplified_hash['result_string']}"
       fail Failure, simplified_hash['result_string'] 
