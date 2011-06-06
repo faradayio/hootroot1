@@ -23,4 +23,5 @@ group :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'timecop'
+  gem 'watchr'
 end
