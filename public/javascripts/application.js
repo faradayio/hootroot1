@@ -807,8 +807,8 @@ AmtrakingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(AmtrakingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
-  emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('distance', { as: 'distance_estimate' });
+  emitter.provide('durationInHours', { as: 'duration' });
   emitter.provide('rail_class');
 })
 function BicyclingSegment(index, step) {
@@ -844,7 +844,7 @@ BussingSegment.prototype = new HopStopSegment();
 Carbon.emitter(BussingSegment, function(emitter) {
   emitter.emitAs('bus_trip');
   emitter.provide('distance');
-  emitter.provide('duration', { as: 'durationInMinutes' });
+  emitter.provide('durationInMinutes', { as: 'duration' });
   emitter.provide('bus_class');
 });
 CommuterRailingSegment = function(index, step) {
@@ -860,8 +860,8 @@ CommuterRailingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(CommuterRailingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
-  emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('distance', { as: 'distance_estimate' });
+  emitter.provide('durationInHours', { as: 'duration' });
   emitter.provide('rail_class');
 })
 function DrivingSegment(index, step) {
@@ -891,7 +891,7 @@ FlyingSegment.prototype = new Segment();
 
 Carbon.emitter(FlyingSegment, function(emitter) {
   emitter.emitAs('flight');
-  emitter.provide('distance_estimate', { as: 'distance' });
+  emitter.provide('distaince', { as: 'distance_estimate' });
   emitter.provide('trips');
 });
 LightRailingSegment = function(index, step) {
@@ -907,8 +907,8 @@ LightRailingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(LightRailingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
-  emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('distance', { as: 'distance_estimate' });
+  emitter.provide('durationInHours', { as: 'duration' });
   emitter.provide('rail_class');
 })
 SubwayingSegment = function(index, step) {
@@ -925,8 +925,8 @@ SubwayingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(SubwayingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
-  emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('distance', { as: 'distance_estimate' });
+  emitter.provide('durationInHours', { as: 'duration' });
   emitter.provide('rail_class');
 });
 function WalkingSegment(index, step) {

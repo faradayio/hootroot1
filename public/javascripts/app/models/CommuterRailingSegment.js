@@ -11,7 +11,7 @@ CommuterRailingSegment.prototype = new HopStopSegment();
 
 Carbon.emitter(CommuterRailingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
-  emitter.provide('distance_estimate', { as: 'distance' });
-  emitter.provide('duration', { as: 'durationInHours' });
+  emitter.provide('distance', { as: 'distance_estimate' });
+  emitter.provide('durationInHours', { as: 'duration' });
   emitter.provide('rail_class');
 })
