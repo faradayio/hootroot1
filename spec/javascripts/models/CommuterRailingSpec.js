@@ -7,9 +7,4 @@ describe('CommuterRailingSegment', function() {
     var ws = new CommuterRailingSegment(0, { duration: { value: 120 } });
     expect(ws.duration).toBe(120);
   });
-
-  it('provides duration in hours', function() {
-    var ws = new CommuterRailingSegment(0, { duration: { value: 7201 } });
-    expect(ws.durationInHours()).toBeClose(2.00, 0.01);
-  });
 });

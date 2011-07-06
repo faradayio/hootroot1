@@ -585,11 +585,6 @@ Segment.prototype.onGetEmissionEstimateWithSegmentError = function(onError) {
 HopStopSegment = function() {}
 HopStopSegment.prototype = Segment.prototype;
 
-HopStopSegment.prototype.durationInHours = function() {
-  if(this.duration)
-    return this.duration / 3600;
-};
-
 HopStopSegment.prototype.durationInMinutes = function() {
   if(this.duration)
     return this.duration / 60;
@@ -808,7 +803,7 @@ AmtrakingSegment.prototype = new HopStopSegment();
 Carbon.emitter(AmtrakingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
   emitter.provide('distance', { as: 'distance_estimate' });
-  emitter.provide('durationInHours', { as: 'duration' });
+  emitter.provide('duration');
   emitter.provide('rail_class');
 })
 function BicyclingSegment(index, step) {
@@ -861,7 +856,7 @@ CommuterRailingSegment.prototype = new HopStopSegment();
 Carbon.emitter(CommuterRailingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
   emitter.provide('distance', { as: 'distance_estimate' });
-  emitter.provide('durationInHours', { as: 'duration' });
+  emitter.provide('duration');
   emitter.provide('rail_class');
 })
 function DrivingSegment(index, step) {
@@ -908,13 +903,14 @@ LightRailingSegment.prototype = new HopStopSegment();
 Carbon.emitter(LightRailingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
   emitter.provide('distance', { as: 'distance_estimate' });
-  emitter.provide('durationInHours', { as: 'duration' });
+  emitter.provide('duration');
   emitter.provide('rail_class');
 })
 SubwayingSegment = function(index, step) {
   this.index = index;
   if(step.distance)
     this.distance = parseFloat(step.distance.value) / 1000.0;
+  console.log('duration: ' + step.duration);
   if(step.duration)
     this.duration = step.duration.value;
   this.instructions = step.instructions;
@@ -926,7 +922,7 @@ SubwayingSegment.prototype = new HopStopSegment();
 Carbon.emitter(SubwayingSegment, function(emitter) {
   emitter.emitAs('rail_trip');
   emitter.provide('distance', { as: 'distance_estimate' });
-  emitter.provide('durationInHours', { as: 'duration' });
+  emitter.provide('duration');
   emitter.provide('rail_class');
 });
 function WalkingSegment(index, step) {
