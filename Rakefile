@@ -12,6 +12,7 @@ load 'jasmine/tasks/jasmine.rake'
 task :default => [:features, :spec]
 
 namespace :js do
+  desc 'Rebuild application.js'
   task :build do
     `echo '' > public/javascripts/application.js` # N.B. this doesn't work on windows, you have to manually remove the first line of application.js afterwards
     if ENV['DEVELOPMENT']
