@@ -10,6 +10,6 @@ FlyingSegment.prototype = new Segment();
 
 Carbon.emitter(FlyingSegment, function(emitter) {
   emitter.emitAs('flight');
-  emitter.provide('distaince', { as: 'distance_estimate' });
+  emitter.provide('distance', { as: 'distance_estimate' });
   emitter.provide('trips');
 });
