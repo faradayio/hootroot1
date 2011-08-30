@@ -1,27 +1,20 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+gem 'rails', '3.1.0.rc8'
 
-gem 'aaronh-chronic'
-gem 'httparty'
-
-group :deployment do
-  gem 'heroku'
-end
+gem 'nodeify', :path => '~/nodeify'
+gem 'sqlite3'
 
 group :production do
-  gem 'bson_ext',               '>= 1.0.9'
   gem 'hoptoad_notifier'
 end
 
+group :assets do
+  gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'uglifier'
+end
+
 group :test do
-  gem 'capybara'
-  gem 'cucumber'
-  gem 'cucumber-rails'
-  gem 'fakeweb'
-  gem 'jasmine'
-  gem 'rspec'
-  gem 'rspec-rails'
-  gem 'timecop'
-  gem 'watchr'
+  # Pretty printed test output
+  gem 'turn', :require => false
 end
