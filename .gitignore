@@ -1,6 +1,7 @@
 .bundle
 db/*.sqlite3
 log/*.log
-tmp/**/*
-*~
-config/initializers/keys.rb
+tmp/
+.sass-cache/
+
+node_modules
