@@ -1,0 +1,22 @@
+{
+  "name": "hootroot",
+  "version": "0.0.1",
+  "author": "Derek Kastner <dkastner@gmail.com>",
+  "description": "Give a hoot, green your route!",
+  "main": "lib/hootroot.js",
+  "engine": "*",
+  "files": ["lib"],
+  "dependencies": {
+    "googlemaps": "*",
+    "jquery-browserify": "*",
+    "jquery.ui.core": "*"
+  },
+  "devDependencies": {
+    "browserify": "*",
+    "fakeweb": "*",
+    "http-browserify": "*",
+    "jsdom": "*",
+    "sinon": "*",
+    "vows": "*"
+  }
+}
