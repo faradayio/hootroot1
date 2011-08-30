@@ -1,5 +1,3 @@
-Mapprint::Application.routes.draw do
-  resources :hopstops, :only => :index
-
+Hootroot::Application.routes.draw do
   root :to => "home#index"
 end
