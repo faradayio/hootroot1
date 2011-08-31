@@ -7,9 +7,12 @@
   "engine": "*",
   "files": ["lib"],
   "dependencies": {
-    "googlemaps": "*",
-    "jquery-browserify": "*",
-    "jquery.ui.core": "*"
+    "jasmine-node": "*",
+    "jasmine-jquery": "*",
+    "jquery": "*",
+    "jquery.ui.core": "*",
+    "native_route": "http://github.com/brighterplanet/native-route/raw/master/native-route.tar.gz"
+    "querystring": "*"
   },
   "devDependencies": {
     "browserify": "*",

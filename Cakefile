@@ -1,13 +1,18 @@
-task 'package', 'Package javascript into a deployable file', ->
-  console.log 'Browserifying...'
-  browserify = require('browserify')
-  entry = 'lib/native-route.js'
-  mount = 'public/javascripts/native-route.js'
-    
-  b = browserify {
-    entry: entry,
-    mount: mount
-  }
+path = require 'path'
 
-  fs = require('fs')
-  fs.writeFileSync mount, b.bundle()
+rails_root = __dirname
+
+node_paths = [
+  path.resolve(rails_root, 'app', 'assets', 'javascripts'),
+  path.resolve(rails_root, 'lib', 'assets', 'javascripts'),
+  path.resolve(rails_root, 'vendor', 'assets', 'javascripts')
+].join(':')
+
+task 'examples', 'Run Jasmine examples', ->
+  child = require 'child_process'
+  child_env = process.env
+  child_env.NODE_PATH = node_paths
+  cmd = './node_modules/.bin/jasmine-node --color spec/javascripts'
+  child.exec cmd, { env: child_env }, (error, stdout, stderr) =>
+    console.log stdout
+    console.error stderr
