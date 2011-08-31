@@ -1,6 +1,7 @@
 var HootBarController = require('./hoot-bar-controller'),
     MapView = require('native_route').MapView,
-    RouteView = require('../views/route-view');
+    RouteView = require('../views/route-view'),
+    Url = require('../../../../lib/assets/javascripts/url');
 
 var IndexController = module.exports = function(mapId) {
   this.mapView = new MapView(mapId);
@@ -17,7 +18,7 @@ var IndexController = module.exports = function(mapId) {
 IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
 IndexController.prototype.init = function() {
-  Carbon.key = 'fd881ce1f975ac07b5c396591bd6978a'
+  CM1.key = 'fd881ce1f975ac07b5c396591bd6978a'
   this.mapView.resize();
   this.mapView.googleMap();
 
