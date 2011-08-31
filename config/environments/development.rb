@@ -1,4 +1,4 @@
-Mapprint::Application.configure do
+Hootroot::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -11,7 +11,6 @@ Mapprint::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_view.debug_rjs             = true
   config.action_controller.perform_caching = false
 
   # Print deprecation notices to the Rails logger
@@ -19,5 +18,8 @@ Mapprint::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  config.action_dispatch.x_sendfile_header = "X-Sendfile"
+  config.i18n.fallbacks = true
 end
 
