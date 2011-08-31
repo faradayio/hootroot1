@@ -15,6 +15,6 @@ group :assets do
 end
 
 group :test do
-  # Pretty printed test output
+  gem 'jasmine'
   gem 'turn', :require => false
 end
