@@ -11,7 +11,7 @@
     "jasmine-jquery": "*",
     "jquery": "*",
     "jquery.ui.core": "*",
-    "native_route": "http://github.com/brighterplanet/native-route/raw/master/native-route.tar.gz"
+    "cm1-route": "http://github.com/brighterplanet/native-route/raw/master/cm1-route.tar.gz"
     "querystring": "*"
   },
   "devDependencies": {
