@@ -1,7 +1,10 @@
+var $ = require('../lib/jquery-custom'),
+    Cm1Route = require('cm1-route');
+
 var HootBarController = require('./hoot-bar-controller'),
-    MapView = require('native_route').MapView,
-    RouteView = require('../views/route-view'),
-    Url = require('../../../../lib/assets/javascripts/url');
+    MapView = require('../views/map-view');
+    RouteView = require('../views/route-view');
+    SPI = require('../lib/spi');
 
 var IndexController = module.exports = function(mapId) {
   this.mapView = new MapView(mapId);
@@ -18,9 +21,10 @@ var IndexController = module.exports = function(mapId) {
 IndexController.modes = ['DRIVING','WALKING','BICYCLING','PUBLICTRANSIT','FLYING'];
 
 IndexController.prototype.init = function() {
-  CM1.key = 'fd881ce1f975ac07b5c396591bd6978a'
+  CM1.key = 'fd881ce1f975ac07b5c396591bd6978a';
   this.mapView.resize();
   this.mapView.googleMap();
+  this.spi = SPI.current();
 
   $('#go').click($.proxy(this.routeButtonClick, this));
   $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
@@ -31,13 +35,9 @@ IndexController.prototype.init = function() {
     this.routeViews[i].enable();
   }
 
-  if(Url.origin()) {
-    $('#origin').val(Url.origin());
-  }
-  if(Url.destination()) {
-    $('#destination').val(Url.destination());
-  }
-  if(Url.origin() && Url.destination()) {
+  if(this.spi.origin) $('#origin').val(this.spi.origin);
+  if(this.spi.destination) $('#destination').val(this.spi.destination);
+  if(this.spi.origin && this.spi.destination) {
     this.routeButtonClick();
   }
 };
@@ -51,21 +51,19 @@ IndexController.prototype.getEmissions = function(directions) {
 };
 
 IndexController.prototype.getDirections = function () {
+  this.directions = new NativeRoute($('#origin').val(), $('#destination').val());
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i].toLowerCase();
-    var direction = Directions.create(
-      $('#origin').val(), $('#destination').val(), IndexController.modes[i]);
-    this.directions[mode] = direction;
-    direction.route(
+    direction[mode](
       this.onDirectionsRouteSuccess(this),
       this.onDirectionsRouteFailure(this));
   }
   this.directionsDisplay.setMap(null); 
   this.directionsDisplay.setMap(this.mapView.googleMap());
-}
+};
 
 IndexController.prototype.currentUrl = function() {
-  return Url.generate($('#origin').val(), $('#destination').val());
+  return SPI.generate($('#origin').val(), $('#destination').val()).urlString;
 };
 
 IndexController.prototype.currentRoute = function() {
@@ -121,7 +119,7 @@ IndexController.prototype.originDestinationInputKeyup = function(event) {
 };
 
 IndexController.prototype.routeButtonClick = function() {
-  Url.go(this.currentUrl());
+  SPI.go(this.currentUrl());
   $('#search').hide('drop', { direction: 'up' }, 500);
   $('h1').hide('drop', { direction: 'up' }, 500);
   $('#nav').show('slide', { direction: 'up' }, 500);
