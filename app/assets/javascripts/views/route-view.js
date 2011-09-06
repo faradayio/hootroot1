@@ -1,6 +1,6 @@
-var $ = require('jquery');
+var $ = require('../lib/jquery-custom');
 
-var NumberFormatter = require('native_route').NumberFormatter;
+var NumberFormatter = require('cm1-route').NumberFormatter;
 
 var RouteView = module.exports = function(controller, mode) {
   this.controller = controller;
@@ -34,7 +34,7 @@ RouteView.prototype.toggleDirections = function() {
   $('#routing').toggle();
 };
 
-RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
+RouteView.prototype.updateSegmentEmissions = function(emissionEstimate) {
   var output;
   var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
   if(emissionEstimate.methodology) {
@@ -43,7 +43,7 @@ RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate)
     output = value.toString() + ' lbs CO₂';
   }
 
-  $('#' + this.mode + '_segment_' + segment.index + ' span.emissions').html(output);
+  $('#' + this.mode + '_segment_' + emissionEstimate.emitter.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
