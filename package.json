@@ -7,19 +7,29 @@
   "engine": "*",
   "files": ["lib"],
   "dependencies": {
+    "async": "*",
+    "http-browserify": "*",
     "jasmine-node": "*",
     "jasmine-jquery": "*",
     "jquery": "*",
     "jquery.ui.core": "*",
-    "cm1-route": "http://github.com/brighterplanet/native-route/raw/master/cm1-route.tar.gz"
+    "jquery.ui.widget": "*",
+    "jquery.ui.position": "*",
+    "jquery.ui.dialog": "*",
+    "jquery.effects.core": "*",
+    "jquery.effects.drop": "*",
+    "jquery.effects.slide": "*",
+    "cm1-route": "http://github.com/brighterplanet/native-route/raw/master/cm1-route.tar.gz",
     "querystring": "*"
   },
   "devDependencies": {
     "browserify": "*",
     "fakeweb": "*",
-    "http-browserify": "*",
     "jsdom": "*",
     "sinon": "*",
     "vows": "*"
+  },
+  "browserify": {
+    "require": { "http-browserify": "http" }
   }
 }
