@@ -35,7 +35,7 @@ HootBarController.prototype.getTweet = function() {
 };
 
 HootBarController.prototype.onAboutClick = function() {
-  $('#about').toggle('slide', { direction: 'up' }, 500);
+  $('#about').toggle(); //'slide', { direction: 'up' }, 500);
   return false;
 };
 
