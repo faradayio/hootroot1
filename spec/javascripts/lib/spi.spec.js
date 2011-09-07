@@ -1,4 +1,4 @@
-var SPI = require('spi');
+var SPI = require('../../../app/assets/javascripts/lib/spi');
 
 describe('SPI', function() {
   describe('#parseSpiPath', function() {
