@@ -67,9 +67,9 @@ RouteView.prototype.enable = function() {
   this.element.removeClass('disabled');
 
   if(!this.isEnabled) {
-    this.element.click(this.controller.onModeClick(this.controller));
-    this.element.hover(this.controller.onModeHoverIn(this.controller),
-                       this.controller.onModeHoverOut(this.controller));
+    this.element.click(this.controller.events.onModeClick(this.controller));
+    this.element.hover(this.controller.events.onModeHoverIn(this.controller),
+                       this.controller.events.onModeHoverOut(this.controller));
   }
   this.isEnabled = true;
 
@@ -89,6 +89,12 @@ RouteView.prototype.disable = function() {
   this.clearDirections();
 
   return this;
+};
+
+RouteView.prototype.fail = function() {
+  $('#' + this.mode + ' .footprint').html('N/A');
+  this.disable();
+  this.finish();
 };
 
 RouteView.prototype.start = function() {
