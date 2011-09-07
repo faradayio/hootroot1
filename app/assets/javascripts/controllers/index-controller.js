@@ -1,7 +1,9 @@
 var $ = require('../lib/jquery-custom'),
+    async = require('async'),
     Cm1Route = require('cm1-route');
 
-var HootBarController = require('./hoot-bar-controller'),
+var FlightPath = require('../models/flight-path'),
+    HootBarController = require('./hoot-bar-controller'),
     MapView = require('../views/map-view');
     RouteView = require('../views/route-view');
     SPI = require('../lib/spi');
@@ -11,8 +13,10 @@ var IndexController = module.exports = function(mapId) {
   this.directionsDisplay = new google.maps.DirectionsRenderer();
   this.directions = {};
   this.routeViews = {};
-  var modes = IndexController.modes;
-  for(var i in modes) { this.routeViews[modes[i].toLowerCase()] = new RouteView(this, modes[i]); }
+  for(var i in IndexController.modes) {
+    var mode = IndexController.modes[i].toLowerCase();
+    this.routeViews[mode] = new RouteView(this, mode);
+  }
   this.hootBarController = new HootBarController(this);
 
   return true;
@@ -26,10 +30,10 @@ IndexController.prototype.init = function() {
   this.mapView.googleMap();
   this.spi = SPI.current();
 
-  $('#go').click($.proxy(this.routeButtonClick, this));
-  $('input[type=text]').keyup($.proxy(this.originDestinationInputKeyup, this));
+  $('#go').click(IndexController.events.routeButtonClick(this));
+  $('input[type=text]').keyup(IndexController.events.originDestinationInputKeyup(this));
   $('#when').val('Today');
-  $('#example').click(this.onExampleClick);
+  $('#example').click(IndexController.events.onExampleClick(this));
   this.hootBarController.init();
   for(var i in this.routeViews) {
     this.routeViews[i].enable();
@@ -45,21 +49,29 @@ IndexController.prototype.init = function() {
 
 IndexController.prototype.getEmissions = function(directions) {
   directions.getEmissions(
-      this.onSegmentEmissionsSuccess(this),
-      this.onSegmentEmissionsFailure(this),
-      this.onSegmentEmissionsFinish);
+    IndexController.events.directionsGetEmissionsCallback(this),
+    IndexController.events.segmentGetEmissionsCallback(this));
 };
 
-IndexController.prototype.getDirections = function () {
-  this.directions = new NativeRoute($('#origin').val(), $('#destination').val());
-  for(var i in IndexController.modes) {
-    var mode = IndexController.modes[i].toLowerCase();
-    direction[mode](
-      this.onDirectionsRouteSuccess(this),
-      this.onDirectionsRouteFailure(this));
-  }
+IndexController.prototype.getDirections = function() {
   this.directionsDisplay.setMap(null); 
   this.directionsDisplay.setMap(this.mapView.googleMap());
+
+  var controller = this;
+  var directions = [];
+  for(var i in this.directions)
+    directions.push(this.directions[i]);
+  async.forEach(
+    directions,
+    function(directions, callback) {
+      directions.route(IndexController.events.directionsRouteCallback(controller, callback));
+    },
+    function(err) {
+      if(err) {
+        console.log('Failed to route directions: ' + err);
+      }
+    }
+  );
 };
 
 IndexController.prototype.currentUrl = function() {
@@ -109,15 +121,6 @@ IndexController.prototype.routeViewFor = function(directions_or_mode) {
   return this.routeViews[mode.toLowerCase()];
 }
 
-
-//////  Events 
-
-IndexController.prototype.originDestinationInputKeyup = function(event) {
-  if(event.keyCode == 13) {
-    this.routeButtonClick();
-  }
-};
-
 IndexController.prototype.routeButtonClick = function() {
   SPI.go(this.currentUrl());
   $('#search').hide('drop', { direction: 'up' }, 500);
@@ -125,6 +128,12 @@ IndexController.prototype.routeButtonClick = function() {
   $('#nav').show('slide', { direction: 'up' }, 500);
   $('#meta').hide();
   $('#modes .failed').each(function(element) { $(element).removeClass('failed'); });
+  for(var i in IndexController.modes) {
+    var mode = IndexController.modes[i];
+    var directions = Cm1Route.DirectionsFactory.
+      create($('#origin').val(), $('#destination').val(), mode);
+    this.directions[mode.toLowerCase()] = directions;
+  }
   for(var i in this.routeViews) { this.routeViews[i].enable().start(); }
   this.routeViews.driving.select();
   if(this.flightPath()) {
@@ -138,89 +147,118 @@ IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
 };
 
-IndexController.prototype.onModeClick = function(controller) {
-  return function() {
-    var newMode = controller.routeViewFor(this.id);
 
-    var oldDirectionId = $('.selected', this.parentNode).get(0).id;
-    var oldDirection = controller.directions[oldDirectionId];
+// Events 
 
-    var newDirection = controller.directions[this.id];
+IndexController.events = {
+  originDestinationInputKeyup: function(controller) {
+    return function(event) {
+      if(event.keyCode == 13) {
+        this.routeButtonClick();
+      }
+    };
+  },
 
-    if(oldDirection.mode == newDirection.mode) {
-      newMode.toggleDirections();
-    } else {
-      newMode.select();
+  routeButtonClick: function(controller) {
+    return function() {
+      controller.routeButtonClick();
+    };
+  },
 
-      controller.hideDirectionsFor(oldDirection);
-      controller.displayDirectionsFor(newDirection);
+  onModeClick: function(controller) {
+    return function() {
+      var newMode = controller.routeViewFor(this.id);
 
-      $('#routing div').hide();
-      $('#routing .' + this.id).show();
-    }
+      var oldDirectionId = $('.selected', this.parentNode).get(0).id;
+      var oldDirection = controller.directions[oldDirectionId];
 
-    return false;
-  };
-};
+      var newDirection = controller.directions[this.id];
 
-IndexController.prototype.onModeHoverIn = function(controller) {
-  return function() {
-    var direction = controller.directions[this.id];
-    var originalDirectionId = $('.selected', this.parentNode).get(0).id;
-    var originalDirection = controller.directions[originalDirectionId];
-    controller.hideDirectionsFor(originalDirection);
-    controller.displayDirectionsFor(direction);
-  };
-};
+      if(oldDirection.mode == newDirection.mode) {
+        newMode.toggleDirections();
+      } else {
+        newMode.select();
 
-IndexController.prototype.onModeHoverOut = function(controller) {
-  return function() {
-    var direction = controller.directions[this.id];
-    var originalDirectionId = $('.selected', this.parentNode).get(0).id;
-    var originalDirection = controller.directions[originalDirectionId];
-    controller.hideDirectionsFor(direction);
-    controller.displayDirectionsFor(originalDirection);
-  };
-};
+        controller.hideDirectionsFor(oldDirection);
+        controller.displayDirectionsFor(newDirection);
 
-IndexController.prototype.onDirectionsRouteSuccess = function(controller) {
-  return function(directions) {
-    controller.routeViewFor(directions).updateDirections();
-    controller.getEmissions(directions);
-    if(directions.mode == 'DRIVING') {
-      controller.directionsDisplay.setOptions({ preserveViewport: false });
-      controller.directionsDisplay.setDirections(directions.directionsResult);
-    }
-    $('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
-  };
-}
+        $('#routing div').hide();
+        $('#routing .' + this.id).show();
+      }
 
-IndexController.prototype.onDirectionsRouteFailure = function(controller) {
-  return function(directions, result) {
-    controller.routeViewFor(directions).disable();
-  };
-}
+      return false;
+    };
+  },
 
-IndexController.prototype.onSegmentEmissionsSuccess = function(controller) {
-  return function(mode, segment, emissionEstimate) {
-    var routeView = controller.routeViewFor(mode);
-    routeView.updateSegmentEmissions(segment, emissionEstimate);
-    routeView.updateTotalEmissions();
+  onModeHoverIn: function(controller) {
+    return function() {
+      var direction = controller.directions[this.id];
+      var originalDirectionId = $('.selected', this.parentNode).get(0).id;
+      var originalDirection = controller.directions[originalDirectionId];
+      controller.hideDirectionsFor(originalDirection);
+      controller.displayDirectionsFor(direction);
+    };
+  },
+
+  onModeHoverOut: function(controller) {
+    return function() {
+      var direction = controller.directions[this.id];
+      var originalDirectionId = $('.selected', this.parentNode).get(0).id;
+      var originalDirection = controller.directions[originalDirectionId];
+      controller.hideDirectionsFor(direction);
+      controller.displayDirectionsFor(originalDirection);
+    };
+  },
+
+  directionsRouteCallback: function(controller, callback) {
+    return function(err, directions) {
+      var routeView = controller.routeViewFor(directions);
+      if(err) {
+        routeView.disable();
+      } else {
+        routeView.updateDirections();
+        controller.getEmissions(directions);
+        if(directions.mode == 'DRIVING') {
+          controller.directionsDisplay.setOptions({ preserveViewport: false });
+          controller.directionsDisplay.setDirections(directions.directionsResult);
+        }
+        $('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
+      }
+      callback(err);
+    };
+  },
+
+  segmentGetEmissionsCallback: function(controller) {
+    return function(err, emissionEstimate) {
+      var segment = emissionEstimate.emitter;
+      var routeView = controller.routeViewFor(segment.mode);
+      if(err) {
+        routeView.fail();
+      } else {
+        routeView.updateSegmentEmissions(emissionEstimate);
+      }
+    };
+  },
+
+  directionsGetEmissionsCallback: function(controller) {
+    return function(err, directions) {
+      var routeView = controller.routeViewFor(directions.mode);
+      if(err) {
+        routeView.fail();
+      } else {
+        routeView.updateTotalEmissions();
+        routeView.finish();
+      }
+    };
+  },
+
+  onExampleClick: function() {
+    return function() {
+      $('#origin').val('1916 Broadway, New York, NY');
+      $('#destination').val('162 Madison Ave, New York, NY');
+      return false;
+    };
   }
 };
 
-IndexController.prototype.onSegmentEmissionsFailure = function(controller) {
-  return function(segment) {
-    controller.routeViewFor(segment.mode).updateSegmentEmissions(segment, 'Unable to fetch emissions');
-  };
-};
-
-IndexController.prototype.onSegmentEmissionsFinish = function(segment) {  // tell 'em, SoulJa Boy
-  $('li#' + segment.mode.toLowerCase()).removeClass('loading');
-};
-
-IndexController.prototype.onExampleClick = function() {
-  $('#origin').val('1916 Broadway, New York, NY');
-  $('#destination').val('162 Madison Ave, New York, NY');
-  return false;
-}
+IndexController.prototype.events = IndexController.events;
