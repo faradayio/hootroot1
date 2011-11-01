@@ -1345,10 +1345,11 @@ IndexController.prototype.onModeClick = function(controller) { return function()
 
     $('li.' + this.id).each(function(i, li) {
       var liHeight = $(li).height() - $('p.emissions', li).outerHeight(true) - 20;
+      var liIncrement = $(li).width();
 
       var instructions = $('p.instructions', li);
       while(instructions.outerHeight(true) > liHeight) {
-        $(li).width($(li).width() + 1);
+        $(li).width($(li).width() + liIncrement);
       }
     });
 
