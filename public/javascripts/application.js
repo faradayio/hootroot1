@@ -747,8 +747,10 @@ Carbon.prototype.provide = function(attribute, options) {
   this.attribute_map[attribute] = actual_field;
 };
 NumberFormatter = {
-  kilogramsToPounds: function(num) {
-    return (Math.round(num * 100 * 2.2046) / 100);
+  kilogramsToPounds: function(num, significantDigits) {
+    if(!significantDigits) significantDigits = 2;
+    var magnitude = Math.pow(10.0, significantDigits)
+    return (Math.round(num * magnitude * 2.2046) / magnitude);
   },
   metersToMiles: function(num) {
     return (Math.round((num / 1609.3) * 100) / 100);
@@ -1001,7 +1003,7 @@ RouteView.prototype.toggleDirections = function() {
 
 RouteView.prototype.updateSegmentEmissions = function(segment, emissionEstimate) {
   var output;
-  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
+  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value(), 4);
   if(emissionEstimate.methodology) {
     output = '<a href="' + emissionEstimate.methodology() + '">' + value + ' lbs CO₂</a>';
   } else {
