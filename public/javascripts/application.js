@@ -1320,8 +1320,7 @@ IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
 };
 
-IndexController.prototype.onModeClick = function(controller) {
-  return function() {
+IndexController.prototype.onModeClick = function(controller) { return function() {
     var newMode = controller.routeViewFor(this.id);
 
     var oldDirectionId = $('.selected', this.parentNode).get(0).id;
@@ -1340,6 +1339,15 @@ IndexController.prototype.onModeClick = function(controller) {
       $('#routing div').hide();
       $('#routing .' + this.id).show();
     }
+
+    $('li.' + this.id).each(function(i, li) {
+      var liHeight = $(li).height() - $('p.emissions', li).outerHeight(true) - 20;
+
+      var instructions = $('p.instructions', li);
+      while(instructions.outerHeight(true) > liHeight) {
+        $(li).width($(li).width() + 1);
+      }
+    });
 
     return false;
   };
