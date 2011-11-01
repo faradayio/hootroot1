@@ -50,7 +50,7 @@ IndexController.prototype.init = function() {
 IndexController.prototype.getEmissions = function(directions) {
   directions.getEmissions(
     IndexController.events.directionsGetEmissionsCallback(this),
-    IndexController.events.segmentGetEmissionsCallback(this));
+    IndexController.events.segmentGetEmissionsCallback(this, directions));
 };
 
 IndexController.prototype.getDirections = function() {
@@ -68,7 +68,7 @@ IndexController.prototype.getDirections = function() {
     },
     function(err) {
       if(err) {
-        console.log('Failed to route directions: ' + err);
+        console.log('Failed to route directions: ' + err.message);
       }
     }
   );
@@ -94,9 +94,9 @@ IndexController.prototype.displayDirectionsFor = function(directions) {
 
 IndexController.prototype.hideDirectionsFor = function(directions) {
   if(directions.mode == 'FLYING') { 
-    this.flightPath().hide();
+    //this.flightPath().hide();
   } else {
-    this.directionsDisplay.setMap(null);
+    //this.directionsDisplay.setMap(null);
   }
 };
 
@@ -154,7 +154,7 @@ IndexController.events = {
   originDestinationInputKeyup: function(controller) {
     return function(event) {
       if(event.keyCode == 13) {
-        this.routeButtonClick();
+        controller.routeButtonClick();
       }
     };
   },
@@ -228,10 +228,10 @@ IndexController.events = {
     };
   },
 
-  segmentGetEmissionsCallback: function(controller) {
+  segmentGetEmissionsCallback: function(controller, directions) {
     return function(err, emissionEstimate) {
       var segment = emissionEstimate.emitter;
-      var routeView = controller.routeViewFor(segment.mode);
+      var routeView = controller.routeViewFor(directions.mode);
       if(err) {
         routeView.fail();
       } else {
