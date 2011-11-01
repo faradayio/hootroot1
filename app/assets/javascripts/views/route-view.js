@@ -38,7 +38,7 @@ RouteView.prototype.updateSegmentEmissions = function(emissionEstimate) {
   var output;
   var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
   if(emissionEstimate.methodology) {
-    output = '<a href="' + emissionEstimate.methodology() + '">' + value + ' lbs CO₂</a>';
+    output = '<a href="' + emissionEstimate.methodology + '">' + value + ' lbs CO₂</a>';
   } else {
     output = value.toString() + ' lbs CO₂';
   }
