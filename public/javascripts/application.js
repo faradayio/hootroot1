@@ -988,7 +988,10 @@ RouteView.prototype.updateDirections = function() {
   var html = '<ul>';
   var mode = this.mode;
   this.directions().eachSegment(function(segment) {
-    var detail = '<p class="instructions">' + segment.instructions + '</p><p class="emissions">Emissions: <span class="emissions"><em>Loading...</em></span></p>';
+    var length = ' (' + (segment.distance ? 
+                         (Math.round(segment.distance * 100) / 100) + 'km' :
+                         Math.ceil(segment.duration / 60.0) + 'min') + ')';
+    var detail = '<p class="instructions">' + segment.instructions + length + '</p><p class="emissions">Emissions: <span class="emissions"><em>Loading...</em></span></p>';
     html += '<li id="' + mode + '_segment_' + segment.index + '" class="' + mode + '">' + detail + '</li>';
   });
   html += '</ul>';
