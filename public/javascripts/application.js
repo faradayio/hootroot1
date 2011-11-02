@@ -988,6 +988,7 @@ RouteView.prototype.updateDirections = function() {
   var html = '<ul>';
   var mode = this.mode;
   this.directions().eachSegment(function(segment) {
+    if(segment.instructions == undefined) return;
     var length = ' (' + (segment.distance ? 
                          (Math.round(segment.distance * 100) / 100) + 'km' :
                          Math.ceil(segment.duration / 60.0) + 'min') + ')';
