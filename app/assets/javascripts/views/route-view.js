@@ -36,7 +36,7 @@ RouteView.prototype.toggleDirections = function() {
 
 RouteView.prototype.updateSegmentEmissions = function(emissionEstimate) {
   var output;
-  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value());
+  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value(), 4);
   if(emissionEstimate.methodology) {
     output = '<a href="' + emissionEstimate.methodology + '">' + value + ' lbs CO₂</a>';
   } else {
