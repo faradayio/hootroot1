@@ -186,6 +186,15 @@ IndexController.events = {
         $('#routing .' + this.id).show();
       }
 
+      $('li.' + this.id).each(function(i, li) {
+        var liHeight = $(li).height() - $('p.emissions', li).outerHeight(true) - 20;
+        var instructions = $('p.instructions', li);
+
+        while(instructions.outerHeight(true) > liHeight) {
+          $(li).width($(li).width() + 1);
+        }
+      });
+
       return false;
     };
   },
