@@ -1,4 +1,4 @@
-var $ = require('jquery-browserify');
+var $ = require('jquery');
 
 var HootBarController = module.exports = function(indexController) {
   this.indexController = indexController;

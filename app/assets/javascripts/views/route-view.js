@@ -38,16 +38,16 @@ RouteView.prototype.toggleDirections = function() {
   $('#routing').toggle();
 };
 
-RouteView.prototype.updateSegmentEmissions = function(emissionEstimate) {
+RouteView.prototype.updateSegmentEmissions = function(impacts) {
   var output;
-  var value = NumberFormatter.kilogramsToPounds(emissionEstimate.value(), 4);
-  if(emissionEstimate.methodology) {
-    output = '<a href="' + emissionEstimate.methodology + '">' + value + ' lbs CO₂</a>';
+  var value = NumberFormatter.kilogramsToPounds(impacts.carbon, 4);
+  if(impacts.methodology) {
+    output = '<a href="' + impacts.methodology + '">' + value + ' lbs CO₂</a>';
   } else {
     output = value.toString() + ' lbs CO₂';
   }
 
-  $('#' + this.mode + '_segment_' + emissionEstimate.emitter.index + ' span.emissions').html(output);
+  $('#' + this.mode + '_segment_' + impacts.subject.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {

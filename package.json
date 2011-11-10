@@ -8,10 +8,10 @@
   "files": ["lib"],
   "dependencies": {
     "async": "*",
-    "http-browserify": "*",
-    "jasmine-node": "*",
-    "jasmine-jquery": "*",
-    "jquery": "*",
+    "cm1-route": "http://github.com/brighterplanet/cm1-route/raw/master/cm1-route.tar.gz",
+    "dkastner-http-browserify": "*",
+    "jquery-browserify": "*",
+    "jquery-placeholdize": "*",
     "jquery.ui.core": "*",
     "jquery.ui.widget": "*",
     "jquery.ui.position": "*",
@@ -19,11 +19,11 @@
     "jquery.effects.core": "*",
     "jquery.effects.drop": "*",
     "jquery.effects.slide": "*",
-    "cm1-route": "http://github.com/brighterplanet/native-route/raw/master/cm1-route.tar.gz",
-    "querystring": "*"
+    "socket.io-client": "*"
   },
   "devDependencies": {
-    "browserify": "*",
+    "dkastner-browserify": "*",
+    "coffee-script": "*",
     "fakeweb": "*",
     "jsdom": "*",
     "sinon": "*",
