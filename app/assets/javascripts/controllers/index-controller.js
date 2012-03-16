@@ -4,6 +4,7 @@ var $ = require('qwery'),
     events = require('bean'),
     dom = require('bonzo'),
     $$ = function(selector, parent) { return dom($(selector, parent)); },
+    morpheus = require('morpheus'),
     Cm1Route = require('cm1-route'),
     Google = require('../lib/google');
 
@@ -51,7 +52,69 @@ IndexController.prototype.init = function() {
   if(this.spi.destination) $$('#destination').val(this.spi.destination);
   if(this.spi.origin && this.spi.destination) {
     this.routeButtonClick();
+  } else {
+    this.fadeInSearch();
   }
+};
+
+IndexController.prototype.fadeInSearch = function() {
+  fadeIn = {
+    opacity: '+=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeIn
+  }
+  morpheus($('#search-panel')[0], fadeIn);
+};
+
+IndexController.prototype.fadeOutSearch = function() {
+  fadeOut = {
+    opacity: '-=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeOut
+  }
+  morpheus($('#search-panel')[0], fadeOut);
+};
+
+IndexController.prototype.fadeInNav = function() {
+  fadeIn = {
+    opacity: '+=1',
+
+    duration: 1500,
+    easing: morpheus.easings.swingTo
+  }
+  morpheus($('#nav')[0], fadeIn);
+};
+
+IndexController.prototype.fadeOutNav = function() {
+  fadeOut = {
+    opacity: '-=1',
+
+    duration: 1500,
+    easing: morpheus.easings.swingFrom
+  }
+  morpheus($('#nav')[0], fadeOut);
+};
+
+IndexController.prototype.fadeInModes = function() {
+  fadeIn = {
+    opacity: '+=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeIn
+  }
+  morpheus($('#modes')[0], fadeIn);
+};
+
+IndexController.prototype.fadeOutModes = function() {
+  fadeOut = {
+    opacity: '-=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeOut
+  }
+  morpheus($('#modes')[0], fadeOut);
 };
 
 IndexController.prototype.getEmissions = function(directions) {
@@ -130,10 +193,8 @@ IndexController.prototype.routeViewFor = function(directions_or_mode) {
 
 IndexController.prototype.routeButtonClick = function() {
   SPI.go(this.currentUrl());
-  $$('#search').hide() //'drop', { direction: 'up' }, 500);
-  $$('h1').hide(); //'drop', { direction: 'up' }, 500);
-  $$('#nav').show(); //'slide', { direction: 'up' }, 500);
-  $$('#meta').hide();
+  this.fadeOutSearch();
+  this.fadeInNav();
   _.each($('#modes .failed'), function(element) { $$(element).removeClass('failed'); });
   for(var i in IndexController.modes) {
     var mode = IndexController.modes[i];
@@ -147,7 +208,7 @@ IndexController.prototype.routeButtonClick = function() {
     this.flightPath().hide();
     this.clearFlightPath();
   }
-  $$('#modes').show(); //'slide', { direction: 'down' }, 500);
+  this.fadeInModes();
   if ($.is($('#about')[0], ':visible')) {
     $$('#about').hide(); //'drop', { direction: 'up' }, 500);
   }

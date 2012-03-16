@@ -79,6 +79,10 @@ body {
   border-bottom: 1px solid #eee;
 }
 
+#search-panel {
+  opacity: 0;
+}
+
 h1 {
   position: absolute;
   width: 386px;
@@ -241,6 +245,7 @@ form#linkform button {
 }
 
 #nav {
+  opacity: 0;
   overflow: hidden;
   position: absolute;
   top: 0;
@@ -388,6 +393,7 @@ form#linkform button {
 }
 
 #modes {
+  opacity: 0;
   position: absolute;
   bottom: 0;
   width: 510px;

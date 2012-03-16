@@ -23,30 +23,32 @@
   </head>
   <body>
     <div id="wrapper">
-      <h1>Hootroot</h1>
       <div id="map_canvas"></div>
-      <form id="search">
-        <fieldset>
-          <legend>Get directions</legend>
-          <button id="go" type="button">Route</button>
-          <label for="origin">Origin:</label>
-          <input type="text" id="origin" placeholder="Where from?" valu="1916 broadway, new york, ny" />
-          <label for="destination">Destination:</label>
-          <input type="text" id="destination" placeholder="Where to?" valu="162 madison ave, new york, ny" />
-          <div id="public_transit" style="display: none;">
-            <label for="when">When:</label>
-            <input id="when" value="Today" />
-            (e.g. "3:45pm" or "tomorrow at 5pm")
+      <div id="search-panel">
+        <h1>Hootroot</h1>
+        <form id="search">
+          <fieldset>
+            <legend>Get directions</legend>
+            <button id="go" type="button">Route</button>
+            <label for="origin">Origin:</label>
+            <input type="text" id="origin" placeholder="Where from?" valu="1916 broadway, new york, ny" />
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" placeholder="Where to?" valu="162 madison ave, new york, ny" />
+            <div id="public_transit" style="display: none;">
+              <label for="when">When:</label>
+              <input id="when" value="Today" />
+              (e.g. "3:45pm" or "tomorrow at 5pm")
+            </div>
+          </fieldset>
+        </form>
+        <p id="meta"><a href="#" id="example">Example directions</a> &middot; <a href="#" id="aboutlink">About Hootroot</a></p>
+        <div id="about" style="display: none">
+          <div class="about">
+            <p><strong>Hootroot</strong> was created by the folks at <a href="http://brighterplanet.com">Brighter Planet</a> to show how providing just a little information about environmental impact in just the right place can help change a mind here or there. <span>When you search for directions using the form above, we'll show you all the ways to go&mdash;driving, walking, biking, and transit&mdash;along with a comparison of their carbon footprints.</span></p>
           </div>
-        </fieldset>
-      </form>
-      <p id="meta"><a href="#" id="example">Example directions</a> &middot; <a href="#" id="aboutlink">About Hootroot</a></p>
-      <div id="about" style="display: none">
-        <div class="about">
-          <p><strong>Hootroot</strong> was created by the folks at <a href="http://brighterplanet.com">Brighter Planet</a> to show how providing just a little information about environmental impact in just the right place can help change a mind here or there. <span>When you search for directions using the form above, we'll show you all the ways to go&mdash;driving, walking, biking, and transit&mdash;along with a comparison of their carbon footprints.</span></p>
         </div>
       </div>
-      <div id="nav" style="display: none;">
+      <div id="nav">
         <h2>Give a hoot, green your route</h2>
         <ul>
           <li id="restart"><a href="#" title="Start over"><span>Start over</span></a></li>
@@ -56,7 +58,7 @@
         </ul>
       </div>
       <a id="hopstop" style="display: none;" href="http://hopstop.com"><img src="/images/hopstop.png" /></a>
-      <div id="modes" style="display: none;">
+      <div id="modes">
         <ul>
           <li id="driving" class="selected loading">
             <a>

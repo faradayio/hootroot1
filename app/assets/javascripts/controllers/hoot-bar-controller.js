@@ -15,7 +15,7 @@ HootBarController.prototype.init = function() {
   events.add($('#link')[0], 'click', HootBarController.events.onLinkClick(this));
   events.add($('#linkclose')[0], 'click', HootBarController.events.onLinkClick(this));
   events.add($('#tweet')[0], 'click', HootBarController.events.onTweetClick(this));
-  events.add($('#restart')[0], 'click', HootBarController.events.onRestartClick);
+  events.add($('#restart')[0], 'click', HootBarController.events.onRestartClick(this));
 }
 
 HootBarController.prototype.getTweet = function() {
@@ -40,7 +40,11 @@ HootBarController.prototype.getTweet = function() {
 
 HootBarController.events = {
   onAboutClick: function() {
-    $$('#about').toggle(); //'slide', { direction: 'up' }, 500);
+    var about = $('#about');
+    dom(about).show();
+    morpheus(about[0], {
+      top: 400
+    }); //'slide', { direction: 'up' }, 500);
     return false;
   },
 
@@ -66,12 +70,11 @@ HootBarController.events = {
     };
   },
 
-  onRestartClick: function() {
-    $$('#search').show(); //'drop', { direction: 'up' }, 500);
-    $$('h1').show(); //'drop', { direction: 'up' }, 500);
-    $$('#nav').hide(); //'slide', { direction: 'up' }, 500);
-    $$('#meta').show();
-    $$('#modes').hide(); //'slide', { direction: 'down' }, 500);
+  onRestartClick: function(controller) {
+    return function() {   
+      controller.indexController.fadeInSearch();
+      controller.indexController.fadeOutNav();
+      controller.indexController.fadeOutModes
     return false;
   }
 };
