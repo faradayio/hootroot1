@@ -1,3 +1,5 @@
+var Google = require('../lib/google');
+
 var FlightPath = module.exports = function(controller, directions) {
   this.controller = controller;
   this.directions = directions;
@@ -12,7 +14,7 @@ FlightPath.prototype.destinationLatLng = function() {
 
 FlightPath.prototype.polyLine = function() {
   if(!this._polyLine && this.originLatLng() && this.destinationLatLng()) {
-    this._polyLine = new google.maps.Polyline({
+    this._polyLine = new Google.maps.Polyline({
       path: [this.originLatLng(),this.destinationLatLng()],
       geodesic: true,
       strokeColor: '#89E',
@@ -27,17 +29,17 @@ FlightPath.prototype.polyLine = function() {
 FlightPath.prototype.markers = function() {
   if(!this._markers && this.originLatLng() && this.destinationLatLng()) {
     this._markers = [];
-    this._markers.push(new google.maps.Marker({ position: this.originLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
-    this._markers.push(new google.maps.Marker({ position: this.destinationLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
+    this._markers.push(new Google.maps.Marker({ position: this.originLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenA.png' }));
+    this._markers.push(new Google.maps.Marker({ position: this.destinationLatLng(), icon: 'http://maps.gstatic.com/intl/en_us/mapfiles/marker_greenB.png' }));
   }
 
   return this._markers;
 };
 
 FlightPath.prototype.display = function() {
-  this.polyLine().setMap(this.controller.mapView.googleMap());
+  this.polyLine().setMap(this.controller.mapView.googleMap);
   for(var i in this.markers()) {
-    this.markers()[i].setMap(this.controller.mapView.googleMap());
+    this.markers()[i].setMap(this.controller.mapView.googleMap);
   }
 };
 FlightPath.prototype.hide = function() {

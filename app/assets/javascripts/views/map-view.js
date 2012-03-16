@@ -1,27 +1,25 @@
-var $ = require('jquery');
+var $ = require('qwery'),
+    bonzo = require('bonzo'),
+    Google = require('../lib/google');
 
 var MapView = module.exports = function(mapId) {
   this.mapId = mapId;
-  var ll = new google.maps.LatLng(39.57, -97.82);
+  var ll = new Google.maps.LatLng(39.57, -97.82);
   this.options = {
     zoom: 4,
     center: ll,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: Google.maps.MapTypeId.ROADMAP
   };
 
   this.canvas = $(this.mapId);
+  this.googleMap = new Google.maps.Map(this.canvas[0], this.options);
 
   return true;
 }
 
-MapView.prototype.googleMap = function () {
-  if(this.google_map == null) {
-    this.google_map = new google.maps.Map(this.canvas.get(0), this.options);
-  }
-  return this.google_map;
-}
-
 MapView.prototype.resize = function() {
-  this.canvas.width('100%');
-  this.canvas.height('100%');
+  bonzo(this.canvas).css({
+    width: '100%',
+    height: '100%'
+  });
 }

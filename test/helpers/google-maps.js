@@ -1,5 +1,0 @@
-google = {
-  maps: {
-    DirectionsRenderer: function() {}
-  }
-}

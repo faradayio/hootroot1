@@ -1,11 +1,15 @@
-var $ = require('../lib/jquery-custom');
+var $ = require('qwery'),
+    events = require('bean'),
+    dom = require('bonzo'),
+    $$ = function(selector, parent) { return dom($(selector, parent)); };
 
 var NumberFormatter = require('cm1-route').NumberFormatter;
 
-var RouteView = module.exports = function(controller, mode) {
+var RouteView = function(controller, mode) {
   this.controller = controller;
   this.mode = mode.toLowerCase();
-  this.element = $('#' + this.mode);
+  this.elementId = '#' + this.mode;
+  this.element = $(this.elementId)[0];
   this.isEnabled = false;
 };
 
@@ -14,7 +18,7 @@ RouteView.prototype.directions = function() {
 };
 
 RouteView.prototype.clearDirections = function() {
-  $('#routing .' + this.mode).html('');
+  $$('#routing .' + this.mode).html('');
 };
 
 RouteView.prototype.updateDirections = function() {
@@ -30,12 +34,12 @@ RouteView.prototype.updateDirections = function() {
   });
   html += '</ul>';
 
-  $('#routing .' + this.mode).html(html);
+  $$('#routing .' + this.mode).html(html);
 };
 
 RouteView.prototype.toggleDirections = function() {
-  $('#wrapper').toggleClass('with_directions');
-  $('#routing').toggle();
+  $$('#wrapper').toggleClass('with_directions');
+  $$('#routing').toggle();
 };
 
 RouteView.prototype.updateSegmentEmissions = function(impacts) {
@@ -47,33 +51,35 @@ RouteView.prototype.updateSegmentEmissions = function(impacts) {
     output = value.toString() + ' lbs CO₂';
   }
 
-  $('#' + this.mode + '_segment_' + impacts.subject.index + ' span.emissions').html(output);
+  $$('#' + this.mode + '_segment_' + impacts.subject.index + ' span.emissions').html(output);
 };
 
 RouteView.prototype.updateTotalEmissions = function() {
   var value = NumberFormatter.kilogramsToPounds(this.directions().totalEmissions);
-  $('#' + this.mode + ' .footprint').html(value).addClass('complete');
+  $$('#' + this.mode + ' .footprint').html(value).addClass('complete');
 };
 
 RouteView.prototype.select = function() {
-  $('#modes .selected').removeClass('selected');
-  this.element.addClass('selected');
+  $$('#modes .selected').removeClass('selected');
+  dom(this.element).addClass('selected');
 
-  if (this.mode == 'publictransit' && $('#hopstop').is(':hidden')) {
-    $('#hopstop').show('slide', { direction: 'down' }, 500);
-  } else if (this.mode != 'publictransit' && $('#hopstop').is(':visible') ) {
-    $('#hopstop').hide('slide', { direction: 'down' }, 500);
+  if (this.mode == 'publictransit' && $.is($('#hopstop')[0], ':hidden')) {
+    $$('#hopstop').show(); //'slide', { direction: 'down' }, 500);
+  } else if (this.mode != 'publictransit' && $.is($('#hopstop')[0], ':visible') ) {
+    $$('#hopstop').hide(); //'slide', { direction: 'down' }, 500);
   }
 };
 
 RouteView.prototype.enable = function() {
   this.start();
-  this.element.removeClass('disabled');
+  dom(this.element).removeClass('disabled');
 
   if(!this.isEnabled) {
-    this.element.click(this.controller.events.onModeClick(this.controller));
-    this.element.hover(this.controller.events.onModeHoverIn(this.controller),
-                       this.controller.events.onModeHoverOut(this.controller));
+    events.add(this.element, {
+      click: this.controller.events.onModeClick(this.controller),
+      mouseenter: this.controller.events.onModeHoverIn(this.controller),
+      mouseleave: this.controller.events.onModeHoverOut(this.controller)
+    });
   }
   this.isEnabled = true;
 
@@ -82,11 +88,11 @@ RouteView.prototype.enable = function() {
 
 RouteView.prototype.disable = function() {
   this.finish();
-  this.element.addClass('disabled');
+  dom(this.element).addClass('disabled');
 
   if(this.isEnabled) {
-    this.element.unbind('click');
-    this.element.unbind('mouseenter mouseleave');
+    events.remove(this.element, 'click');
+    events.remove(this.element, 'mouseenter mouseleave');
   }
   this.isEnabled = false;
 
@@ -96,19 +102,21 @@ RouteView.prototype.disable = function() {
 };
 
 RouteView.prototype.fail = function() {
-  $('#' + this.mode + ' .footprint').html('N/A');
+  $$('#' + this.mode + ' .footprint').html('N/A');
   this.disable();
   this.finish();
 };
 
 RouteView.prototype.start = function() {
   this.clearDirections();
-  this.element.addClass('loading');
-  this.element.find('.footprint').html('...');
-  this.element.find('.total_time').html('');
+  dom(this.element).addClass('loading');
+  $$('.footprint', this.element).html('...');
+  $$('.total_time', this.element).html('');
   return this;
 };
 
 RouteView.prototype.finish = function() {
-  this.element.removeClass('loading');
+  dom(this.element).removeClass('loading');
 };
+
+module.exports = RouteView;

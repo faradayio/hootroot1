@@ -1,5 +1,8 @@
-require('../helper');
-var SPI = require('../../app/assets/javascripts/lib/spi');
+var helper = require('../helper'),
+    vows = helper.vows,
+    assert = helper.assert,
+    sinon = helper.sinon,
+    SPI = require('../../app/assets/javascripts/lib/spi');
 
 vows.describe('SPI').addBatch({
   '#parseSpiPath': {

@@ -1,24 +1,28 @@
-var $ = require('jquery');
+var $ = require('qwery'),
+    events = require('bean'),
+    dom = require('bonzo'),
+    ajax = require('reqwest'),
+    $$ = function(selector, parent) { return dom($(selector, parent)); };
 
-var HootBarController = module.exports = function(indexController) {
+var HootBarController = function(indexController) {
   this.indexController = indexController;
 }
 
 HootBarController.prototype.init = function() {
-  $('#aboutlink').click(this.onAboutClick);
-  $('#about').click(this.onAboutClick);
-  $('#directions').click($.proxy(this.onDirectionsClick, this));
-  $('#link').click($.proxy(this.onLinkClick, this));
-  $('#linkclose').click($.proxy(this.onLinkClick, this));
-  $('#tweet').click($.proxy(this.onTweetClick, this));
-  $('#restart').click(this.onRestartClick);
+  events.add($('#aboutlink')[0], 'click', HootBarController.events.onAboutClick);
+  events.add($('#about')[0], 'click', HootBarController.events.onAboutClick);
+  events.add($('#directions')[0], 'click', HootBarController.events.onDirectionsClick(this));
+  events.add($('#link')[0], 'click', HootBarController.events.onLinkClick(this));
+  events.add($('#linkclose')[0], 'click', HootBarController.events.onLinkClick(this));
+  events.add($('#tweet')[0], 'click', HootBarController.events.onTweetClick(this));
+  events.add($('#restart')[0], 'click', HootBarController.events.onRestartClick);
 }
 
 HootBarController.prototype.getTweet = function() {
   document.body.style.cursor = 'wait';
-  $.ajax('http://is.gd/create.php', {
+  ajax('http://is.gd/create.php', {
     data: { url: this.indexController.currentUrl(), format: 'json' },
-    dataType: 'json',
+    type: 'json',
     success: function(data) {
       document.body.style.cursor = 'default';
       if(data.shorturl) {
@@ -34,33 +38,42 @@ HootBarController.prototype.getTweet = function() {
   });
 };
 
-HootBarController.prototype.onAboutClick = function() {
-  $('#about').toggle(); //'slide', { direction: 'up' }, 500);
-  return false;
+HootBarController.events = {
+  onAboutClick: function() {
+    $$('#about').toggle(); //'slide', { direction: 'up' }, 500);
+    return false;
+  },
+
+  onDirectionsClick: function(controller) {
+    return function() {
+      controller.indexController.currentRoute().toggleDirections();
+      return false;
+    };
+  },
+
+  onLinkClick: function(controller) {
+    return function() {
+      $$('#permalink').val(controller.indexController.currentUrl());
+      $$('#linkform').toggle(); //'drop', { direction: 'up' }, 500);
+      return false;
+    };
+  },
+
+  onTweetClick: function(controller) {
+    return function() {
+      controller.getTweet();
+      return false;
+    };
+  },
+
+  onRestartClick: function() {
+    $$('#search').show(); //'drop', { direction: 'up' }, 500);
+    $$('h1').show(); //'drop', { direction: 'up' }, 500);
+    $$('#nav').hide(); //'slide', { direction: 'up' }, 500);
+    $$('#meta').show();
+    $$('#modes').hide(); //'slide', { direction: 'down' }, 500);
+    return false;
+  }
 };
 
-HootBarController.prototype.onDirectionsClick = function() {
-  this.indexController.currentRoute().toggleDirections();
-  return false;
-};
-
-HootBarController.prototype.onLinkClick = function() {
-  $('#permalink').val(this.indexController.currentUrl());
-  $('#linkform').toggle('drop', { direction: 'up' }, 500);
-  return false;
-};
-
-HootBarController.prototype.onTweetClick = function() {
-  this.getTweet();
-  return false;
-};
-
-HootBarController.prototype.onRestartClick = function() {
-  $('#search').show('drop', { direction: 'up' }, 500);
-  $('h1').show('drop', { direction: 'up' }, 500);
-  $('#nav').hide('slide', { direction: 'up' }, 500);
-  $('#meta').show();
-  $('#modes').hide('slide', { direction: 'down' }, 500);
-  return false;
-};
-
+module.exports = HootBarController;

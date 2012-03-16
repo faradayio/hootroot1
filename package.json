@@ -3,26 +3,23 @@
   "version": "0.0.1",
   "author": "Derek Kastner <dkastner@gmail.com>",
   "description": "Give a hoot, green your route!",
-  "main": "lib/hootroot.js",
   "engine": "*",
   "files": ["lib"],
   "dependencies": {
     "async": "*",
+    "bean": "*",
+    "bonzo": "*",
     "cm1-route": "http://github.com/brighterplanet/cm1-route/raw/master/cm1-route.tar.gz",
     "dkastner-http-browserify": "*",
-    "jquery-browserify": "*",
-    "jquery-placeholdize": "*",
-    "jquery.ui.core": "*",
-    "jquery.ui.widget": "*",
-    "jquery.ui.position": "*",
-    "jquery.ui.dialog": "*",
-    "jquery.effects.core": "*",
-    "jquery.effects.drop": "*",
-    "jquery.effects.slide": "*",
-    "socket.io-client": "*"
+    "domready": "*",
+    "morpheus": "*",
+    "qwery": "*",
+    "reqwest": "*",
+    "socket.io-client": "*",
+    "underscore": "*"
   },
   "devDependencies": {
-    "dkastner-browserify": "*",
+    "browserify": "*",
     "coffee-script": "*",
     "fakeweb": "*",
     "jsdom": "*",
@@ -30,6 +27,6 @@
     "vows": "*"
   },
   "browserify": {
-    "require": { "http-browserify": "http" }
+    "require": { "dkastner-http-browserify": "http" }
   }
 }
