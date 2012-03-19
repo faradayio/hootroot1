@@ -41,5 +41,6 @@ module Hootroot
 
     # Enable the asset pipeline
     config.assets.enabled = true
+    config.assets.precompile = [/application/]
   end
 end
