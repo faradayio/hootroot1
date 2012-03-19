@@ -54,67 +54,57 @@ IndexController.prototype.init = function() {
     this.routeButtonClick();
   } else {
     this.fadeInSearch();
+    $$('#nav').hide();
+    $$('#modes').hide();
   }
+};
+
+IndexController.prototype.fadeIn = function(selector) {
+  fadeIn = {
+    opacity: '+=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeIn
+  }
+  var element = $$(selector);
+  element.show();
+  if(element.css('opacity') <= 0) morpheus($(selector)[0], fadeIn);
+};
+
+IndexController.prototype.fadeOut = function(selector) {
+  fadeOut = {
+    opacity: '-=1',
+
+    duration: 1500,
+    easing: morpheus.easings.easeOut,
+    complete: function() { $$(selector).show(); }
+  }
+  var element = $$(selector);
+  if(element.css('opacity') > 0) morpheus($(selector)[0], fadeOut);
 };
 
 IndexController.prototype.fadeInSearch = function() {
-  fadeIn = {
-    opacity: '+=1',
-
-    duration: 1500,
-    easing: morpheus.easings.easeIn
-  }
-  morpheus($('#search-panel')[0], fadeIn);
+  this.fadeIn('#search-panel');
 };
 
 IndexController.prototype.fadeOutSearch = function() {
-  fadeOut = {
-    opacity: '-=1',
-
-    duration: 1500,
-    easing: morpheus.easings.easeOut
-  }
-  morpheus($('#search-panel')[0], fadeOut);
+  this.fadeOut('#search-panel');
 };
 
 IndexController.prototype.fadeInNav = function() {
-  fadeIn = {
-    opacity: '+=1',
-
-    duration: 1500,
-    easing: morpheus.easings.swingTo
-  }
-  morpheus($('#nav')[0], fadeIn);
+  this.fadeIn('#nav');
 };
 
 IndexController.prototype.fadeOutNav = function() {
-  fadeOut = {
-    opacity: '-=1',
-
-    duration: 1500,
-    easing: morpheus.easings.swingFrom
-  }
-  morpheus($('#nav')[0], fadeOut);
+  this.fadeOut('#nav');
 };
 
 IndexController.prototype.fadeInModes = function() {
-  fadeIn = {
-    opacity: '+=1',
-
-    duration: 1500,
-    easing: morpheus.easings.easeIn
-  }
-  morpheus($('#modes')[0], fadeIn);
+  this.fadeIn('#modes');
 };
 
 IndexController.prototype.fadeOutModes = function() {
-  fadeOut = {
-    opacity: '-=1',
-
-    duration: 1500,
-    easing: morpheus.easings.easeOut
-  }
-  morpheus($('#modes')[0], fadeOut);
+  this.fadeOut('#modes');
 };
 
 IndexController.prototype.getEmissions = function(directions) {

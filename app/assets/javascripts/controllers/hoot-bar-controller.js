@@ -74,8 +74,9 @@ HootBarController.events = {
     return function() {   
       controller.indexController.fadeInSearch();
       controller.indexController.fadeOutNav();
-      controller.indexController.fadeOutModes
-    return false;
+      controller.indexController.fadeOutModes();
+      return false;
+    };
   }
 };
 
