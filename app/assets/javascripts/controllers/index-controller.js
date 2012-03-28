@@ -246,17 +246,19 @@ IndexController.events = {
         $$('#routing .' + this.id).show();
       }
 
-      _.each($('li.' + this.id), function(li) {
-        var liHeight = $$(li).dim().height - $$('p.emissions', li).dim().height - 20;
-        var liIncrement = $$(li).dim().width;
+      if($$('#routing').css('display') != 'none') {
+        _.each($('li.' + this.id), function(li) {
+          var liHeight = $$(li).dim().height - $$('p.emissions', li).dim().height - 20;
+          var liIncrement = $$(li).dim().width;
 
-        var instructions = $$('p.instructions', li);
+          var instructions = $$('p.instructions', li);
 
-        while(instructions.dim().height > liHeight) {
-          var width = $$(li).dim().width + liIncrement;
-          $$(li).css('width', width + 'px');
-        }
-      });
+          while(instructions.dim().height > liHeight) {
+            var width = $$(li).dim().width + liIncrement;
+            $$(li).css('width', width + 'px');
+          }
+        });
+      }
 
       return false;
     };
