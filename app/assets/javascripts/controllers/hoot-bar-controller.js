@@ -1,7 +1,8 @@
 var $ = require('qwery'),
-    events = require('bean'),
-    dom = require('bonzo'),
     ajax = require('reqwest'),
+    dom = require('bonzo'),
+    events = require('bean'),
+    morpheus = require('morpheus'),
     $$ = function(selector, parent) { return dom($(selector, parent)); };
 
 var HootBarController = function(indexController) {
@@ -40,11 +41,15 @@ HootBarController.prototype.getTweet = function() {
 
 HootBarController.events = {
   onAboutClick: function() {
-    var about = $('#about');
-    dom(about).show();
-    morpheus(about[0], {
-      top: 400
-    }); //'slide', { direction: 'up' }, 500);
+    var about = $$('#about');
+    if(about.css('display') == 'none') {
+      about.show();
+      morpheus($('#about')[0], { opacity: '+=1' });
+    } else {
+      morpheus($('#about')[0], { opacity: '-=1', complete: function() {
+        about.hide();
+      }});
+    }
     return false;
   },
 
