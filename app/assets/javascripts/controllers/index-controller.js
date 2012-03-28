@@ -244,14 +244,15 @@ IndexController.events = {
         $$('#routing .' + this.id).show();
       }
 
-      $('li.' + this.id).each(function(i, li) {
-        var liHeight = $(li).height() - $('p.emissions', li).outerHeight(true) - 20;
-        var liIncrement = $(li).width();
+      _.each($('li.' + this.id), function(li) {
+        var liHeight = $$(li).dim().height - $$('p.emissions', li).dim().height - 20;
+        var liIncrement = $$(li).dim().width;
 
-        var instructions = $('p.instructions', li);
+        var instructions = $$('p.instructions', li);
 
-        while(instructions.outerHeight(true) > liHeight) {
-          $(li).width($(li).width() + liIncrement);
+        while(instructions.dim().height > liHeight) {
+          var width = $$(li).dim().width + liIncrement;
+          $$(li).css('width', width + 'px');
         }
       });
 
