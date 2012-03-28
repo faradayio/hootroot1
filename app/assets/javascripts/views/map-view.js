@@ -8,7 +8,11 @@ var MapView = module.exports = function(mapId) {
   this.options = {
     zoom: 4,
     center: ll,
-    mapTypeId: Google.maps.MapTypeId.ROADMAP
+    mapTypeId: Google.maps.MapTypeId.ROADMAP,
+    scaleControl: true,
+    scaleControlOptions: {
+      position: google.maps.ControlPosition.RIGHT_TOP
+    }
   };
 
   this.canvas = $(this.mapId);
