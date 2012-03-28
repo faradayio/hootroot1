@@ -84,11 +84,13 @@ IndexController.prototype.fadeOut = function(selector) {
 };
 
 IndexController.prototype.fadeInSearch = function() {
+  $$('#search-panel').css('display', 'block');
   this.fadeIn('#search-panel');
 };
 
 IndexController.prototype.fadeOutSearch = function() {
   this.fadeOut('#search-panel');
+  $$('#search-panel').css('display', 'none');
 };
 
 IndexController.prototype.fadeInNav = function() {
