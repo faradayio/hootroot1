@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.1.0'
+gem 'rails', '~> 3.2.0'
 
+gem 'httparty'
 gem 'nodeify'
 gem 'sqlite3'
 
@@ -10,6 +11,12 @@ group :production do
 end
 
 group :assets do
-  gem 'sass-rails', "  ~> 3.1.0.rc"
+  gem 'sass-rails'
   gem 'uglifier'
+end
+
+group :test do
+  gem 'fakeweb'
+  gem 'rspec-rails'
+  gem 'vcr'
 end

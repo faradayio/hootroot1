@@ -1,0 +1,42 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://www.mapquestapi.com/directions/v1/route?ambiguities=ignore&avoidTimedConditions=true&doReverseGeocode=false&routeType=multimodal&timeType=1&enhancedNarrative=true&shapeFormat=raw&generalize=0&unit=m&key=
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      connection:
+      - close
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      server:
+      - Apache-Coyote/1.1
+      expires:
+      - Mon, 20 Dec 1998 01:00:00 GMT
+      last-modified:
+      - Wed, 04 Apr 2012 21:01:37 GMT
+      cache-control:
+      - no-cache, must-revalidate
+      pragma:
+      - no-cache
+      content-type:
+      - application/json;charset=UTF-8
+      content-length:
+      - '370'
+      date:
+      - Wed, 04 Apr 2012 21:01:36 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ! '{"route":{"informationAreas":[]},"info":{"copyright":{"text":"© 2012
+        MapQuest, Inc.","imageUrl":"http://api.mqcdn.com/res/mqlogo.gif","imageAltText":"©
+        2012 MapQuest, Inc."},"statuscode":403,"messages":["Please provide a \"key=\"
+        Parameter to access this service. If you do not have a key, you can obtain
+        a free key by registering at http://developer.mapquest.com."]}}'
+    http_version: '1.1'
+  recorded_at: Wed, 04 Apr 2012 21:01:37 GMT
+recorded_with: VCR 2.0.1
