@@ -3,7 +3,7 @@ var $ = require('qwery'),
     dom = require('bonzo'),
     $$ = function(selector, parent) { return dom($(selector, parent)); };
 
-var NumberFormatter = require('cm1-route').NumberFormatter;
+var NumberFormatter = require('cm1-route').Cm1Route.NumberFormatter;
 
 var RouteView = function(controller, mode) {
   this.controller = controller;

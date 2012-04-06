@@ -5,7 +5,7 @@ var $ = require('qwery'),
     dom = require('bonzo'),
     $$ = function(selector, parent) { return dom($(selector, parent)); },
     morpheus = require('morpheus'),
-    Cm1Route = require('cm1-route'),
+    Cm1Route = require('cm1-route').Cm1Route,
     Google = require('../lib/google');
 
 var FlightPath = require('../models/flight-path'),
