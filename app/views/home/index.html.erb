@@ -1,116 +1,91 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Hootroot · give a hoot, green your route</title>
-    <link type="text/css" rel="stylesheet" href="stylesheets/application.css" />
-    <link type="text/css" rel="stylesheet" href="stylesheets/jquery-ui-1.8.11.custom.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-    <meta charset="utf-8" />
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?libraries=geometry&sensor=false"></script>
-    <script type="text/javascript" src="/assets/application.js"></script>
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-1667526-27']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="wrapper">
-      <div id="map_canvas"></div>
-      <div id="search-panel">
-        <h1>Hootroot</h1>
-        <form id="search">
-          <fieldset>
-            <legend>Get directions</legend>
-            <button id="go" type="button">Route</button>
-            <label for="origin">Origin:</label>
-            <input type="text" id="origin" placeholder="Where from?" valu="1916 broadway, new york, ny" />
-            <label for="destination">Destination:</label>
-            <input type="text" id="destination" placeholder="Where to?" valu="162 madison ave, new york, ny" />
-            <div id="public_transit" style="display: none;">
-              <label for="when">When:</label>
-              <input id="when" value="Today" />
-              (e.g. "3:45pm" or "tomorrow at 5pm")
-            </div>
-          </fieldset>
-        </form>
-        <p id="meta"><a href="#" id="example">Example directions</a> &middot; <a href="#" id="aboutlink">About Hootroot</a></p>
-        <div id="about" style="display: none">
-          <div class="about">
-            <p><strong>Hootroot</strong> was created by the folks at <a href="http://brighterplanet.com">Brighter Planet</a> to show how providing just a little information about environmental impact in just the right place can help change a mind here or there. <span>When you search for directions using the form above, we'll show you all the ways to go&mdash;driving, walking, biking, and transit&mdash;along with a comparison of their carbon footprints.</span></p>
-          </div>
+<div id="wrapper">
+  <div id="map_canvas"></div>
+  <div id="search-panel">
+    <h1>Hootroot</h1>
+    <form id="search">
+      <fieldset>
+        <legend>Get directions</legend>
+        <button id="go" type="button">Route</button>
+        <label for="origin">Origin:</label>
+        <input type="text" id="origin" placeholder="Where from?" valu="1916 broadway, new york, ny" />
+        <label for="destination">Destination:</label>
+        <input type="text" id="destination" placeholder="Where to?" valu="162 madison ave, new york, ny" />
+        <div id="public_transit" style="display: none;">
+          <label for="when">When:</label>
+          <input id="when" value="Today" />
+          (e.g. "3:45pm" or "tomorrow at 5pm")
         </div>
+      </fieldset>
+    </form>
+    <p id="meta"><a href="#" id="example">Example directions</a> &middot; <a href="#" id="aboutlink">About Hootroot</a></p>
+    <div id="about" style="display: none">
+      <div class="about">
+        <p><strong>Hootroot</strong> was created by the folks at <a href="http://brighterplanet.com">Brighter Planet</a> to show how providing just a little information about environmental impact in just the right place can help change a mind here or there. <span>When you search for directions using the form above, we'll show you all the ways to go&mdash;driving, walking, biking, and transit&mdash;along with a comparison of their carbon footprints.</span></p>
       </div>
-      <div id="nav">
-        <h2>Give a hoot, green your route</h2>
-        <ul>
-          <li id="restart"><a href="#" title="Start over"><span>Start over</span></a></li>
-          <li id="tweet"><a href="#" title="Tweet"><span>Tweet</span></a></li>
-          <li id="link"><a href="#" title="Get link"><span>Get link</span></a></li>
-          <li id="directions"><a href="#" title="Directions"><span>Directions</span></a></li>
-        </ul>
-      </div>
-      <a id="hopstop" style="display: none;" href="http://hopstop.com"><img src="/images/hopstop.png" /></a>
-      <div id="modes">
-        <ul>
-          <li id="driving" class="selected loading">
-            <a>
-              <span class="mode">Driving</span>
-              <span class="footprint">&hellip;</span>
-              <span class="total_time"></span>
-            </a>
-          </li>
-          <li id="walking" class="loading">
-            <a>
-              <span class="mode">On foot</span>
-              <span class="footprint">&hellip;</span>
-              <span class="total_time"></span>
-            </a>
-          </li>
-          <li id="bicycling" class="loading">
-            <a>
-              <span class="mode">Bicycling</span>
-              <span class="footprint">&hellip;</span>
-              <span class="total_time"></span>
-            </a>
-          </li>
-          <li id="publictransit" class="loading">
-            <a>
-              <span class="mode">Transit</span>
-              <span class="footprint">&hellip;</span>
-              <span class="total_time"></span>
-            </a>
-          </li>
-          <li id="flying" class="loading">
-            <a>
-              <span class="mode">Flying</span>
-              <span class="footprint">&hellip;</span>
-              <span class="total_time"></span>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <p id="brighter_planet">Carbon by <a href="http://brighterplanet.com">Brighter Planet</a></p>
-      <form id="linkform" style="display: none;">
-        <fieldset>
-          <legend>Permalink</legend>
-          <button id="linkclose" type="button">Close</button>
-          <input type="text" id="permalink" />
-        </fieldset>
-      </form>
     </div>
-    <div id="routing" style="display: none;">
-      <div class="driving"></div>
-      <div class="walking" style="display: none;"></div>
-      <div class="bicycling" style="display: none;"></div>
-      <div class="publictransit" style="display: none;"></div>
-      <div class="flying" style="display: none;"></div>
-    </div>
-  </body>
-</html>
+  </div>
+  <div id="nav">
+    <h2>Give a hoot, green your route</h2>
+    <ul>
+      <li id="restart"><a href="#" title="Start over"><span>Start over</span></a></li>
+      <li id="tweet"><a href="#" title="Tweet"><span>Tweet</span></a></li>
+      <li id="link"><a href="#" title="Get link"><span>Get link</span></a></li>
+      <li id="directions"><a href="#" title="Directions"><span>Directions</span></a></li>
+    </ul>
+  </div>
+  <a id="hopstop" style="display: none;" href="http://hopstop.com"><img src="/images/hopstop.png" /></a>
+  <div id="modes">
+    <ul>
+      <li id="driving" class="selected loading">
+        <a>
+          <span class="mode">Driving</span>
+          <span class="footprint">&hellip;</span>
+          <span class="total_time"></span>
+        </a>
+      </li>
+      <li id="walking" class="loading">
+        <a>
+          <span class="mode">On foot</span>
+          <span class="footprint">&hellip;</span>
+          <span class="total_time"></span>
+        </a>
+      </li>
+      <li id="bicycling" class="loading">
+        <a>
+          <span class="mode">Bicycling</span>
+          <span class="footprint">&hellip;</span>
+          <span class="total_time"></span>
+        </a>
+      </li>
+      <li id="publictransit" class="loading">
+        <a>
+          <span class="mode">Transit</span>
+          <span class="footprint">&hellip;</span>
+          <span class="total_time"></span>
+        </a>
+      </li>
+      <li id="flying" class="loading">
+        <a>
+          <span class="mode">Flying</span>
+          <span class="footprint">&hellip;</span>
+          <span class="total_time"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <p id="brighter_planet">Carbon by <a href="http://brighterplanet.com">Brighter Planet</a></p>
+  <form id="linkform" style="display: none;">
+    <fieldset>
+      <legend>Permalink</legend>
+      <button id="linkclose" type="button">Close</button>
+      <input type="text" id="permalink" />
+    </fieldset>
+  </form>
+</div>
+<div id="routing" style="display: none;">
+  <div class="driving"></div>
+  <div class="walking" style="display: none;"></div>
+  <div class="bicycling" style="display: none;"></div>
+  <div class="publictransit" style="display: none;"></div>
+  <div class="flying" style="display: none;"></div>
+</div>
