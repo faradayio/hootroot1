@@ -154,9 +154,9 @@ IndexController.prototype.displayDirectionsFor = function(directions) {
 
 IndexController.prototype.hideDirectionsFor = function(directions) {
   if(directions.mode == 'FLYING') { 
-    //this.flightPath().hide();
+    this.flightPath().hide();
   } else {
-    //this.directionsDisplay.setMap(null);
+    this.directionsDisplay.setMap(null);
   }
 };
 
