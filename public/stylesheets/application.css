@@ -79,10 +79,6 @@ body {
   border-bottom: 1px solid #eee;
 }
 
-#search-panel {
-  opacity: 0;
-}
-
 h1 {
   position: absolute;
   width: 386px;
