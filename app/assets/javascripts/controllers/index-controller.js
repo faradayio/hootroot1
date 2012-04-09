@@ -63,7 +63,7 @@ IndexController.prototype.fadeIn = function(selector) {
   fadeIn = {
     opacity: '+=1',
 
-    duration: 1500,
+    duration: 700,
     easing: morpheus.easings.easeIn
   }
   var element = $$(selector);
@@ -75,7 +75,7 @@ IndexController.prototype.fadeOut = function(selector) {
   fadeOut = {
     opacity: '-=1',
 
-    duration: 1500,
+    duration: 700,
     easing: morpheus.easings.easeOut,
     complete: function() { $$(selector).hide(); }
   }
