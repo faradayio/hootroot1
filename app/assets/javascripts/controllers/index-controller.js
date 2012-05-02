@@ -274,11 +274,13 @@ IndexController.events = {
     };
   },
 
-  directionsRouteCallback: function(controller, callback) {
+  directionsRouteCallback: function(controller) {
     return function(err, directions) {
       var routeView = controller.routeViewFor(directions);
       if(err) {
         routeView.disable();
+        if(typeof console != 'undefined')
+          console.log('Failed to route ' + directions.mode);
       } else {
         routeView.updateDirections();
         controller.getEmissions(directions);
@@ -288,7 +290,6 @@ IndexController.events = {
         }
         $$('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
       }
-      callback(err);
     };
   },
 
