@@ -1,3 +1,5 @@
+require 'uri'
+
 class Mapquest
   include HTTParty
   base_uri 'http://www.mapquestapi.com'
@@ -10,8 +12,8 @@ class Mapquest
       :timeType => '1', :enhancedNarrative => 'true',
       :shapeFormat => 'raw', :generalize => '0', :unit => 'm'
     }
-    params[:key] = ENV['MAPQUEST_KEY'] || ''
-    puts "get http://wwww.mapquestapi.com/directions/v1/route #{params.inspect}"
+    params[:key] = ENV['MAPQUEST_KEY'] ? URI.decode(ENV['MAPQUEST_KEY']) : ''
+    puts "get http://www.mapquestapi.com/directions/v1/route #{params.inspect}"
     get '/directions/v1/route', :query => params
   end
 end
