@@ -119,15 +119,16 @@ IndexController.prototype.getDirections = function() {
 
   var controller = this;
   var directions = [];
-  for(var i in this.directions)
-    directions.push(this.directions[i]);
+  _.each(this.directions, function(direction) {
+    directions.push(direction);
+  });
   async.forEach(
     directions,
-    function(directions, callback) {
-      directions.route(IndexController.events.directionsRouteCallback(controller, callback));
+    function(direction, callback) {
+      direction.route(IndexController.events.directionsRouteCallback(controller, callback));
     },
     function(err) {
-      if(err) {
+      if(err && typeof console != 'undefined') {
         console.log('Failed to route directions: ' + err.message);
       }
     }
