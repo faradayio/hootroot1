@@ -9,9 +9,8 @@
     "async": "*",
     "bean": "*",
     "bonzo": "*",
-    "cm1-route": "*",
+    "cm1-route": "git://github.com/brighterplanet/cm1-route.git",
     "domready": "*",
-    "http-browserify": "git://github.com/dkastner/http-browserify.git",
     "morpheus": "*",
     "qwery": "*",
     "reqwest": "*",
@@ -22,6 +21,7 @@
     "browserify": "*",
     "coffee-script": "*",
     "fakeweb": "*",
+    "http-browserify": "git://github.com/dkastner/http-browserify.git",
     "jsdom": "*",
     "sinon": "*",
     "vows": "*"
