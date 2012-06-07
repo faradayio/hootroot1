@@ -197,6 +197,17 @@ IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
 };
 
+IndexController.prototype.normalizePublicTransitDirections = function() {
+  var drivingDirections = this.directions.driving.directionsResult,
+      transitDirections = this.directions.publictransit.directionsResult,
+      secretKey = _.first(_.difference(_.keys(drivingDirections), _.keys(transitDirections)));
+  if(secretKey) {
+    transitDirections[secretKey] = {
+      travelMode: 'DRIVING'
+    };
+  }
+};
+
 
 // Events 
 
@@ -287,6 +298,8 @@ IndexController.events = {
         if(directions.mode == 'DRIVING') {
           controller.directionsDisplay.setOptions({ preserveViewport: false });
           controller.directionsDisplay.setDirections(directions.directionsResult);
+        } else if(directions.mode == 'PUBLICTRANSIT') {
+          controller.normalizePublicTransitDirections();
         }
         $$('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
       }
