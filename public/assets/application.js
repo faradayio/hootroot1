@@ -1082,6 +1082,17 @@ IndexController.prototype.routeButtonClick = function() {
   this.getDirections();
 };
 
+IndexController.prototype.normalizePublicTransitDirections = function() {
+  var drivingDirections = this.directions.driving.directionsResult,
+      transitDirections = this.directions.publictransit.directionsResult,
+      secretKey = _.first(_.difference(_.keys(drivingDirections), _.keys(transitDirections)));
+  if(secretKey) {
+    transitDirections[secretKey] = {
+      travelMode: 'DRIVING'
+    };
+  }
+};
+
 
 // Events 
 
@@ -1172,6 +1183,8 @@ IndexController.events = {
         if(directions.mode == 'DRIVING') {
           controller.directionsDisplay.setOptions({ preserveViewport: false });
           controller.directionsDisplay.setDirections(directions.directionsResult);
+        } else if(directions.mode == 'PUBLICTRANSIT') {
+          controller.normalizePublicTransitDirections();
         }
         $$('#' + directions.mode.toLowerCase() + ' a span.total_time').html(directions.totalTime());
       }
@@ -5224,7 +5237,7 @@ FlyingDirections.events.onGeocodeFinish = function(directions, callback) {
         distance: { value: directions.distanceInMeters },
         steps: steps
       }],
-      warnings: [],
+      warnings: []
     };
     route.bounds = GoogleDirectionsRoute.generateBounds(route.overview_path);
 
@@ -5242,11 +5255,12 @@ var _ = require('underscore'),
     async = require('async');
 
 var DirectionsEvents = require('./directions-events'),
+    DrivingSegment = require('./segment/driving-segment'),
     SegmentFactory = require('./segment-factory'),
     TimeFormatter = require('./time-formatter'),
     WalkingSegment = require('./segment/walking-segment');
 
-var Directions = module.exports = function(origin, destination, mode) {
+var Directions = function(origin, destination, mode) {
   this.origin = origin;
   this.destination = destination;
   this.mode = mode;
@@ -5295,8 +5309,9 @@ Directions.prototype.getEmissions = function(callback, segmentCallback) {
 
 Directions.prototype.getEmissionsFromSegments = function(callback, segmentCallback) {
   var directions = this;
+  var segments = this.combineSegments();
   async.forEach(
-    this.segments,
+    segments,
     function(segment, asyncCallback) {
       segment.parameters = directions.parameters;
       segment.getImpacts(
@@ -5306,6 +5321,27 @@ Directions.prototype.getEmissionsFromSegments = function(callback, segmentCallba
       callback(err, directions);
     }
   );
+};
+
+Directions.prototype.combineSegments = function() {
+  var drivingDistance = 0,
+      computableSegments = [];
+
+  _.each(this.segments, function(segment) {
+    if(segment.travel_mode == 'DRIVING') {
+      drivingDistance += segment.distance;
+    } else {
+      computableSegments.push(segment);
+    }
+  });
+
+  if(drivingDistance > 0) {
+    var segment = new DrivingSegment(0, { travel_mode: 'DRIVING' });
+    segment.distance = drivingDistance;
+    computableSegments.push(segment);
+  }
+
+  return computableSegments;
 };
 
 Directions.prototype.getEmissionsFromDistance = function(callback, segmentCallback) {
@@ -5335,6 +5371,8 @@ Directions.prototype.isAllWalkingSegments = function() {
   return result;
 };
 
+module.exports = Directions;
+
 });
 
 require.define("/node_modules/cm1-route/lib/directions-events.js", function (require, module, exports, __dirname, __filename) {
@@ -5363,6 +5401,7 @@ var DirectionsEvents = module.exports = function() {
 
   this.onSegmentGetEmissionEstimate = function(directions, segmentCallback, asyncCallback) {
     return function(err, impacts) {
+      if(err) return asyncCallback(err);
       directions.totalEmissions += impacts.carbon;
       if(segmentCallback) segmentCallback(err, impacts);
       asyncCallback(err);
@@ -5378,64 +5417,19 @@ DirectionsEvents.GeocodeError = function(message) {
 
 });
 
-require.define("/node_modules/cm1-route/lib/segment-factory.js", function (require, module, exports, __dirname, __filename) {
-var AmtrakingSegment = require('./segment/amtraking-segment'),
-    BicyclingSegment = require('./segment/bicycling-segment'),
-    BussingSegment = require('./segment/bussing-segment'),
-    CommuterRailingSegment = require('./segment/commuter-railing-segment'),
-    DrivingSegment = require('./segment/driving-segment'),
-    FlyingSegment = require('./segment/flying-segment'),
-    LightRailingSegment = require('./segment/light-railing-segment'),
-    SubwayingSegment = require('./segment/subwaying-segment'),
-    WalkingSegment = require('./segment/walking-segment');
-
-var SegmentFactory = module.exports = {
-  create: function(index, step) {
-    if(step.travel_mode == 'DRIVING') {
-      return new DrivingSegment(index, step);
-    } else if(step.travel_mode == 'WALKING' || step.travel_mode == 'ENTRANCEEXIT') {
-      return new WalkingSegment(index, step);
-    } else if(step.travel_mode == 'BICYCLING') {
-      return new BicyclingSegment(index, step);
-    } else if(step.travel_mode == 'PUBLICTRANSIT') {
-      return new SubwayingSegment(index, step);
-    } else if(step.travel_mode == 'SUBWAYING') {
-      return new SubwayingSegment(index, step);
-    } else if(step.travel_mode == 'RAIL') {
-      return new SubwayingSegment(index, step);
-    } else if(step.travel_mode == 'AUTO') {
-      return new WalkingSegment(index, step);
-    } else if(step.travel_mode == 'BUSSING') {
-      return new BussingSegment(index, step);
-    } else if(step.travel_mode == 'LIGHTRAILING') {
-      return new LightRailingSegment(index, step);
-    } else if(step.travel_mode == 'FLYING') {
-      return new FlyingSegment(index, step);
-    } else if(step.travel_mode == 'AMTRAKING') {
-      return new AmtrakingSegment(index, step);
-    } else if(step.travel_mode == 'COMMUTERRAILING') {
-      return new CommuterRailingSegment(index, step);
-    } else {
-      throw "Could not create a Segment for travel_mode: " + step.travel_mode;
-    }
-  }
-};
-
-});
-
-require.define("/node_modules/cm1-route/lib/segment/amtraking-segment.js", function (require, module, exports, __dirname, __filename) {
+require.define("/node_modules/cm1-route/lib/segment/driving-segment.js", function (require, module, exports, __dirname, __filename) {
 var CM1 = require('CM1'),
     Segment = require('../segment');
 
-var AmtrakingSegment = module.exports = function(index, step) {
+var DrivingSegment = module.exports = function(index, step) {
   this.init(index, step);
-  this.rail_class = 'intercity rail';
+  this.mode = 'DRIVING';
 }
-AmtrakingSegment.prototype = new Segment();
+DrivingSegment.prototype = new Segment();
 
-CM1.extend(AmtrakingSegment, {
-  model: 'rail_trip',
-  provides: ['distance', 'rail_class']
+CM1.extend(DrivingSegment, {
+  model: 'automobile_trip',
+  provides: ['distance']
 });
 
 });
@@ -6632,10 +6626,74 @@ Segment.prototype.init = function(index, step) {
     this.distance = parseFloat(step.distance.value) / 1000.0;
   if(step.duration)
     this.duration = step.duration.value;
+  if(step.travel_mode)
+    this.travel_mode = step.travel_mode;
   this.instructions = step.instructions;
 };
 
 module.exports = Segment;
+
+});
+
+require.define("/node_modules/cm1-route/lib/segment-factory.js", function (require, module, exports, __dirname, __filename) {
+var AmtrakingSegment = require('./segment/amtraking-segment'),
+    BicyclingSegment = require('./segment/bicycling-segment'),
+    BussingSegment = require('./segment/bussing-segment'),
+    CommuterRailingSegment = require('./segment/commuter-railing-segment'),
+    DrivingSegment = require('./segment/driving-segment'),
+    FlyingSegment = require('./segment/flying-segment'),
+    LightRailingSegment = require('./segment/light-railing-segment'),
+    SubwayingSegment = require('./segment/subwaying-segment'),
+    WalkingSegment = require('./segment/walking-segment');
+
+var SegmentFactory = module.exports = {
+  create: function(index, step) {
+    if(step.travel_mode == 'DRIVING') {
+      return new DrivingSegment(index, step);
+    } else if(step.travel_mode == 'WALKING' || step.travel_mode == 'ENTRANCEEXIT') {
+      return new WalkingSegment(index, step);
+    } else if(step.travel_mode == 'BICYCLING') {
+      return new BicyclingSegment(index, step);
+    } else if(step.travel_mode == 'PUBLICTRANSIT') {
+      return new SubwayingSegment(index, step);
+    } else if(step.travel_mode == 'SUBWAYING') {
+      return new SubwayingSegment(index, step);
+    } else if(step.travel_mode == 'RAIL') {
+      return new SubwayingSegment(index, step);
+    } else if(step.travel_mode == 'AUTO') {
+      return new WalkingSegment(index, step);
+    } else if(step.travel_mode == 'BUSSING') {
+      return new BussingSegment(index, step);
+    } else if(step.travel_mode == 'LIGHTRAILING') {
+      return new LightRailingSegment(index, step);
+    } else if(step.travel_mode == 'FLYING') {
+      return new FlyingSegment(index, step);
+    } else if(step.travel_mode == 'AMTRAKING') {
+      return new AmtrakingSegment(index, step);
+    } else if(step.travel_mode == 'COMMUTERRAILING') {
+      return new CommuterRailingSegment(index, step);
+    } else {
+      throw "Could not create a Segment for travel_mode: " + step.travel_mode;
+    }
+  }
+};
+
+});
+
+require.define("/node_modules/cm1-route/lib/segment/amtraking-segment.js", function (require, module, exports, __dirname, __filename) {
+var CM1 = require('CM1'),
+    Segment = require('../segment');
+
+var AmtrakingSegment = module.exports = function(index, step) {
+  this.init(index, step);
+  this.rail_class = 'intercity rail';
+}
+AmtrakingSegment.prototype = new Segment();
+
+CM1.extend(AmtrakingSegment, {
+  model: 'rail_trip',
+  provides: ['distance', 'duration', 'rail_class']
+});
 
 });
 
@@ -6672,7 +6730,7 @@ BussingSegment.prototype = new Segment();
 
 CM1.extend(BussingSegment, {
   model: 'bus_trip',
-  provides: ['distance', 'bus_class']
+  provides: ['distance', 'bus_class', 'duration']
 });
 
 });
@@ -6689,24 +6747,7 @@ CommuterRailingSegment.prototype = new Segment();
 
 CM1.extend(CommuterRailingSegment, {
   model: 'rail_trip',
-  provides: ['distance', 'rail_class']
-});
-
-});
-
-require.define("/node_modules/cm1-route/lib/segment/driving-segment.js", function (require, module, exports, __dirname, __filename) {
-var CM1 = require('CM1'),
-    Segment = require('../segment');
-
-var DrivingSegment = module.exports = function(index, step) {
-  this.init(index, step);
-  this.mode = 'DRIVING';
-}
-DrivingSegment.prototype = new Segment();
-
-CM1.extend(DrivingSegment, {
-  model: 'automobile_trip',
-  provides: ['distance']
+  provides: ['distance', 'duration', 'rail_class']
 });
 
 });
@@ -6759,7 +6800,7 @@ SubwayingSegment.prototype = new Segment();
 
 CM1.extend(SubwayingSegment, {
   model: 'rail_trip',
-  provides: ['rail_class', 'distance']
+  provides: ['rail_class', 'distance', 'duration']
 });
 
 });
@@ -6855,7 +6896,7 @@ var GoogleDirectionsRoute = {
     }
 
     return corners;
-  },
+  }
 };
 
 module.exports = GoogleDirectionsRoute;
@@ -7007,7 +7048,13 @@ MapquestDirections.translateRoute = function(result) {
   this.distance = route.legs[0].distance.value;
   this.distanceInMeters = this.distance * 1000;
 
-  return { routes: [route] };
+  return {
+    Ib: {
+      travelMode: 'DRIVING'
+    },
+    routes: [route],
+    status: 'OK'
+  };
 };
 
 MapquestDirections.generateOverviewPath = function(decimals) {
@@ -7363,18 +7410,21 @@ DirectBusDirections.events.onGeocodeFinish = function(directions, callback) {
       duration: { value: directions.duration() },
       instructions: NumberFormatter.metersToMiles(directions.distanceInMeters) + ' mile bus trip',
       start_location: directions.originLatLng,
-      end_location: directions.destinationLatLng,
+      end_location: directions.destinationLatLng
     }];
 
-    var directionsResult = { routes: [{
+    var route = {
+      overview_path: [directions.originLatLng, directions.destinationLatLng],
       legs: [{
         duration: { value: directions.duration() },
         distance: { value: directions.distanceInMeters },
         steps: steps
       }],
-      warnings: [],
-      bounds: GoogleDirectionsRoute.generateBounds(steps)
-    }]};
+      warnings: []
+    };
+    route.bounds = GoogleDirectionsRoute.generateBounds(route.overview_path);
+
+    var directionsResult = { routes: [route]};
     directions.storeRoute(directionsResult);
 
     callback(null, directions);
@@ -7441,7 +7491,7 @@ DirectRailDirections.events.onGeocodeFinish = function(directions, callback) {
       duration: { value: directions.duration() },
       instructions: NumberFormatter.metersToMiles(directions.distance) + ' km rail trip',
       start_location: directions.originLatLng,
-      end_location: directions.destinationLatLng,
+      end_location: directions.destinationLatLng
     }];
 
     var route = {
@@ -7451,7 +7501,7 @@ DirectRailDirections.events.onGeocodeFinish = function(directions, callback) {
         distance: { value: directions.distanceInMeters },
         steps: steps
       }],
-      warnings: [],
+      warnings: []
     };
     route.bounds = GoogleDirectionsRoute.generateBounds(route.overview_path);
 
