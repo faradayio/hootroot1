@@ -19,10 +19,10 @@ var IndexController = module.exports = function(mapId) {
   this.directionsDisplay = new Google.maps.DirectionsRenderer();
   this.directions = {};
   this.routeViews = {};
-  for(var i in IndexController.modes) {
-    var mode = IndexController.modes[i].toLowerCase();
+  _.each(IndexController.modes, function(mode) {
+    mode = mode.toLowerCase();
     this.routeViews[mode] = new RouteView(this, mode);
-  }
+  }, this);
   this.hootBarController = new HootBarController(this);
 
   return true;
@@ -44,9 +44,9 @@ IndexController.prototype.init = function() {
   dom($('#when')[0]).val('Today');
   events.add($('#example')[0], 'click', IndexController.events.onExampleClick(this));
   this.hootBarController.init();
-  for(var i in this.routeViews) {
-    this.routeViews[i].enable();
-  }
+  _.each(this.routeViews, function(routeView) {
+    routeView.enable();
+  });
 
   if(this.spi.origin) $$('#origin').val(this.spi.origin);
   if(this.spi.destination) $$('#destination').val(this.spi.destination);
@@ -178,13 +178,14 @@ IndexController.prototype.routeButtonClick = function() {
   this.fadeOutSearch();
   this.fadeInNav();
   _.each($('#modes .failed'), function(element) { $$(element).removeClass('failed'); });
-  for(var i in IndexController.modes) {
-    var mode = IndexController.modes[i];
+  _.each(IndexController.modes, function(mode) {
     var directions = Cm1Route.DirectionsFactory.
       create($$('#origin').val(), $$('#destination').val(), mode);
     this.directions[mode.toLowerCase()] = directions;
-  }
-  for(var i in this.routeViews) { this.routeViews[i].enable().start(); }
+  }, this);
+  _.each(this.routeViews, function(routeView) {
+    this.routeViews[i].enable().start();
+  });
   this.routeViews.driving.select();
   if(this.flightPath()) {
     this.flightPath().hide();
