@@ -2,10 +2,10 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.2.8'
 
-gem 'fozzie'
 gem 'httparty'
 gem 'nodeify'
 gem 'sqlite3'
+gem 'statsd-ruby', :require => 'statsd'
 
 group :production do
   gem 'hoptoad_notifier'
